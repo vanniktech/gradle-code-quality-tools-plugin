@@ -1,0 +1,1 @@
+# gradle-code-quality-plugin
