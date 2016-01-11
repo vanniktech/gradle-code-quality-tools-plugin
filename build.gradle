@@ -32,8 +32,8 @@ group = GROUP
 version = VERSION_NAME
 
 pluginBundle {
-    website = 'https://github.com/vanniktech/gradle-code-quality-tools-plugin'
-    vcsUrl = 'https://github.com/vanniktech/gradle-code-quality-tools-plugin'
+    website = POM_URL
+    vcsUrl = POM_SCM_URL
 
     plugins {
         codeQualityTools {
