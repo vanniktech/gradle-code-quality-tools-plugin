@@ -23,6 +23,35 @@ buildscript {
 apply plugin: 'com.vanniktech.code.quality.tools'
 ```
 
+## Configuration (since 0.2.0)
+
+This configuration is shown with default values.
+
+```groovy
+codeQualityTools {
+    failEarly = true
+    xmlReports = true
+    htmlReports = false
+    ignoreProjects = []
+
+    findbugs {
+        toolVersion = '3.0.1'
+        excludeFilter = 'code_quality_tools/findbugs-filter.xml'
+    }
+
+    checkstyle {
+        toolVersion = '6.14.1'
+        configFile = 'code_quality_tools/checkstyle.xml'
+    }
+
+    pmd {
+        toolVersion = '5.4.1'
+        ruleSetFile = 'code_quality_tools/pmd.xml'
+    }
+}
+
+```
+
 Information: [This plugin is also available on Gradle plugins](https://plugins.gradle.org/plugin/com.vanniktech.code.quality.tools)
 
 ### Snapshots
@@ -30,7 +59,7 @@ Information: [This plugin is also available on Gradle plugins](https://plugins.g
 Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-code-quality-tools-plugin). Current one is:
 
 ```groovy
-classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.1.1-SNAPSHOT'
+classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.2.0-SNAPSHOT'
 ```
 
 # License
