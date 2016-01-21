@@ -9,31 +9,67 @@ import org.gradle.api.plugins.quality.Pmd
 class CodeQualityToolsPlugin implements Plugin<Project> {
     @Override
     void apply(final Project rootProject) {
+        rootProject.extensions.create("codeQualityTools", CodeQualityToolsPluginExtension)
+
         rootProject.subprojects { subProject ->
+            afterEvaluate {
+                def extension = rootProject.codeQualityTools
+
+                if (!shouldIgnore(subProject, extension)) { // Reason for checking again in each add method: Unit Tests (they can't handle afterEvaluate properly)
+                    addPmd(subProject, rootProject, extension)
+                    addCheckstyle(subProject, rootProject, extension)
+                    addFindbugs(subProject, rootProject, extension)
+
+                    tasks.findByName('pmd').dependsOn('assemble')
+                    tasks.findByName('findbugs').dependsOn('assemble')
+
+                    def checkTask = tasks.findByName('check')
+
+                    checkTask.dependsOn('pmd')
+                    checkTask.dependsOn('findbugs')
+                    checkTask.dependsOn('checkstyle')
+                }
+            }
+        }
+    }
+
+    protected static void addPmd(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
+        if (!shouldIgnore(subProject, extension)) {
             subProject.plugins.apply('pmd')
+
             subProject.pmd {
-                toolVersion = '5.4.1'
-                ignoreFailures = false
+                toolVersion = extension.pmd.toolVersion
+                ignoreFailures = !extension.failEarly
+                ruleSetFiles = subProject.files(rootProject.file(extension.pmd.ruleSetFile))
             }
 
             subProject.task("pmd", type: Pmd) {
                 description = 'Run pmd'
                 group = 'verification'
 
-                ruleSetFiles = project.files(rootProject.file("code_quality_tools/pmd.xml"))
                 ruleSets = []
 
-                source = fileTree('src/main/java')
+                source = subProject.fileTree('src/main/java')
                 include '**/*.java'
                 exclude '**/gen/**'
-            }
 
+                reports {
+                    html.enabled = extension.htmlReports
+                    xml.enabled = extension.xmlReports
+                }
+            }
+        }
+    }
+
+    protected static void addCheckstyle(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
+        if (!shouldIgnore(subProject, extension)) {
             subProject.plugins.apply('checkstyle')
+
             subProject.checkstyle {
-                toolVersion = '6.14.1'
-                configFile rootProject.file('code_quality_tools/checkstyle.xml')
-                ignoreFailures false
-                showViolations true
+                toolVersion = extension.checkstyle.toolVersion
+                configFile rootProject.file(extension.checkstyle.configFile)
+                ignoreFailures = !extension.failEarly
+                showViolations extension.failEarly
             }
 
             subProject.task("checkstyle", type: Checkstyle) {
@@ -44,45 +80,54 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 include '**/*.java'
                 exclude '**/gen/**'
 
-                classpath = files()
-            }
+                classpath = subProject.files()
 
-            afterEvaluate {
-                final boolean isAndroidLibrary = subProject.plugins.hasPlugin('com.android.library')
-                final boolean isAndroidApp = subProject.plugins.hasPlugin('com.android.application')
-                final boolean isAndroidPlugin = isAndroidLibrary || isAndroidApp
-
-                final String findbugsClassesPath = isAndroidPlugin ? 'build/intermediates/classes/debug/' : 'build/classes/main/'
-
-                subProject.plugins.apply('findbugs')
-
-                subProject.findbugs {
-                    sourceSets = []
-                    ignoreFailures = false
-                    toolVersion = '3.0.1'
-                    effort = 'max'
-                    reportLevel = 'low'
-                    excludeFilter = rootProject.file("code_quality_tools/findbugs-filter.xml")
+                reports {
+                    html.enabled = extension.htmlReports
+                    xml.enabled = extension.xmlReports
                 }
-
-                subProject.task("findbugs", type: FindBugs) {
-                    description = 'Run findbugs'
-                    group = 'verification'
-
-                    classes = subProject.fileTree(findbugsClassesPath)
-                    source = subProject.fileTree('src')
-                    classpath = subProject.files()
-                }
-
-                tasks.findByName('pmd').dependsOn('assemble')
-                tasks.findByName('findbugs').dependsOn('assemble')
-
-                def checkTask = tasks.findByName('check')
-
-                checkTask.dependsOn('pmd')
-                checkTask.dependsOn('findbugs')
-                checkTask.dependsOn('checkstyle')
             }
         }
+    }
+
+    protected static void addFindbugs(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
+        if (!shouldIgnore(subProject, extension)) {
+            final String findbugsClassesPath = isAndroidProject(subProject) ? 'build/intermediates/classes/debug/' : 'build/classes/main/'
+
+            subProject.plugins.apply('findbugs')
+
+            subProject.findbugs {
+                sourceSets = []
+                ignoreFailures = !extension.failEarly
+                toolVersion = extension.findbugs.toolVersion
+                effort = 'max'
+                reportLevel = 'low'
+                excludeFilter = rootProject.file(extension.findbugs.excludeFilter)
+            }
+
+            subProject.task("findbugs", type: FindBugs) {
+                description = 'Run findbugs'
+                group = 'verification'
+
+                classes = subProject.fileTree(findbugsClassesPath)
+                source = subProject.fileTree('src')
+                classpath = subProject.files()
+
+                reports {
+                    html.enabled = extension.htmlReports
+                    xml.enabled = extension.xmlReports
+                }
+            }
+        }
+    }
+
+    private static boolean shouldIgnore(final Project project, final CodeQualityToolsPluginExtension extension) {
+        extension.ignoreProjects != null && extension.ignoreProjects.contains(project.name)
+    }
+
+    private static boolean isAndroidProject(final Project project) {
+        final boolean isAndroidLibrary = project.plugins.hasPlugin('com.android.library')
+        final boolean isAndroidApp = project.plugins.hasPlugin('com.android.application')
+        isAndroidLibrary || isAndroidApp
     }
 }
