@@ -25,28 +25,37 @@ apply plugin: 'com.vanniktech.code.quality.tools'
 
 ## Configuration (since 0.2.0)
 
-This configuration is shown with default values.
+Those are all available configurations - shown with default values.
 
 ```groovy
 codeQualityTools {
-    failEarly = true
-    xmlReports = true
-    htmlReports = false
-    ignoreProjects = []
+    failEarly = true // type boolean
+    xmlReports = true // type boolean
+    htmlReports = false // type boolean
+    ignoreProjects = [] // type String array
 
     findbugs {
-        toolVersion = '3.0.1'
-        excludeFilter = 'code_quality_tools/findbugs-filter.xml'
+        enabled = true // type boolean
+        toolVersion = '3.0.1' // type String
+        excludeFilter = 'code_quality_tools/findbugs-filter.xml' // type String
     }
 
     checkstyle {
-        toolVersion = '6.14.1'
-        configFile = 'code_quality_tools/checkstyle.xml'
+        enabled = true // type boolean
+        toolVersion = '6.14.1' // type String
+        configFile = 'code_quality_tools/checkstyle.xml' // type String
     }
 
     pmd {
-        toolVersion = '5.4.1'
-        ruleSetFile = 'code_quality_tools/pmd.xml'
+        enabled = true // type boolean
+        toolVersion = '5.4.1' // type String
+        ruleSetFile = 'code_quality_tools/pmd.xml' // type String
+    }
+
+    lint {
+        enabled = true // type boolean
+        textReport = null // type Boolean
+        textOutput = 'stdout' // type String
     }
 }
 

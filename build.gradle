@@ -73,3 +73,14 @@ artifacts {
 }
 
 apply from: file('gradle/gradle-mvn-push.gradle')
+
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        main(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+        }
+    }
+}

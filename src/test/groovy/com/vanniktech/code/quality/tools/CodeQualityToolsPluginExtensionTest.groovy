@@ -5,7 +5,7 @@ import org.junit.Test
 class CodeQualityToolsPluginExtensionTest {
     @Test
     public void testDefaults() {
-        def extension = new CodeQualityToolsPluginExtension()
+        def extension = new CodeQualityToolsPluginExceptionForTests()
 
         assert extension.failEarly
         assert extension.xmlReports
@@ -20,5 +20,13 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.pmd.ruleSetFile == 'code_quality_tools/pmd.xml'
 
         assert extension.ignoreProjects.size() == 0
+
+        assert extension.lint.enabled
+        assert extension.findbugs.enabled
+        assert extension.checkstyle.enabled
+        assert extension.pmd.enabled
+
+        assert extension.lint.textReport == null
+        assert extension.lint.textOutput == 'stdout'
     }
 }
