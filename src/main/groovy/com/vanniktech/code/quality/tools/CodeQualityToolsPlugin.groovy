@@ -9,32 +9,49 @@ import org.gradle.api.plugins.quality.Pmd
 class CodeQualityToolsPlugin implements Plugin<Project> {
     @Override
     void apply(final Project rootProject) {
-        rootProject.extensions.create("codeQualityTools", CodeQualityToolsPluginExtension)
+        rootProject.extensions.create('codeQualityTools', CodeQualityToolsPluginExtension)
+        rootProject.codeQualityTools.extensions.create('findbugs', CodeQualityToolsPluginExtension.Findbugs)
+        rootProject.codeQualityTools.extensions.create('checkstyle', CodeQualityToolsPluginExtension.Checkstyle)
+        rootProject.codeQualityTools.extensions.create('pmd', CodeQualityToolsPluginExtension.Pmd)
+        rootProject.codeQualityTools.extensions.create('lint', CodeQualityToolsPluginExtension.Lint)
 
         rootProject.subprojects { subProject ->
             afterEvaluate {
                 def extension = rootProject.codeQualityTools
 
-                if (!shouldIgnore(subProject, extension)) { // Reason for checking again in each add method: Unit Tests (they can't handle afterEvaluate properly)
-                    addPmd(subProject, rootProject, extension)
-                    addCheckstyle(subProject, rootProject, extension)
-                    addFindbugs(subProject, rootProject, extension)
-
-                    tasks.findByName('pmd').dependsOn('assemble')
-                    tasks.findByName('findbugs').dependsOn('assemble')
+                if (!shouldIgnore(subProject, extension)) {
+                    // Reason for checking again in each add method: Unit Tests (they can't handle afterEvaluate properly)
+                    def hasPmd = addPmd(subProject, rootProject, extension)
+                    def hasCheckstyle = addCheckstyle(subProject, rootProject, extension)
+                    def hasFindbugs = addFindbugs(subProject, rootProject, extension)
+                    def hasLint = addLint(subProject, extension)
 
                     def checkTask = tasks.findByName('check')
 
-                    checkTask.dependsOn('pmd')
-                    checkTask.dependsOn('findbugs')
-                    checkTask.dependsOn('checkstyle')
+                    if (hasPmd) {
+                        tasks.findByName('pmd').dependsOn('assemble')
+                        checkTask.dependsOn('pmd')
+                    }
+
+                    if (hasFindbugs) {
+                        tasks.findByName('findbugs').dependsOn('assemble')
+                        checkTask.dependsOn('findbugs')
+                    }
+
+                    if (hasCheckstyle) {
+                        checkTask.dependsOn('checkstyle')
+                    }
+
+                    if (hasLint) {
+                        checkTask.dependsOn('lint')
+                    }
                 }
             }
         }
     }
 
-    protected static void addPmd(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
-        if (!shouldIgnore(subProject, extension)) {
+    protected static boolean addPmd(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
+        if (!shouldIgnore(subProject, extension) && extension.pmd.enabled) {
             subProject.plugins.apply('pmd')
 
             subProject.pmd {
@@ -58,11 +75,15 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                     xml.enabled = extension.xmlReports
                 }
             }
+
+            return true
         }
+
+        return false
     }
 
-    protected static void addCheckstyle(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
-        if (!shouldIgnore(subProject, extension)) {
+    protected static boolean addCheckstyle(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
+        if (!shouldIgnore(subProject, extension) && extension.checkstyle.enabled) {
             subProject.plugins.apply('checkstyle')
 
             subProject.checkstyle {
@@ -87,11 +108,15 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                     xml.enabled = extension.xmlReports
                 }
             }
+
+            return true
         }
+
+        return false
     }
 
-    protected static void addFindbugs(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
-        if (!shouldIgnore(subProject, extension)) {
+    protected static boolean addFindbugs(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
+        if (!shouldIgnore(subProject, extension) && extension.findbugs.enabled) {
             final String findbugsClassesPath = isAndroidProject(subProject) ? 'build/intermediates/classes/debug/' : 'build/classes/main/'
 
             subProject.plugins.apply('findbugs')
@@ -118,16 +143,40 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                     xml.enabled = extension.xmlReports
                 }
             }
+
+            return true
         }
+
+        return false
+    }
+
+    protected static boolean addLint(final Project subProject, final CodeQualityToolsPluginExtension extension) {
+        if (!shouldIgnore(subProject, extension) && extension.lint.enabled && isAndroidProject(subProject)) {
+            subProject.android.lintOptions {
+                warningsAsErrors extension.failEarly
+                abortOnError extension.failEarly
+            }
+
+            if (extension.lint.textReport != null) {
+                subProject.android.lintOptions {
+                    textReport extension.lint.textReport
+                    textOutput extension.lint.textOutput
+                }
+            }
+
+            return true
+        }
+
+        return false
+    }
+
+    protected static boolean isAndroidProject(final Project project) {
+        final boolean isAndroidLibrary = project.plugins.hasPlugin('com.android.library')
+        final boolean isAndroidApp = project.plugins.hasPlugin('com.android.application')
+        return isAndroidLibrary || isAndroidApp
     }
 
     private static boolean shouldIgnore(final Project project, final CodeQualityToolsPluginExtension extension) {
-        extension.ignoreProjects != null && extension.ignoreProjects.contains(project.name)
-    }
-
-    private static boolean isAndroidProject(final Project project) {
-        final boolean isAndroidLibrary = project.plugins.hasPlugin('com.android.library')
-        final boolean isAndroidApp = project.plugins.hasPlugin('com.android.application')
-        isAndroidLibrary || isAndroidApp
+        return extension.ignoreProjects?.contains(project.name)
     }
 }

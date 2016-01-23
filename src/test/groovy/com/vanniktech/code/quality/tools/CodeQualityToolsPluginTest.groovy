@@ -4,6 +4,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.quality.*
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 public class CodeQualityToolsPluginTest {
@@ -32,21 +33,21 @@ public class CodeQualityToolsPluginTest {
 
     @Test
     public void testAddFindbugsJavaDefault() {
-        CodeQualityToolsPlugin.addFindbugs(javaProject, rootProject, new CodeQualityToolsPluginExtension())
+        assert CodeQualityToolsPlugin.addFindbugs(javaProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
         assertFindbugs(javaProject, "/build/classes/main")
     }
 
     @Test
     public void testAddFindbugsAndroidAppDefault() {
-        CodeQualityToolsPlugin.addFindbugs(androidAppProject, rootProject, new CodeQualityToolsPluginExtension())
+        assert CodeQualityToolsPlugin.addFindbugs(androidAppProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
         assertFindbugs(androidAppProject, "/build/intermediates/classes/debug")
     }
 
     @Test
     public void testAddFindbugsAndroidLibraryDefault() {
-        CodeQualityToolsPlugin.addFindbugs(androidLibraryProject, rootProject, new CodeQualityToolsPluginExtension())
+        assert CodeQualityToolsPlugin.addFindbugs(androidLibraryProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
         assertFindbugs(androidLibraryProject, "/build/intermediates/classes/debug")
     }
@@ -79,21 +80,21 @@ public class CodeQualityToolsPluginTest {
 
     @Test
     public void testAddCheckstyleJavaDefault() {
-        CodeQualityToolsPlugin.addCheckstyle(javaProject, rootProject, new CodeQualityToolsPluginExtension())
+        assert CodeQualityToolsPlugin.addCheckstyle(javaProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
         assertCheckstyle(javaProject)
     }
 
     @Test
     public void testAddCheckstyleAndroidAppDefault() {
-        CodeQualityToolsPlugin.addCheckstyle(androidAppProject, rootProject, new CodeQualityToolsPluginExtension())
+        assert CodeQualityToolsPlugin.addCheckstyle(androidAppProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
         assertCheckstyle(androidAppProject)
     }
 
     @Test
     public void testAddCheckstyleAndroidLibraryDefault() {
-        CodeQualityToolsPlugin.addCheckstyle(androidLibraryProject, rootProject, new CodeQualityToolsPluginExtension())
+        assert CodeQualityToolsPlugin.addCheckstyle(androidLibraryProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
         assertCheckstyle(androidLibraryProject)
     }
@@ -129,21 +130,21 @@ public class CodeQualityToolsPluginTest {
 
     @Test
     public void testAddPmdJavaDefault() {
-        CodeQualityToolsPlugin.addPmd(javaProject, rootProject, new CodeQualityToolsPluginExtension())
+        assert CodeQualityToolsPlugin.addPmd(javaProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
         assertPmd(javaProject)
     }
 
     @Test
     public void testAddPmdAndroidAppDefault() {
-        CodeQualityToolsPlugin.addPmd(androidAppProject, rootProject, new CodeQualityToolsPluginExtension())
+        assert CodeQualityToolsPlugin.addPmd(androidAppProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
         assertPmd(androidAppProject)
     }
 
     @Test
     public void testAddPmdAndroidLibraryDefault() {
-        CodeQualityToolsPlugin.addPmd(androidLibraryProject, rootProject, new CodeQualityToolsPluginExtension())
+        assert CodeQualityToolsPlugin.addPmd(androidLibraryProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
         assertPmd(androidLibraryProject)
     }
@@ -178,32 +179,66 @@ public class CodeQualityToolsPluginTest {
     }
 
     @Test
+    public void testAddLintJavaDefault() {
+        assert !CodeQualityToolsPlugin.addLint(javaProject, new CodeQualityToolsPluginExceptionForTests())
+    }
+
+    @Test
+    public void testAddLintAndroidAppDefault() {
+        assert CodeQualityToolsPlugin.addLint(androidAppProject, new CodeQualityToolsPluginExceptionForTests())
+
+        assertLint(androidAppProject)
+    }
+
+    @Test
+    public void testAddLintAndroidLibraryDefault() {
+        assert CodeQualityToolsPlugin.addLint(androidLibraryProject, new CodeQualityToolsPluginExceptionForTests())
+
+        assertLint(androidLibraryProject)
+    }
+
+    private void assertLint(Project project) {
+        assert project.android.lintOptions.warningsAsErrors
+        assert project.android.lintOptions.abortOnError
+        assert !project.android.lintOptions.textReport
+        assert project.android.lintOptions.textOutput == null
+    }
+
+    @Test
     public void testFailEarly() {
-        def extension = new CodeQualityToolsPluginExtension()
+        def extension = new CodeQualityToolsPluginExceptionForTests()
         extension.failEarly = false
 
         for (def project : projects) {
-            CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
-            CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
-            CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
+            def isAndroidProject = CodeQualityToolsPlugin.isAndroidProject(project)
+
+            assert CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
+            assert isAndroidProject == CodeQualityToolsPlugin.addLint(project, extension)
 
             assert project.findbugs.ignoreFailures
             assert project.checkstyle.ignoreFailures
             assert !project.checkstyle.showViolations
             assert project.pmd.ignoreFailures
+
+            if (isAndroidProject) {
+                assert !project.android.lintOptions.warningsAsErrors
+                assert !project.android.lintOptions.abortOnError
+            }
         }
     }
 
     @Test
     public void testReports() {
-        def extension = new CodeQualityToolsPluginExtension()
+        def extension = new CodeQualityToolsPluginExceptionForTests()
         extension.htmlReports = true
         extension.xmlReports = false
 
         for (def project : projects) {
-            CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
-            CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
-            CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
 
             def findbugsTask = project.tasks.findByName('findbugs')
 
@@ -230,15 +265,15 @@ public class CodeQualityToolsPluginTest {
 
     @Test
     public void testToolVersions() {
-        def extension = new CodeQualityToolsPluginExtension()
+        def extension = new CodeQualityToolsPluginExceptionForTests()
         extension.findbugs.toolVersion = '3.0.0'
         extension.checkstyle.toolVersion = '6.14.0'
         extension.pmd.toolVersion = '5.4.0'
 
         for (def project : projects) {
-            CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
-            CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
-            CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
 
             assert project.findbugs.toolVersion == extension.findbugs.toolVersion
             assert project.checkstyle.toolVersion == extension.checkstyle.toolVersion
@@ -248,15 +283,15 @@ public class CodeQualityToolsPluginTest {
 
     @Test
     public void testConfigFiles() {
-        def extension = new CodeQualityToolsPluginExtension()
+        def extension = new CodeQualityToolsPluginExceptionForTests()
         extension.findbugs.excludeFilter = 'findbugs.xml'
         extension.checkstyle.configFile = 'checkstyle.xml'
         extension.pmd.ruleSetFile = 'pmd.xml'
 
         for (def project : projects) {
-            CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
-            CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
-            CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
+            assert CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
 
             assert project.findbugs.excludeFilter == rootProject.file(extension.findbugs.excludeFilter)
             assert project.checkstyle.configFile == rootProject.file(extension.checkstyle.configFile)
@@ -266,18 +301,82 @@ public class CodeQualityToolsPluginTest {
 
     @Test
     public void testIgnoreProjects() {
-        def extension = new CodeQualityToolsPluginExtension()
+        def extension = new CodeQualityToolsPluginExceptionForTests()
 
         for (def project : projects) {
             extension.ignoreProjects = [project.name]
 
-            CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
-            CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
-            CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
+            assert !CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
+            assert !CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
+            assert !CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
 
             assert !project.plugins.hasPlugin(FindBugsPlugin)
             assert !project.plugins.hasPlugin(CheckstylePlugin)
             assert !project.plugins.hasPlugin(PmdPlugin)
         }
+    }
+
+    @Test
+    public void testLintConfigurations() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.lint.textReport = true
+        extension.lint.textOutput = 'stdout'
+
+        assert CodeQualityToolsPlugin.addLint(androidAppProject, extension)
+
+        assert androidAppProject.android.lintOptions.textReport == extension.lint.textReport
+        assert androidAppProject.android.lintOptions.textOutput.toString() == extension.lint.textOutput
+
+        assert CodeQualityToolsPlugin.addLint(androidLibraryProject, extension)
+
+        assert androidLibraryProject.android.lintOptions.textReport == extension.lint.textReport
+        assert androidLibraryProject.android.lintOptions.textOutput.toString() == extension.lint.textOutput
+    }
+
+    @Test
+    public void testFindbugsEnabled() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.findbugs.enabled = false
+
+        for (def project : projects) {
+            assert !CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
+        }
+    }
+
+    @Test
+    public void testCheckstyleEnabled() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.checkstyle.enabled = false
+
+        for (def project : projects) {
+            assert !CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
+        }
+    }
+
+    @Test
+    public void testPmdEnabled() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.pmd.enabled = false
+
+        for (def project : projects) {
+            assert !CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
+        }
+    }
+
+    @Test
+    public void testLintEnabled() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.lint.enabled = false
+
+        for (def project : projects) {
+            assert !CodeQualityToolsPlugin.addLint(project, extension)
+        }
+    }
+
+    @Test
+    public void testIsAndroidProject() {
+        assert CodeQualityToolsPlugin.isAndroidProject(androidAppProject)
+        assert CodeQualityToolsPlugin.isAndroidProject(androidLibraryProject)
+        assert !CodeQualityToolsPlugin.isAndroidProject(javaProject)
     }
 }
