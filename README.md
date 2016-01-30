@@ -4,7 +4,7 @@
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 ![Java 7 required](https://img.shields.io/badge/java-7-brightgreen.svg)
 
-Gradle plugin that generates Findbugs-, Checkstyle- and PMD Tasks for every subproject. All of the taks will also automatically hook into the build lifecycle.
+Gradle plugin that generates Findbugs-, Checkstyle- and PMD Tasks for every subproject. In Android projects Lint will also be configured. All of the taks will also automatically hook into the build lifecycle.
 
 Works with the latest Gradle Android Tools version 1.5.0. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
 
@@ -25,7 +25,7 @@ apply plugin: 'com.vanniktech.code.quality.tools'
 
 ## Configuration (since 0.2.0)
 
-Those are all available configurations - shown with default values.
+Those are all available configurations - shown with default values and their types.
 
 ```groovy
 codeQualityTools {
