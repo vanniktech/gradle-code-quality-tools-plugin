@@ -25,7 +25,7 @@ apply plugin: 'com.vanniktech.code.quality.tools'
 
 ## Configuration (since 0.2.0)
 
-Those are all available configurations - shown with default values and their types.
+Those are all available configurations - shown with default values and their types. More information can be found in the [Java Documentation of the Extension](src/main/groovy/com/vanniktech/code/quality/tools/CodeQualityToolsPluginExtension.groovy).
 
 ```groovy
 codeQualityTools {
