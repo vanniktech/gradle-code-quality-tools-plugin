@@ -28,5 +28,7 @@ class CodeQualityToolsPluginExtensionTest {
 
         assert extension.lint.textReport == null
         assert extension.lint.textOutput == 'stdout'
+        assert extension.lint.abortOnError == null
+        assert extension.lint.warningsAsErrors == null
     }
 }

@@ -153,8 +153,8 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     protected static boolean addLint(final Project subProject, final CodeQualityToolsPluginExtension extension) {
         if (!shouldIgnore(subProject, extension) && extension.lint.enabled && isAndroidProject(subProject)) {
             subProject.android.lintOptions {
-                warningsAsErrors extension.failEarly
-                abortOnError extension.failEarly
+                warningsAsErrors extension.lint.warningsAsErrors != null ? extension.lint.warningsAsErrors : extension.failEarly
+                abortOnError extension.lint.abortOnError != null ? extension.lint.abortOnError : extension.failEarly
             }
 
             if (extension.lint.textReport != null) {

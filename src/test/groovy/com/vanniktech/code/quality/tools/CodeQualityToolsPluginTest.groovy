@@ -1,10 +1,14 @@
 package com.vanniktech.code.quality.tools
 
 import org.gradle.api.Project
+import org.gradle.api.Project
+import org.gradle.api.plugins.quality.*
 import org.gradle.api.plugins.quality.*
 import org.gradle.testfixtures.ProjectBuilder
+import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Before
-import org.junit.Ignore
+import org.junit.Before
+import org.junit.Test
 import org.junit.Test
 
 public class CodeQualityToolsPluginTest {
@@ -322,15 +326,37 @@ public class CodeQualityToolsPluginTest {
         extension.lint.textReport = true
         extension.lint.textOutput = 'stdout'
 
-        assert CodeQualityToolsPlugin.addLint(androidAppProject, extension)
+        extension.lint.abortOnError = false
+        extension.lint.warningsAsErrors = false
 
+        assert CodeQualityToolsPlugin.addLint(androidAppProject, extension)
+        assert androidAppProject.android.lintOptions.warningsAsErrors == extension.lint.warningsAsErrors
+        assert androidAppProject.android.lintOptions.abortOnError == extension.lint.abortOnError
         assert androidAppProject.android.lintOptions.textReport == extension.lint.textReport
         assert androidAppProject.android.lintOptions.textOutput.toString() == extension.lint.textOutput
 
         assert CodeQualityToolsPlugin.addLint(androidLibraryProject, extension)
-
+        assert androidLibraryProject.android.lintOptions.warningsAsErrors == extension.lint.warningsAsErrors
+        assert androidLibraryProject.android.lintOptions.abortOnError == extension.lint.abortOnError
         assert androidLibraryProject.android.lintOptions.textReport == extension.lint.textReport
         assert androidLibraryProject.android.lintOptions.textOutput.toString() == extension.lint.textOutput
+    }
+
+    @Test
+    public void testLintConfigurationsWhenNotFailEarly() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.failEarly = false
+
+        extension.lint.abortOnError = true
+        extension.lint.warningsAsErrors = true
+
+        assert CodeQualityToolsPlugin.addLint(androidAppProject, extension)
+        assert androidAppProject.android.lintOptions.abortOnError == extension.lint.abortOnError
+        assert androidAppProject.android.lintOptions.warningsAsErrors == extension.lint.warningsAsErrors
+
+        assert CodeQualityToolsPlugin.addLint(androidLibraryProject, extension)
+        assert androidLibraryProject.android.lintOptions.abortOnError == extension.lint.abortOnError
+        assert androidLibraryProject.android.lintOptions.warningsAsErrors == extension.lint.warningsAsErrors
     }
 
     @Test
