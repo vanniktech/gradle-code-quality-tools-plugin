@@ -56,6 +56,8 @@ codeQualityTools {
         enabled = true // type boolean
         textReport = null // type Boolean
         textOutput = 'stdout' // type String
+        abortOnError = null // type Boolean
+        warningsAsErrors = null // type Boolean
     }
 }
 

@@ -89,5 +89,17 @@ class CodeQualityToolsPluginExtension {
          * @since 0.2.0
          */
         String textOutput = 'stdout'
+
+        /**
+         * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
+         * @since 0.2.0
+         */
+        Boolean abortOnError
+
+        /**
+         * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
+         * @since 0.2.0
+         */
+        Boolean warningsAsErrors
     }
 }
