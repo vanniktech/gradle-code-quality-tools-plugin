@@ -16,7 +16,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.1.0'
+        classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.2.0'
     }
 }
 
