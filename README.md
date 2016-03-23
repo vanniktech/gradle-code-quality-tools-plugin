@@ -23,6 +23,16 @@ buildscript {
 apply plugin: 'com.vanniktech.code.quality.tools'
 ```
 
+Information: [This plugin is also available on Gradle plugins](https://plugins.gradle.org/plugin/com.vanniktech.code.quality.tools)
+
+### Snapshots
+
+Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-code-quality-tools-plugin). Current one is:
+
+```groovy
+classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.3.0-SNAPSHOT'
+```
+
 ## Configuration (since 0.2.0)
 
 Those are all available configurations - shown with default values and their types. More information can be found in the [Java Documentation of the Extension](src/main/groovy/com/vanniktech/code/quality/tools/CodeQualityToolsPluginExtension.groovy).
@@ -61,16 +71,6 @@ codeQualityTools {
     }
 }
 
-```
-
-Information: [This plugin is also available on Gradle plugins](https://plugins.gradle.org/plugin/com.vanniktech.code.quality.tools)
-
-### Snapshots
-
-Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-code-quality-tools-plugin). Current one is:
-
-```groovy
-classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.3.0-SNAPSHOT'
 ```
 
 # License
