@@ -21,30 +21,10 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
                 if (!shouldIgnore(subProject, extension)) {
                     // Reason for checking again in each add method: Unit Tests (they can't handle afterEvaluate properly)
-                    def hasPmd = addPmd(subProject, rootProject, extension)
-                    def hasCheckstyle = addCheckstyle(subProject, rootProject, extension)
-                    def hasFindbugs = addFindbugs(subProject, rootProject, extension)
-                    def hasLint = addLint(subProject, extension)
-
-                    def checkTask = tasks.findByName('check')
-
-                    if (hasPmd) {
-                        tasks.findByName('pmd').dependsOn('assemble')
-                        checkTask.dependsOn('pmd')
-                    }
-
-                    if (hasFindbugs) {
-                        tasks.findByName('findbugs').dependsOn('assemble')
-                        checkTask.dependsOn('findbugs')
-                    }
-
-                    if (hasCheckstyle) {
-                        checkTask.dependsOn('checkstyle')
-                    }
-
-                    if (hasLint) {
-                        checkTask.dependsOn('lint')
-                    }
+                    addPmd(subProject, rootProject, extension)
+                    addCheckstyle(subProject, rootProject, extension)
+                    addFindbugs(subProject, rootProject, extension)
+                    addLint(subProject, extension)
                 }
             }
         }
@@ -60,7 +40,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 ruleSetFiles = subProject.files(rootProject.file(extension.pmd.ruleSetFile))
             }
 
-            subProject.task("pmd", type: Pmd) {
+            subProject.task('pmd', type: Pmd, dependsOn: 'assemble') {
                 description = 'Run pmd'
                 group = 'verification'
 
@@ -75,6 +55,8 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                     xml.enabled = extension.xmlReports
                 }
             }
+
+            subProject.check.dependsOn 'pmd'
 
             return true
         }
@@ -93,7 +75,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 showViolations extension.failEarly
             }
 
-            subProject.task("checkstyle", type: Checkstyle) {
+            subProject.task('checkstyle', type: Checkstyle) {
                 description = 'Run checkstyle'
                 group = 'verification'
 
@@ -108,6 +90,8 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                     xml.enabled = extension.xmlReports
                 }
             }
+
+            subProject.check.dependsOn 'checkstyle'
 
             return true
         }
@@ -130,7 +114,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 excludeFilter = rootProject.file(extension.findbugs.excludeFilter)
             }
 
-            subProject.task("findbugs", type: FindBugs) {
+            subProject.task('findbugs', type: FindBugs, dependsOn: 'assemble') {
                 description = 'Run findbugs'
                 group = 'verification'
 
@@ -143,6 +127,8 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                     xml.enabled = extension.xmlReports
                 }
             }
+
+            subProject.check.dependsOn 'findbugs'
 
             return true
         }
@@ -163,6 +149,8 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                     textOutput extension.lint.textOutput
                 }
             }
+
+            subProject.check.dependsOn 'lint'
 
             return true
         }

@@ -1,14 +1,10 @@
 package com.vanniktech.code.quality.tools
 
 import org.gradle.api.Project
-import org.gradle.api.Project
-import org.gradle.api.plugins.quality.*
+import org.gradle.api.Task
 import org.gradle.api.plugins.quality.*
 import org.gradle.testfixtures.ProjectBuilder
-import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Before
-import org.junit.Before
-import org.junit.Test
 import org.junit.Test
 
 public class CodeQualityToolsPluginTest {
@@ -79,7 +75,11 @@ public class CodeQualityToolsPluginTest {
 
             assert reports.xml.enabled
             assert !reports.html.enabled
+
+            assert taskDependsOn(task, 'assemble')
         }
+
+        assert taskDependsOn(project.check, 'findbugs')
     }
 
     @Test
@@ -130,6 +130,8 @@ public class CodeQualityToolsPluginTest {
             assert reports.xml.enabled
             assert !reports.html.enabled
         }
+
+        assert taskDependsOn(project.check, 'checkstyle')
     }
 
     @Test
@@ -179,7 +181,11 @@ public class CodeQualityToolsPluginTest {
 
             assert reports.xml.enabled
             assert !reports.html.enabled
+
+            assert taskDependsOn(task, 'assemble')
         }
+
+        assert taskDependsOn(project.check, 'pmd')
     }
 
     @Test
@@ -206,6 +212,8 @@ public class CodeQualityToolsPluginTest {
         assert project.android.lintOptions.abortOnError
         assert !project.android.lintOptions.textReport
         assert project.android.lintOptions.textOutput == null
+
+        assert taskDependsOn(project.check, 'lint')
     }
 
     @Test
@@ -317,6 +325,10 @@ public class CodeQualityToolsPluginTest {
             assert !project.plugins.hasPlugin(FindBugsPlugin)
             assert !project.plugins.hasPlugin(CheckstylePlugin)
             assert !project.plugins.hasPlugin(PmdPlugin)
+
+            assert !taskDependsOn(project.check, 'findbugs')
+            assert !taskDependsOn(project.check, 'checkstyle')
+            assert !taskDependsOn(project.check, 'pmd')
         }
     }
 
@@ -404,5 +416,19 @@ public class CodeQualityToolsPluginTest {
         assert CodeQualityToolsPlugin.isAndroidProject(androidAppProject)
         assert CodeQualityToolsPlugin.isAndroidProject(androidLibraryProject)
         assert !CodeQualityToolsPlugin.isAndroidProject(javaProject)
+    }
+
+    static boolean taskDependsOn(final Task task, final String taskName) {
+        def it = task.dependsOn.iterator()
+
+        while (it.hasNext()) {
+            def item = it.next()
+
+            if (item.toString().equals(taskName)) {
+                return  true
+            }
+        }
+
+        return false
     }
 }
