@@ -12,7 +12,7 @@ class CodeQualityToolsPluginExtensionTest {
         assert !extension.htmlReports
 
         assert extension.findbugs.toolVersion == '3.0.1'
-        assert extension.checkstyle.toolVersion == '6.16.1'
+        assert extension.checkstyle.toolVersion == '6.17'
         assert extension.pmd.toolVersion == '5.4.1'
 
         assert extension.findbugs.excludeFilter == 'code_quality_tools/findbugs-filter.xml'
