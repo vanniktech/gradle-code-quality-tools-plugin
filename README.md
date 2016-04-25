@@ -1,6 +1,7 @@
 # gradle-code-quality-tools-plugin
 
 [![Build Status](https://travis-ci.org/vanniktech/gradle-code-quality-tools-plugin.svg?branch=master)](https://travis-ci.org/vanniktech/gradle-code-quality-tools-plugin?branch=master)
+[![Codecov](https://codecov.io/github/vanniktech/gradle-code-quality-tools-plugin/coverage.svg?branch=master)](https://codecov.io/github/vanniktech/gradle-code-quality-tools-plugin?branch=master)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 ![Java 7 required](https://img.shields.io/badge/java-7-brightgreen.svg)
 
