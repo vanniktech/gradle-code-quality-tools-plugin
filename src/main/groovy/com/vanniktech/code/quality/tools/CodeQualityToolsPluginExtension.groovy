@@ -51,7 +51,7 @@ class CodeQualityToolsPluginExtension {
         boolean enabled = true
 
         /** @since 0.2.0 */
-        String toolVersion = '6.16.1'
+        String toolVersion = '6.17'
 
         /** @since 0.2.0 */
         String configFile = 'code_quality_tools/checkstyle.xml'
