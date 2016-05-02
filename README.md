@@ -7,7 +7,7 @@
 
 Gradle plugin that generates Findbugs-, Checkstyle- and PMD Tasks for every subproject. In Android projects Lint will also be configured. All of the taks will also automatically hook into the build lifecycle.
 
-Works with the latest Gradle Android Tools version 1.5.0. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
+Works with the latest Gradle Android Tools version 2.1.0. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
 
 # Set up
 
