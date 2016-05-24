@@ -121,6 +121,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 classes = subProject.fileTree(findbugsClassesPath)
                 source = subProject.fileTree('src')
                 classpath = subProject.files()
+                pluginClasspath = extension.findbugs.pluginClasspath
 
                 reports {
                     html.enabled = extension.htmlReports
