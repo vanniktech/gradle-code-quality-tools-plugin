@@ -75,6 +75,12 @@ class CodeQualityToolsPluginExtension {
 
         /** @since 0.2.0 */
         String ruleSetFile = 'code_quality_tools/pmd.xml'
+
+        /**
+         * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
+         * @since 0.3.0
+         */
+        Boolean ignoreFailures
     }
 
     static class Lint {
