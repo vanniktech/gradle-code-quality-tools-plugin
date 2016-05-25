@@ -15,6 +15,8 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.checkstyle.toolVersion == '6.17'
         assert extension.pmd.toolVersion == '5.4.1'
 
+        assert extension.findbugs.ignoreFailures == null
+
         assert extension.findbugs.excludeFilter == 'code_quality_tools/findbugs-filter.xml'
         assert extension.checkstyle.configFile == 'code_quality_tools/checkstyle.xml'
         assert extension.pmd.ruleSetFile == 'code_quality_tools/pmd.xml'
