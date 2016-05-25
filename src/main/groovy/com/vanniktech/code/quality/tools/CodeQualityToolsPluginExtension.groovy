@@ -41,6 +41,12 @@ class CodeQualityToolsPluginExtension {
 
         /** @since 0.2.0 */
         String excludeFilter = 'code_quality_tools/findbugs-filter.xml'
+
+        /**
+         * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
+         * @since 0.3.0
+         */
+        Boolean ignoreFailures
     }
 
     static class Checkstyle {

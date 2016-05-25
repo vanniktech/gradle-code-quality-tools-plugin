@@ -333,6 +333,36 @@ public class CodeQualityToolsPluginTest {
     }
 
     @Test
+    public void findbugsIgnoreFailuresFalse() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.findbugs.ignoreFailures = false
+
+        assert CodeQualityToolsPlugin.addFindbugs(androidAppProject, rootProject, extension)
+        assert androidAppProject.findbugs.ignoreFailures == extension.findbugs.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addFindbugs(androidLibraryProject, rootProject, extension)
+        assert androidLibraryProject.findbugs.ignoreFailures == extension.findbugs.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addFindbugs(javaProject, rootProject, extension)
+        assert javaProject.findbugs.ignoreFailures == extension.findbugs.ignoreFailures
+    }
+
+    @Test
+    public void findbugsIgnoreFailuresTrue() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.findbugs.ignoreFailures = true
+
+        assert CodeQualityToolsPlugin.addFindbugs(androidAppProject, rootProject, extension)
+        assert androidAppProject.findbugs.ignoreFailures == extension.findbugs.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addFindbugs(androidLibraryProject, rootProject, extension)
+        assert androidLibraryProject.findbugs.ignoreFailures == extension.findbugs.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addFindbugs(javaProject, rootProject, extension)
+        assert javaProject.findbugs.ignoreFailures == extension.findbugs.ignoreFailures
+    }
+
+    @Test
     public void testLintConfigurations() {
         def extension = new CodeQualityToolsPluginExceptionForTests()
         extension.lint.textReport = true
