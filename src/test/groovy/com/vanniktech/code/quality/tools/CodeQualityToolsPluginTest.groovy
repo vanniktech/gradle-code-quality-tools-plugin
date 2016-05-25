@@ -363,6 +363,36 @@ public class CodeQualityToolsPluginTest {
     }
 
     @Test
+    public void pmdIgnoreFailuresFalse() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.pmd.ignoreFailures = false
+
+        assert CodeQualityToolsPlugin.addPmd(androidAppProject, rootProject, extension)
+        assert androidAppProject.pmd.ignoreFailures == extension.pmd.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addPmd(androidLibraryProject, rootProject, extension)
+        assert androidLibraryProject.pmd.ignoreFailures == extension.pmd.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addPmd(javaProject, rootProject, extension)
+        assert javaProject.pmd.ignoreFailures == extension.pmd.ignoreFailures
+    }
+
+    @Test
+    public void pmdIgnoreFailuresTrue() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.pmd.ignoreFailures = true
+
+        assert CodeQualityToolsPlugin.addPmd(androidAppProject, rootProject, extension)
+        assert androidAppProject.pmd.ignoreFailures == extension.pmd.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addPmd(androidLibraryProject, rootProject, extension)
+        assert androidLibraryProject.pmd.ignoreFailures == extension.pmd.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addPmd(javaProject, rootProject, extension)
+        assert javaProject.pmd.ignoreFailures == extension.pmd.ignoreFailures
+    }
+
+    @Test
     public void testLintConfigurations() {
         def extension = new CodeQualityToolsPluginExceptionForTests()
         extension.lint.textReport = true

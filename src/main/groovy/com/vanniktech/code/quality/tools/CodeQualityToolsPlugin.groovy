@@ -36,7 +36,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
             subProject.pmd {
                 toolVersion = extension.pmd.toolVersion
-                ignoreFailures = !extension.failEarly
+                ignoreFailures = extension.pmd.ignoreFailures != null ? extension.pmd.ignoreFailures : !extension.failEarly
                 ruleSetFiles = subProject.files(rootProject.file(extension.pmd.ruleSetFile))
             }
 
