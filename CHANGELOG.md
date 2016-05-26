@@ -1,7 +1,13 @@
 # Change Log
 
-Version 0.3.0 *(In development)*
---------------------------------
+Version 0.3.0 *(2016-05-16)*
+----------------------------
+
+- Update default Checkstyle version to 6.18 [\#30](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/30) ([vanniktech](https://github.com/vanniktech))
+- Add ignoreFailures & showViolations to checkstyle extension [\#29](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/29) ([vanniktech](https://github.com/vanniktech))
+- Add ignoreFailures to pmd extension [\#28](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/28) ([vanniktech](https://github.com/vanniktech))
+- Add ignoreFailures to findbugs extension [\#27](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/27) ([vanniktech](https://github.com/vanniktech))
+- Update Android Gradle Build Tools to 2.1.0 [\#22](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/22) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.2.0 *(2016-02-13)*
 ----------------------------
