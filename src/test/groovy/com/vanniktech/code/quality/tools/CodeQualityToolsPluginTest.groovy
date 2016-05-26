@@ -393,6 +393,66 @@ public class CodeQualityToolsPluginTest {
     }
 
     @Test
+    public void checkstyleIgnoreFailuresFalse() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.checkstyle.ignoreFailures = false
+
+        assert CodeQualityToolsPlugin.addCheckstyle(androidAppProject, rootProject, extension)
+        assert androidAppProject.checkstyle.ignoreFailures == extension.checkstyle.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addCheckstyle(androidLibraryProject, rootProject, extension)
+        assert androidLibraryProject.checkstyle.ignoreFailures == extension.checkstyle.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addCheckstyle(javaProject, rootProject, extension)
+        assert javaProject.checkstyle.ignoreFailures == extension.checkstyle.ignoreFailures
+    }
+
+    @Test
+    public void checkstyleIgnoreFailuresTrue() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.checkstyle.ignoreFailures = true
+
+        assert CodeQualityToolsPlugin.addCheckstyle(androidAppProject, rootProject, extension)
+        assert androidAppProject.checkstyle.ignoreFailures == extension.checkstyle.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addCheckstyle(androidLibraryProject, rootProject, extension)
+        assert androidLibraryProject.checkstyle.ignoreFailures == extension.checkstyle.ignoreFailures
+
+        assert CodeQualityToolsPlugin.addCheckstyle(javaProject, rootProject, extension)
+        assert javaProject.checkstyle.ignoreFailures == extension.checkstyle.ignoreFailures
+    }
+
+    @Test
+    public void checkstyleShowViolationsFalse() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.checkstyle.showViolations = false
+
+        assert CodeQualityToolsPlugin.addCheckstyle(androidAppProject, rootProject, extension)
+        assert androidAppProject.checkstyle.showViolations == extension.checkstyle.showViolations
+
+        assert CodeQualityToolsPlugin.addCheckstyle(androidLibraryProject, rootProject, extension)
+        assert androidLibraryProject.checkstyle.showViolations == extension.checkstyle.showViolations
+
+        assert CodeQualityToolsPlugin.addCheckstyle(javaProject, rootProject, extension)
+        assert javaProject.checkstyle.showViolations == extension.checkstyle.showViolations
+    }
+
+    @Test
+    public void checkstyleShowViolationsTrue() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.checkstyle.showViolations = true
+
+        assert CodeQualityToolsPlugin.addCheckstyle(androidAppProject, rootProject, extension)
+        assert androidAppProject.checkstyle.showViolations == extension.checkstyle.showViolations
+
+        assert CodeQualityToolsPlugin.addCheckstyle(androidLibraryProject, rootProject, extension)
+        assert androidLibraryProject.checkstyle.showViolations == extension.checkstyle.showViolations
+
+        assert CodeQualityToolsPlugin.addCheckstyle(javaProject, rootProject, extension)
+        assert javaProject.checkstyle.showViolations == extension.checkstyle.showViolations
+    }
+
+    @Test
     public void testLintConfigurations() {
         def extension = new CodeQualityToolsPluginExceptionForTests()
         extension.lint.textReport = true

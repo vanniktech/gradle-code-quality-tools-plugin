@@ -61,6 +61,18 @@ class CodeQualityToolsPluginExtension {
 
         /** @since 0.2.0 */
         String configFile = 'code_quality_tools/checkstyle.xml'
+
+        /**
+         * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
+         * @since 0.3.0
+         */
+        Boolean ignoreFailures
+
+        /**
+         * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
+         * @since 0.3.0
+         */
+        Boolean showViolations
     }
 
     static class Pmd {
