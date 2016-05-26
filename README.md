@@ -31,7 +31,7 @@ Information: [This plugin is also available on Gradle plugins](https://plugins.g
 Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-code-quality-tools-plugin). Current one is:
 
 ```groovy
-classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.3.0-SNAPSHOT'
+classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.4.0-SNAPSHOT'
 ```
 
 ## Configuration
