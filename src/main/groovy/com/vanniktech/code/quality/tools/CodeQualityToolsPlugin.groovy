@@ -71,8 +71,8 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
             subProject.checkstyle {
                 toolVersion = extension.checkstyle.toolVersion
                 configFile rootProject.file(extension.checkstyle.configFile)
-                ignoreFailures = !extension.failEarly
-                showViolations extension.failEarly
+                ignoreFailures = extension.checkstyle.ignoreFailures != null ? extension.checkstyle.ignoreFailures : !extension.failEarly
+                showViolations extension.checkstyle.showViolations != null ? extension.checkstyle.showViolations : extension.failEarly
             }
 
             subProject.task('checkstyle', type: Checkstyle) {
