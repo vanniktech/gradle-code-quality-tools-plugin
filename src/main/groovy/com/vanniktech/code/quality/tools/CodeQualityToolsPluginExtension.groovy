@@ -47,6 +47,12 @@ class CodeQualityToolsPluginExtension {
          * @since 0.3.0
          */
         Boolean ignoreFailures
+
+        /**
+         * ability to hook custom plugins into findbugs
+         * @since 0.4.0
+         */
+        Object pluginClasspath
     }
 
     static class Checkstyle {
