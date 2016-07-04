@@ -40,7 +40,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 ruleSetFiles = subProject.files(rootProject.file(extension.pmd.ruleSetFile))
             }
 
-            subProject.task('pmd', type: Pmd, dependsOn: 'assemble') {
+            subProject.task('pmd', type: Pmd) {
                 description = 'Run pmd'
                 group = 'verification'
 

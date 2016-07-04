@@ -181,8 +181,6 @@ public class CodeQualityToolsPluginTest {
 
             assert reports.xml.enabled
             assert !reports.html.enabled
-
-            assert taskDependsOn(task, 'assemble')
         }
 
         assert taskDependsOn(project.check, 'pmd')
