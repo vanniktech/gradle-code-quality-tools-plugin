@@ -47,6 +47,9 @@ class CodeQualityToolsPluginExtension {
          * @since 0.3.0
          */
         Boolean ignoreFailures
+
+        /** @since 0.4.0 */
+        String source = 'src'
     }
 
     static class Checkstyle {
@@ -73,6 +76,9 @@ class CodeQualityToolsPluginExtension {
          * @since 0.3.0
          */
         Boolean showViolations
+
+        /** @since 0.4.0 */
+        String source = 'src'
     }
 
     static class Pmd {
@@ -93,6 +99,9 @@ class CodeQualityToolsPluginExtension {
          * @since 0.3.0
          */
         Boolean ignoreFailures
+
+        /** @since 0.4.0 */
+        String source = 'src'
     }
 
     static class Lint {

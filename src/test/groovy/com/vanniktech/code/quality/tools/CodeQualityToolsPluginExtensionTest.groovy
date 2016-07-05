@@ -15,6 +15,10 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.checkstyle.toolVersion == '6.18'
         assert extension.pmd.toolVersion == '5.4.1'
 
+        assert extension.findbugs.source == 'src'
+        assert extension.checkstyle.source == 'src'
+        assert extension.pmd.source == 'src'
+
         assert extension.findbugs.ignoreFailures == null
         assert extension.checkstyle.ignoreFailures == null
         assert extension.checkstyle.showViolations == null
