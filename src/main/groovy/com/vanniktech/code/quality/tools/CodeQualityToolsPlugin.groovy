@@ -46,7 +46,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
                 ruleSets = []
 
-                source = subProject.fileTree('src/main/java')
+                source = subProject.fileTree(extension.pmd.source)
                 include '**/*.java'
                 exclude '**/gen/**'
 
@@ -79,7 +79,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 description = 'Run checkstyle'
                 group = 'verification'
 
-                source 'src'
+                source = subProject.fileTree(extension.checkstyle.source)
                 include '**/*.java'
                 exclude '**/gen/**'
 
@@ -119,7 +119,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 group = 'verification'
 
                 classes = subProject.fileTree(findbugsClassesPath)
-                source = subProject.fileTree('src')
+                source = subProject.fileTree(extension.findbugs.source)
                 classpath = subProject.files()
 
                 reports {
