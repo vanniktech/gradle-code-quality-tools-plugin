@@ -19,6 +19,12 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.checkstyle.source == 'src'
         assert extension.pmd.source == 'src'
 
+        assert extension.checkstyle.include == '**/*.java'
+        assert extension.pmd.include == '**/*.java'
+
+        assert extension.checkstyle.exclude == '**/gen/**'
+        assert extension.pmd.exclude == '**/gen/**'
+
         assert extension.findbugs.ignoreFailures == null
         assert extension.checkstyle.ignoreFailures == null
         assert extension.checkstyle.showViolations == null

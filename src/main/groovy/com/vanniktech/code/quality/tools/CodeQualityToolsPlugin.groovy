@@ -47,8 +47,8 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 ruleSets = []
 
                 source = subProject.fileTree(extension.pmd.source)
-                include '**/*.java'
-                exclude '**/gen/**'
+                include extension.pmd.include
+                exclude extension.pmd.exclude
 
                 reports {
                     html.enabled = extension.htmlReports
@@ -80,8 +80,8 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 group = 'verification'
 
                 source = subProject.fileTree(extension.checkstyle.source)
-                include '**/*.java'
-                exclude '**/gen/**'
+                include extension.checkstyle.include
+                exclude extension.checkstyle.exclude
 
                 classpath = subProject.files()
 
