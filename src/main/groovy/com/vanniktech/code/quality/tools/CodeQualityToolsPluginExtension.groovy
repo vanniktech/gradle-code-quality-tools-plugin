@@ -79,6 +79,12 @@ class CodeQualityToolsPluginExtension {
 
         /** @since 0.4.0 */
         String source = 'src'
+
+        /** @since 0.4.0 */
+        String include = '**/*.java'
+
+        /** @since 0.4.0 */
+        String exclude = '**/gen/**'
     }
 
     static class Pmd {
@@ -102,6 +108,12 @@ class CodeQualityToolsPluginExtension {
 
         /** @since 0.4.0 */
         String source = 'src'
+
+        /** @since 0.4.0 */
+        String include = '**/*.java'
+
+        /** @since 0.4.0 */
+        String exclude = '**/gen/**'
     }
 
     static class Lint {

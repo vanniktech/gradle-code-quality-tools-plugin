@@ -391,6 +391,38 @@ public class CodeQualityToolsPluginTest {
     }
 
     @Test
+    public void pmdInclude() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.pmd.include = '*.java'
+
+        for (def project : projects) {
+            assert CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
+            def task = project.tasks.findByName('pmd')
+
+            task.with {
+                assert includes.size() == 1
+                assert includes.contains('*.java')
+            }
+        }
+    }
+
+    @Test
+    public void pmdExclude() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.pmd.exclude = '**/gen'
+
+        for (def project : projects) {
+            assert CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
+            def task = project.tasks.findByName('pmd')
+
+            task.with {
+                assert excludes.size() == 1
+                assert excludes.contains('**/gen')
+            }
+        }
+    }
+
+    @Test
     public void checkstyleIgnoreFailuresFalse() {
         def extension = new CodeQualityToolsPluginExceptionForTests()
         extension.checkstyle.ignoreFailures = false
@@ -403,6 +435,38 @@ public class CodeQualityToolsPluginTest {
 
         assert CodeQualityToolsPlugin.addCheckstyle(javaProject, rootProject, extension)
         assert javaProject.checkstyle.ignoreFailures == extension.checkstyle.ignoreFailures
+    }
+
+    @Test
+    public void checkstyleInclude() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.checkstyle.include = '*.java'
+
+        for (def project : projects) {
+            assert CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
+            def task = project.tasks.findByName('checkstyle')
+
+            task.with {
+                assert includes.size() == 1
+                assert includes.contains('*.java')
+            }
+        }
+    }
+
+    @Test
+    public void checkstyleExclude() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.checkstyle.exclude = '**/gen'
+
+        for (def project : projects) {
+            assert CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
+            def task = project.tasks.findByName('checkstyle')
+
+            task.with {
+                assert excludes.size() == 1
+                assert excludes.contains('**/gen')
+            }
+        }
     }
 
     @Test
