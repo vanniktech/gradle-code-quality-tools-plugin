@@ -50,6 +50,12 @@ class CodeQualityToolsPluginExtension {
 
         /** @since 0.4.0 */
         String source = 'src'
+
+        /** @since 0.4.0 */
+        String effort = 'max'
+
+        /** @since 0.4.0 */
+        String reportLevel = 'low'
     }
 
     static class Checkstyle {
