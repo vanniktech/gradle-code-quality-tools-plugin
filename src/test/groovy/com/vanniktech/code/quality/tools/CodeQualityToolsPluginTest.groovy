@@ -564,6 +564,28 @@ public class CodeQualityToolsPluginTest {
     }
 
     @Test
+    public void findbugsEffort() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.findbugs.effort = 'medium'
+
+        for (def project : projects) {
+            assert CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
+            assert project.findbugs.effort == 'medium'
+        }
+    }
+
+    @Test
+    public void findbugsReportLevel() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.findbugs.reportLevel = 'medium'
+
+        for (def project : projects) {
+            assert CodeQualityToolsPlugin.addFindbugs(project, rootProject, extension)
+            assert project.findbugs.reportLevel == 'medium'
+        }
+    }
+
+    @Test
     public void testCheckstyleEnabled() {
         def extension = new CodeQualityToolsPluginExceptionForTests()
         extension.checkstyle.enabled = false

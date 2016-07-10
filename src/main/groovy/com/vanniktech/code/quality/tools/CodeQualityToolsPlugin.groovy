@@ -109,8 +109,8 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 sourceSets = []
                 ignoreFailures = extension.findbugs.ignoreFailures != null ? extension.findbugs.ignoreFailures : !extension.failEarly
                 toolVersion = extension.findbugs.toolVersion
-                effort = 'max'
-                reportLevel = 'low'
+                effort = extension.findbugs.effort
+                reportLevel = extension.findbugs.reportLevel
                 excludeFilter = rootProject.file(extension.findbugs.excludeFilter)
             }
 
