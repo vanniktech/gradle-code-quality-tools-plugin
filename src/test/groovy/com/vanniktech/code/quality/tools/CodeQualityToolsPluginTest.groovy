@@ -159,7 +159,7 @@ public class CodeQualityToolsPluginTest {
         assert project.plugins.hasPlugin(PmdPlugin)
 
         assert !project.pmd.ignoreFailures
-        assert project.pmd.toolVersion == '5.4.1'
+        assert project.pmd.toolVersion == '5.5.0'
         assert project.pmd.ruleSetFiles.singleFile == rootProject.file("code_quality_tools/pmd.xml")
 
         def task = project.tasks.findByName('pmd')
