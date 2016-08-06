@@ -1,7 +1,17 @@
 # Change Log
 
-Version 0.4.0 *(In development)*
+Version 0.5.0 *(In development)*
 --------------------------------
+
+Version 0.4.0 *(2016-07-16)*
+----------------------------
+
+- Update Default PMD Version to 5.5.0 [\#38](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/38) ([vanniktech](https://github.com/vanniktech))
+- Update Default Checkstyle Version to 7.0 [\#37](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/37) ([vanniktech](https://github.com/vanniktech))
+- Findbugs extension: Add effort + reportLevel [\#36](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/36) ([vanniktech](https://github.com/vanniktech))
+- Checkstyle + PMD: Include + exclude extension [\#35](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/35) ([vanniktech](https://github.com/vanniktech))
+- Add source attribute to Findbugs, PMD & Checkstyle extension [\#34](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/34) ([vanniktech](https://github.com/vanniktech))
+- PMD: Remove unnecessary dependency to assemble task [\#33](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/33) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.3.0 *(2016-05-16)*
 ----------------------------

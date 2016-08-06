@@ -17,7 +17,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.3.0'
+        classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.4.0'
     }
 }
 
@@ -31,7 +31,7 @@ Information: [This plugin is also available on Gradle plugins](https://plugins.g
 Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-code-quality-tools-plugin). Current one is:
 
 ```groovy
-classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.4.0-SNAPSHOT'
+classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.5.0-SNAPSHOT'
 ```
 
 ## Configuration
@@ -50,6 +50,9 @@ codeQualityTools {
         toolVersion = '3.0.1' // type String
         excludeFilter = 'code_quality_tools/findbugs-filter.xml' // type String
         ignoreFailures // type Boolean
+        source = 'src' // type String
+        effort = 'max' // type String
+        reportLevel = 'low' // type String
     }
 
     checkstyle {
@@ -58,6 +61,9 @@ codeQualityTools {
         configFile = 'code_quality_tools/checkstyle.xml' // type String
         ignoreFailures // type Boolean
         showViolations // type Boolean
+        source = 'src' // type String
+        include = '**/*.java' // type String
+        exclude = '**/gen/**' // type String
     }
 
     pmd {
@@ -65,6 +71,9 @@ codeQualityTools {
         toolVersion = '5.4.1' // type String
         ruleSetFile = 'code_quality_tools/pmd.xml' // type String
         ignoreFailures // type Boolean
+        source = 'src' // type String
+        include = '**/*.java' // type String
+        exclude = '**/gen/**' // type String
     }
 
     lint {
