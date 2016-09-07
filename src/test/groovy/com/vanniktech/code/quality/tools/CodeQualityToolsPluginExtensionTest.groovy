@@ -13,7 +13,7 @@ class CodeQualityToolsPluginExtensionTest {
 
         assert extension.findbugs.toolVersion == '3.0.1'
         assert extension.checkstyle.toolVersion == '7.0'
-        assert extension.pmd.toolVersion == '5.5.0'
+        assert extension.pmd.toolVersion == '5.5.1'
 
         assert extension.findbugs.source == 'src'
         assert extension.checkstyle.source == 'src'
