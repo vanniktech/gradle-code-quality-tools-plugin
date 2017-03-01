@@ -108,7 +108,7 @@ public class CodeQualityToolsPluginTest {
 
         assert !project.checkstyle.ignoreFailures
         assert project.checkstyle.showViolations
-        assert project.checkstyle.toolVersion == '7.5.1'
+        assert project.checkstyle.toolVersion == '7.6'
         assert project.checkstyle.configFile == rootProject.file("code_quality_tools/checkstyle.xml")
 
         def task = project.tasks.findByName('checkstyle')
@@ -159,7 +159,7 @@ public class CodeQualityToolsPluginTest {
         assert project.plugins.hasPlugin(PmdPlugin)
 
         assert !project.pmd.ignoreFailures
-        assert project.pmd.toolVersion == '5.5.2'
+        assert project.pmd.toolVersion == '5.5.4'
         assert project.pmd.ruleSetFiles.singleFile == rootProject.file("code_quality_tools/pmd.xml")
 
         def task = project.tasks.findByName('pmd')
