@@ -210,6 +210,7 @@ public class CodeQualityToolsPluginTest {
         assert project.android.lintOptions.abortOnError
         assert !project.android.lintOptions.textReport
         assert project.android.lintOptions.textOutput == null
+        assert !project.android.lintOptions.checkAllWarnings
 
         assert taskDependsOn(project.check, 'lint')
     }
@@ -551,6 +552,20 @@ public class CodeQualityToolsPluginTest {
         assert CodeQualityToolsPlugin.addLint(androidLibraryProject, extension)
         assert androidLibraryProject.android.lintOptions.abortOnError == extension.lint.abortOnError
         assert androidLibraryProject.android.lintOptions.warningsAsErrors == extension.lint.warningsAsErrors
+    }
+
+    @Test
+    public void testLintConfigurationCheckAllWarnings() {
+        def extension = new CodeQualityToolsPluginExceptionForTests()
+        extension.failEarly = false
+
+        extension.lint.checkAllWarnings = true
+
+        assert CodeQualityToolsPlugin.addLint(androidAppProject, extension)
+        assert androidAppProject.android.lintOptions.checkAllWarnings == extension.lint.checkAllWarnings
+
+        assert CodeQualityToolsPlugin.addLint(androidLibraryProject, extension)
+        assert androidLibraryProject.android.lintOptions.checkAllWarnings == extension.lint.checkAllWarnings
     }
 
     @Test

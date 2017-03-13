@@ -143,6 +143,12 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 abortOnError extension.lint.abortOnError != null ? extension.lint.abortOnError : extension.failEarly
             }
 
+            if (extension.lint.checkAllWarnings != null) {
+                subProject.android.lintOptions {
+                    checkAllWarnings = extension.lint.checkAllWarnings
+                }
+            }
+
             if (extension.lint.textReport != null) {
                 subProject.android.lintOptions {
                     textReport extension.lint.textReport
