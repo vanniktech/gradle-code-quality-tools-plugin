@@ -152,5 +152,11 @@ class CodeQualityToolsPluginExtension {
          * @since 0.2.0
          */
         Boolean warningsAsErrors
+
+        /**
+         * Returns whether lint should check all warnings, including those off by default
+         * @since 0.5.0
+         */
+        Boolean checkAllWarnings
     }
 }
