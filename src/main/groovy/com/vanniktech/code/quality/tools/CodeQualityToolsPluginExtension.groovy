@@ -158,5 +158,11 @@ class CodeQualityToolsPluginExtension {
          * @since 0.5.0
          */
         Boolean checkAllWarnings
+
+        /**
+         * The baseline file name (e.g. baseline.xml) which will be saved under each project.
+         * @since 0.5.0
+         */
+        String baselineFileName = null
     }
 }

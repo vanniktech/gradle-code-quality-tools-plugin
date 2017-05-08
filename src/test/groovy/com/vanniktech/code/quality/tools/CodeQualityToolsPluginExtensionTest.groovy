@@ -46,5 +46,6 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.lint.abortOnError == null
         assert extension.lint.warningsAsErrors == null
         assert extension.lint.checkAllWarnings == null
+        assert extension.lint.baselineFileName == null
     }
 }
