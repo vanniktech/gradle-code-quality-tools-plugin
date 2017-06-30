@@ -11,6 +11,7 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.xmlReports
         assert !extension.htmlReports
 
+        assert extension.ktlint.toolVersion == '0.8.3'
         assert extension.findbugs.toolVersion == '3.0.1'
         assert extension.checkstyle.toolVersion == '7.6'
         assert extension.pmd.toolVersion == '5.5.4'
@@ -36,6 +37,7 @@ class CodeQualityToolsPluginExtensionTest {
 
         assert extension.ignoreProjects.size() == 0
 
+        assert extension.ktlint.enabled
         assert extension.lint.enabled
         assert extension.findbugs.enabled
         assert extension.checkstyle.enabled
