@@ -211,6 +211,7 @@ public class CodeQualityToolsPluginTest {
         assert !project.android.lintOptions.textReport
         assert project.android.lintOptions.textOutput == null
         assert !project.android.lintOptions.checkAllWarnings
+        assert project.android.lintOptions.baselineFile == null
 
         assert taskDependsOn(project.check, 'lint')
     }
@@ -523,17 +524,24 @@ public class CodeQualityToolsPluginTest {
 
         extension.lint.abortOnError = false
         extension.lint.warningsAsErrors = false
+        extension.lint.checkAllWarnings = true
+
+        extension.lint.baselineFileName = "baseline.xml"
 
         assert CodeQualityToolsPlugin.addLint(androidAppProject, extension)
         assert androidAppProject.android.lintOptions.warningsAsErrors == extension.lint.warningsAsErrors
         assert androidAppProject.android.lintOptions.abortOnError == extension.lint.abortOnError
+        assert androidAppProject.android.lintOptions.checkAllWarnings == extension.lint.checkAllWarnings
         assert androidAppProject.android.lintOptions.textReport == extension.lint.textReport
+        assert androidAppProject.android.lintOptions.baselineFile == androidAppProject.file("baseline.xml")
         assert androidAppProject.android.lintOptions.textOutput.toString() == extension.lint.textOutput
 
         assert CodeQualityToolsPlugin.addLint(androidLibraryProject, extension)
         assert androidLibraryProject.android.lintOptions.warningsAsErrors == extension.lint.warningsAsErrors
         assert androidLibraryProject.android.lintOptions.abortOnError == extension.lint.abortOnError
+        assert androidLibraryProject.android.lintOptions.checkAllWarnings == extension.lint.checkAllWarnings
         assert androidLibraryProject.android.lintOptions.textReport == extension.lint.textReport
+        assert androidLibraryProject.android.lintOptions.baselineFile == androidLibraryProject.file("baseline.xml")
         assert androidLibraryProject.android.lintOptions.textOutput.toString() == extension.lint.textOutput
     }
 

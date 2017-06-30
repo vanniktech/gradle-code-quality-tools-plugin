@@ -149,6 +149,12 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                 }
             }
 
+            if (extension.lint.baselineFileName != null) {
+                subProject.android.lintOptions {
+                    baseline subProject.file(extension.lint.baselineFileName)
+                }
+            }
+
             if (extension.lint.textReport != null) {
                 subProject.android.lintOptions {
                     textReport extension.lint.textReport
