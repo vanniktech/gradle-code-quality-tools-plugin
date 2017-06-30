@@ -9,4 +9,5 @@ class CodeQualityToolsPluginExceptionForTests extends CodeQualityToolsPluginExte
     CodeQualityToolsPluginExtension.Checkstyle checkstyle = new CodeQualityToolsPluginExtension.Checkstyle()
     CodeQualityToolsPluginExtension.Pmd pmd = new CodeQualityToolsPluginExtension.Pmd()
     CodeQualityToolsPluginExtension.Lint lint = new CodeQualityToolsPluginExtension.Lint()
+    CodeQualityToolsPluginExtension.Ktlint ktlint = new CodeQualityToolsPluginExtension.Ktlint()
 }
