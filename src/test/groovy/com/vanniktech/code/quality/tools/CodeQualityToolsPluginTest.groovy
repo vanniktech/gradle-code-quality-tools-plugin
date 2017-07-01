@@ -1,36 +1,10 @@
 package com.vanniktech.code.quality.tools
 
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.plugins.quality.*
-import org.gradle.testfixtures.ProjectBuilder
-import org.junit.Before
 import org.junit.Test
 
-public class CodeQualityToolsPluginTest {
-    private Project rootProject
-    private Project javaProject
-    private Project androidAppProject
-    private Project androidLibraryProject
-
-    private Project[] projects
-
-    @Before
-    public void setUp() {
-        rootProject = ProjectBuilder.builder().withName('root').build()
-
-        javaProject = ProjectBuilder.builder().withName('java').withParent(rootProject).build()
-        javaProject.plugins.apply('java')
-
-        androidAppProject = ProjectBuilder.builder().withName('android app').build()
-        androidAppProject.plugins.apply('com.android.application')
-
-        androidLibraryProject = ProjectBuilder.builder().withName('android library').build()
-        androidLibraryProject.plugins.apply('com.android.library')
-
-        projects = [javaProject, androidAppProject, androidLibraryProject]
-    }
-
+public class CodeQualityToolsPluginTest extends CommonCodeQualityToolsTest {
     @Test
     public void testAddFindbugsJavaDefault() {
         assert CodeQualityToolsPlugin.addFindbugs(javaProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
@@ -205,7 +179,7 @@ public class CodeQualityToolsPluginTest {
         assertLint(androidLibraryProject)
     }
 
-    private void assertLint(Project project) {
+    private static void assertLint(Project project) {
         assert project.android.lintOptions.warningsAsErrors
         assert project.android.lintOptions.abortOnError
         assert !project.android.lintOptions.textReport
@@ -643,19 +617,5 @@ public class CodeQualityToolsPluginTest {
         assert CodeQualityToolsPlugin.isAndroidProject(androidAppProject)
         assert CodeQualityToolsPlugin.isAndroidProject(androidLibraryProject)
         assert !CodeQualityToolsPlugin.isAndroidProject(javaProject)
-    }
-
-    static boolean taskDependsOn(final Task task, final String taskName) {
-        def it = task.dependsOn.iterator()
-
-        while (it.hasNext()) {
-            def item = it.next()
-
-            if (item.toString().equals(taskName)) {
-                return  true
-            }
-        }
-
-        return false
     }
 }

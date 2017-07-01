@@ -5,6 +5,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.FindBugs
 import org.gradle.api.plugins.quality.Pmd
+import org.gradle.api.tasks.JavaExec
 
 class CodeQualityToolsPlugin implements Plugin<Project> {
     @Override
@@ -14,6 +15,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         rootProject.codeQualityTools.extensions.create('checkstyle', CodeQualityToolsPluginExtension.Checkstyle)
         rootProject.codeQualityTools.extensions.create('pmd', CodeQualityToolsPluginExtension.Pmd)
         rootProject.codeQualityTools.extensions.create('lint', CodeQualityToolsPluginExtension.Lint)
+        rootProject.codeQualityTools.extensions.create('ktlint', CodeQualityToolsPluginExtension.Ktlint)
 
         rootProject.subprojects { subProject ->
             afterEvaluate {
@@ -25,6 +27,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                     addCheckstyle(subProject, rootProject, extension)
                     addFindbugs(subProject, rootProject, extension)
                     addLint(subProject, extension)
+                    addKtlint(subProject, extension)
                 }
             }
         }
@@ -163,6 +166,36 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
             }
 
             subProject.check.dependsOn 'lint'
+
+            return true
+        }
+
+        return false
+    }
+
+    protected static boolean addKtlint(final Project subProject, final CodeQualityToolsPluginExtension extension) {
+        if (!shouldIgnore(subProject, extension) && extension.ktlint.enabled) {
+            subProject.configurations {
+                ktlint
+            }
+
+            subProject.dependencies {
+                ktlint "com.github.shyiko:ktlint:${extension.ktlint.toolVersion}"
+            }
+
+            subProject.task('ktlint', type: JavaExec) {
+                main = "com.github.shyiko.ktlint.Main"
+                classpath = subProject.configurations.ktlint
+                args "src/**/*.kt"
+            }
+
+            subProject.task('ktlintFormat', type: JavaExec) {
+                main = "com.github.shyiko.ktlint.Main"
+                classpath = subProject.configurations.ktlint
+                args "-F", "src/**/*.kt"
+            }
+
+            subProject.check.dependsOn 'ktlint'
 
             return true
         }
