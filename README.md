@@ -17,7 +17,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.4.0'
+        classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.5.0'
     }
 }
 
@@ -57,7 +57,7 @@ codeQualityTools {
 
     checkstyle {
         enabled = true // type boolean
-        toolVersion = '6.14.1' // type String
+        toolVersion = '7.8.2' // type String
         configFile = 'code_quality_tools/checkstyle.xml' // type String
         ignoreFailures // type Boolean
         showViolations // type Boolean
@@ -68,7 +68,7 @@ codeQualityTools {
 
     pmd {
         enabled = true // type boolean
-        toolVersion = '5.4.1' // type String
+        toolVersion = '5.8.1' // type String
         ruleSetFile = 'code_quality_tools/pmd.xml' // type String
         ignoreFailures // type Boolean
         source = 'src' // type String
@@ -82,6 +82,12 @@ codeQualityTools {
         textOutput = 'stdout' // type String
         abortOnError = null // type Boolean
         warningsAsErrors = null // type Boolean
+        baselineFileName = null // type String
+    }
+
+    ktlint {
+        enabled = true // type boolean
+        toolVersion = '0.8.3' // type String
     }
 }
 

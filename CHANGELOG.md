@@ -1,7 +1,13 @@
 # Change Log
 
-Version 0.5.0 *(In development)*
---------------------------------
+Version 0.5.0 *(2017-07-01)*
+----------------------------
+
+- Add KtLint. [\#60](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/60) ([vanniktech](https://github.com/vanniktech))
+- Update to Gradle 4.0 [\#58](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/58) ([vanniktech](https://github.com/vanniktech))
+- Add baseline extension point for Lint. [\#55](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/55) ([vanniktech](https://github.com/vanniktech))
+- Lint: Add checkAllWarnings. [\#53](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/53) ([vanniktech](https://github.com/vanniktech))
+- Update Checkstyle to 7.6 and PMD to 5.5.4 [\#51](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/51) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.4.0 *(2016-07-16)*
 ----------------------------
