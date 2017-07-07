@@ -5,9 +5,9 @@
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 ![Java 7 required](https://img.shields.io/badge/java-7-brightgreen.svg)
 
-Gradle plugin that generates Findbugs-, Checkstyle- and PMD Tasks for every subproject. In Android projects Lint will also be configured. All of the taks will also automatically hook into the build lifecycle.
+Gradle plugin that generates [ErrorProne](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-5.8.0/usage/cpd-usage.html), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint) Tasks for every subproject. In Android projects Lint will also be configured. All of the taks will also automatically hook into the build lifecycle.
 
-Works with the latest Gradle Android Tools version 2.1.3. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
+Works with the latest Gradle Android Tools version 2.3.3. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
 
 # Set up
 
@@ -17,7 +17,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.5.0'
+    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.6.0'
   }
 }
 
@@ -43,13 +43,14 @@ codeQualityTools {
   failEarly = true // type boolean
   xmlReports = true // type boolean
   htmlReports = false // type boolean
+  textReports = false // type boolean
   ignoreProjects = [] // type String array
 
   findbugs {
     enabled = true // type boolean
     toolVersion = '3.0.1' // type String
     excludeFilter = 'code_quality_tools/findbugs-filter.xml' // type String
-    ignoreFailures // type Boolean
+    ignoreFailures = null // type Boolean
     source = 'src' // type String
     effort = 'max' // type String
     reportLevel = 'low' // type String
@@ -59,7 +60,7 @@ codeQualityTools {
     enabled = true // type boolean
     toolVersion = '7.8.2' // type String
     configFile = 'code_quality_tools/checkstyle.xml' // type String
-    ignoreFailures // type Boolean
+    ignoreFailures = null // type Boolean
     showViolations // type Boolean
     source = 'src' // type String
     include = '**/*.java' // type String
@@ -70,7 +71,7 @@ codeQualityTools {
     enabled = true // type boolean
     toolVersion = '5.8.1' // type String
     ruleSetFile = 'code_quality_tools/pmd.xml' // type String
-    ignoreFailures // type Boolean
+    ignoreFailures = null // type Boolean
     source = 'src' // type String
     include = '**/*.java' // type String
     exclude = '**/gen/**' // type String
@@ -82,12 +83,36 @@ codeQualityTools {
     textOutput = 'stdout' // type String
     abortOnError = null // type Boolean
     warningsAsErrors = null // type Boolean
+    checkAllWarnings = null // type Boolean
     baselineFileName = null // type String
   }
 
   ktlint {
     enabled = true // type boolean
     toolVersion = '0.8.3' // type String
+  }
+
+  detext {
+    enabled = true // type boolean
+    gradlePluginVersion = '1.0.0.M12.3' // type String
+    toolVersion = '1.0.0.M12.3' // type String
+    config = 'code_quality_tools/detekt.yml' // type String
+  }
+
+  cpd {
+    enabled = true // type boolean
+    gradlePluginVersion = '1.0' // type String
+    toolVersion = '5.4.2' // type String
+    source = 'src' // type String
+    language = 'java' // type String
+    ignoreFailures = null // type Boolean
+    minimumTokenCount = 50 // type int
+  }
+
+  errorProne {
+    enabled = true // type boolean
+    gradlePluginVersion = '0.0.10' // type String
+    toolVersion = '2.0.20' // type String
   }
 }
 

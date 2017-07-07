@@ -42,7 +42,7 @@ pluginBundle {
         codeQualityTools {
             id = 'com.vanniktech.code.quality.tools'
             displayName = POM_NAME
-            tags = ['gradle', 'android', 'java', 'findbugs', 'pmd', 'checkstyle', 'errorprone', 'multiprojects', 'app module', 'library module', 'lint']
+            tags = ['gradle', 'android', 'java', 'findbugs', 'pmd', 'cpd', 'detekt', 'kotlin', 'ktlint', 'checkstyle', 'errorprone', 'multiprojects', 'app module', 'library module', 'lint']
             description = POM_DESCRIPTION
         }
     }

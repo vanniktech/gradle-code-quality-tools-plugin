@@ -1,7 +1,11 @@
 # Change Log
 
-Version 0.6.0 *(In development)*
---------------------------------
+Version 0.6.0 *(2017-07-08)*
+----------------------------
+
+- Add ErrorProne. [\#64](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/64) ([vanniktech](https://github.com/vanniktech))
+- Add CPD. [\#63](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/63) ([vanniktech](https://github.com/vanniktech))
+- Add detekt. [\#62](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/62) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.5.0 *(2017-07-01)*
 ----------------------------
