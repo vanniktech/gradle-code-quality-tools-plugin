@@ -11,6 +11,7 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.xmlReports
         assert !extension.htmlReports
 
+        assert extension.detekt.toolVersion == '1.0.0.M12.3'
         assert extension.ktlint.toolVersion == '0.8.3'
         assert extension.findbugs.toolVersion == '3.0.1'
         assert extension.checkstyle.toolVersion == '7.8.2'
@@ -31,12 +32,14 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.checkstyle.showViolations == null
         assert extension.pmd.ignoreFailures == null
 
+        assert extension.detekt.config == 'code_quality_tools/detekt.yml'
         assert extension.findbugs.excludeFilter == 'code_quality_tools/findbugs-filter.xml'
         assert extension.checkstyle.configFile == 'code_quality_tools/checkstyle.xml'
         assert extension.pmd.ruleSetFile == 'code_quality_tools/pmd.xml'
 
         assert extension.ignoreProjects.size() == 0
 
+        assert extension.detekt.enabled
         assert extension.ktlint.enabled
         assert extension.lint.enabled
         assert extension.findbugs.enabled

@@ -176,4 +176,18 @@ class CodeQualityToolsPluginExtension {
         /** @since 0.5.0 */
         String toolVersion = '0.8.3'
     }
+
+    static class Detekt {
+        /**
+         * ability to enable or disable only detekt for every subproject that is not ignored
+         * @since 0.6.0
+         */
+        boolean enabled = true
+
+        /** @since 0.6.0 */
+        String toolVersion = '1.0.0.M12.3'
+
+        /** @since 0.6.0 */
+        String config = 'code_quality_tools/detekt.yml'
+    }
 }

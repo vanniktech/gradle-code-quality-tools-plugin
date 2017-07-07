@@ -16,11 +16,23 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         rootProject.codeQualityTools.extensions.create('pmd', CodeQualityToolsPluginExtension.Pmd)
         rootProject.codeQualityTools.extensions.create('lint', CodeQualityToolsPluginExtension.Lint)
         rootProject.codeQualityTools.extensions.create('ktlint', CodeQualityToolsPluginExtension.Ktlint)
+        rootProject.codeQualityTools.extensions.create('detekt', CodeQualityToolsPluginExtension.Detekt)
 
         rootProject.subprojects { subProject ->
-            afterEvaluate {
-                def extension = rootProject.codeQualityTools
+            def extension = rootProject.codeQualityTools
 
+            if (extension.detekt.enabled) {
+                subProject.buildscript {
+                    repositories {
+                        maven { url "https://plugins.gradle.org/m2/" }
+                    }
+                    dependencies {
+                        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${extension.detekt.toolVersion}"
+                    }
+                }
+            }
+
+            afterEvaluate {
                 if (!shouldIgnore(subProject, extension)) {
                     // Reason for checking again in each add method: Unit Tests (they can't handle afterEvaluate properly)
                     addPmd(subProject, rootProject, extension)
@@ -28,6 +40,19 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                     addFindbugs(subProject, rootProject, extension)
                     addLint(subProject, extension)
                     addKtlint(subProject, extension)
+
+                    if (extension.detekt.enabled) {
+                        subProject.plugins.apply('io.gitlab.arturbosch.detekt')
+                        subProject.detekt {
+                            version = extension.detekt.toolVersion
+                            profile("main") {
+                                input = "${subProject.file('.')}"
+                                config = rootProject.file(extension.detekt.config)
+                            }
+                        }
+
+                        subProject.check.dependsOn 'detektCheck'
+                    }
                 }
             }
         }
