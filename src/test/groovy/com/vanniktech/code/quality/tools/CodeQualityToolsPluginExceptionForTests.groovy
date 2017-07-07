@@ -12,4 +12,5 @@ class CodeQualityToolsPluginExceptionForTests extends CodeQualityToolsPluginExte
     CodeQualityToolsPluginExtension.Ktlint ktlint = new CodeQualityToolsPluginExtension.Ktlint()
     CodeQualityToolsPluginExtension.Detekt detekt = new CodeQualityToolsPluginExtension.Detekt()
     CodeQualityToolsPluginExtension.Cpd cpd = new CodeQualityToolsPluginExtension.Cpd()
+    CodeQualityToolsPluginExtension.ErrorProne errorProne = new CodeQualityToolsPluginExtension.ErrorProne()
 }
