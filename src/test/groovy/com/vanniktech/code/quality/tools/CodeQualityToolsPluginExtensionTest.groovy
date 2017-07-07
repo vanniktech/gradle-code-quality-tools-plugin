@@ -12,9 +12,11 @@ class CodeQualityToolsPluginExtensionTest {
         assert !extension.htmlReports
         assert !extension.textReports
 
+        assert extension.errorProne.gradlePluginVersion == '0.0.10'
         assert extension.detekt.gradlePluginVersion == '1.0.0.M12.3'
         assert extension.cpd.gradlePluginVersion == '1.0'
 
+        assert extension.errorProne.toolVersion == '2.0.20'
         assert extension.cpd.toolVersion == '5.4.2'
         assert extension.detekt.toolVersion == '1.0.0.M12.3'
         assert extension.ktlint.toolVersion == '0.8.3'
@@ -48,6 +50,8 @@ class CodeQualityToolsPluginExtensionTest {
 
         assert extension.ignoreProjects.size() == 0
 
+        assert extension.errorProne.enabled
+        assert extension.cpd.enabled
         assert extension.detekt.enabled
         assert extension.ktlint.enabled
         assert extension.lint.enabled

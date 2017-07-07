@@ -18,9 +18,21 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         rootProject.codeQualityTools.extensions.create('ktlint', CodeQualityToolsPluginExtension.Ktlint)
         rootProject.codeQualityTools.extensions.create('detekt', CodeQualityToolsPluginExtension.Detekt)
         rootProject.codeQualityTools.extensions.create('cpd', CodeQualityToolsPluginExtension.Cpd)
+        rootProject.codeQualityTools.extensions.create('errorProne', CodeQualityToolsPluginExtension.ErrorProne)
 
         rootProject.subprojects { subProject ->
             def extension = rootProject.codeQualityTools
+
+            if (extension.errorProne.enabled) {
+                subProject.buildscript {
+                    repositories {
+                        maven { url "https://plugins.gradle.org/m2/" }
+                    }
+                    dependencies {
+                        classpath "net.ltgt.gradle:gradle-errorprone-plugin:${extension.errorProne.gradlePluginVersion}"
+                    }
+                }
+            }
 
             if (extension.detekt.enabled) {
                 subProject.buildscript {
@@ -60,6 +72,13 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                         }
 
                         subProject.check.dependsOn 'detektCheck'
+                    }
+
+                    if (extension.errorProne.enabled) {
+                        subProject.plugins.apply('net.ltgt.errorprone')
+                        subProject.configurations.errorprone {
+                            resolutionStrategy.force "com.google.errorprone:error_prone_core:${extension.errorProne.toolVersion}"
+                        }
                     }
                 }
             }

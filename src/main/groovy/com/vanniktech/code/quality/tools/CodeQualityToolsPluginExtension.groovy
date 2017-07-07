@@ -231,4 +231,18 @@ class CodeQualityToolsPluginExtension {
          */
         int minimumTokenCount = 50
     }
+
+    static class ErrorProne {
+        /**
+         * ability to enable or disable only errorprone for every subproject that is not ignored
+         * @since 0.6.0
+         */
+        boolean enabled = true
+
+        /** @since 0.6.0 */
+        String gradlePluginVersion = '0.0.10'
+
+        /** @since 0.6.0 */
+        String toolVersion = '2.0.20'
+    }
 }
