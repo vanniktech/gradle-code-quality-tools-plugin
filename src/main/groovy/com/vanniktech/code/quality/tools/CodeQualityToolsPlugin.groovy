@@ -17,6 +17,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         rootProject.codeQualityTools.extensions.create('lint', CodeQualityToolsPluginExtension.Lint)
         rootProject.codeQualityTools.extensions.create('ktlint', CodeQualityToolsPluginExtension.Ktlint)
         rootProject.codeQualityTools.extensions.create('detekt', CodeQualityToolsPluginExtension.Detekt)
+        rootProject.codeQualityTools.extensions.create('cpd', CodeQualityToolsPluginExtension.Cpd)
 
         rootProject.subprojects { subProject ->
             def extension = rootProject.codeQualityTools
@@ -27,8 +28,14 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                         maven { url "https://plugins.gradle.org/m2/" }
                     }
                     dependencies {
-                        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${extension.detekt.toolVersion}"
+                        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${extension.detekt.gradlePluginVersion}"
                     }
+                }
+            }
+
+            if (extension.cpd.enabled) {
+                subProject.buildscript.dependencies {
+                    classpath "de.aaschmid:gradle-cpd-plugin:${extension.cpd.gradlePluginVersion}"
                 }
             }
 
@@ -40,6 +47,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
                     addFindbugs(subProject, rootProject, extension)
                     addLint(subProject, extension)
                     addKtlint(subProject, extension)
+                    addCpd(subProject, extension)
 
                     if (extension.detekt.enabled) {
                         subProject.plugins.apply('io.gitlab.arturbosch.detekt')
@@ -221,6 +229,34 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
             }
 
             subProject.check.dependsOn 'ktlint'
+
+            return true
+        }
+
+        return false
+    }
+
+    protected static boolean addCpd(final Project subProject, final CodeQualityToolsPluginExtension extension) {
+        if (!shouldIgnore(subProject, extension) && extension.cpd.enabled) {
+            subProject.plugins.apply('cpd')
+
+            subProject.cpd {
+                language = extension.cpd.language
+                toolVersion = extension.cpd.toolVersion
+            }
+
+            subProject.cpdCheck {
+                reports {
+                    xml.enabled = extension.xmlReports
+                    text.enabled = extension.textReports
+                }
+                encoding = 'UTF-8'
+                source = subProject.fileTree(extension.cpd.source).filter { it.name.endsWith(".${extension.cpd.language}") }
+                minimumTokenCount = extension.cpd.minimumTokenCount
+                ignoreFailures = extension.cpd.ignoreFailures != null ? extension.cpd.ignoreFailures : !extension.failEarly
+            }
+
+            subProject.check.dependsOn 'cpdCheck'
 
             return true
         }
