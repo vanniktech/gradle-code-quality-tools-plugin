@@ -35,7 +35,7 @@ public abstract class CommonCodeQualityToolsTest {
       def item = it.next()
 
       if (item.toString().equals(taskName)) {
-        return  true
+        return true
       }
     }
 
