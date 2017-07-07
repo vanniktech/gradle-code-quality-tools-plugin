@@ -12,16 +12,22 @@ class CodeQualityToolsPluginExtension {
     boolean failEarly = true
 
     /**
-     * global configuration which will be applied on all enabled code quality tools
+     * global configuration which will be applied on all enabled code quality tools that support xml reports
      * @since 0.2.0
      */
     boolean xmlReports = true
 
     /**
-     * global configuration which will be applied on all enabled code quality tools
+     * global configuration which will be applied on all enabled code quality tools that support html reports
      * @since 0.2.0
      */
     boolean htmlReports = false
+
+    /**
+     * global configuration which will be applied on all enabled code quality tools that support text reports
+     * @since 0.6.0
+     */
+    boolean textReports = false
 
     /**
      * subprojects that should be ignored
@@ -185,9 +191,44 @@ class CodeQualityToolsPluginExtension {
         boolean enabled = true
 
         /** @since 0.6.0 */
+        String gradlePluginVersion = '1.0.0.M12.3'
+
+        /** @since 0.6.0 */
         String toolVersion = '1.0.0.M12.3'
 
         /** @since 0.6.0 */
         String config = 'code_quality_tools/detekt.yml'
+    }
+
+    static class Cpd {
+        /**
+         * ability to enable or disable only cpd for every subproject that is not ignored
+         * @since 0.6.0
+         */
+        boolean enabled = true
+
+        /** @since 0.6.0 */
+        String gradlePluginVersion = '1.0'
+
+        /** @since 0.6.0 */
+        String toolVersion = '5.4.2'
+
+        /** @since 0.6.0 */
+        String source = 'src'
+
+        /** @since 0.6.0 */
+        String language = 'java'
+
+        /**
+         * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
+         * @since 0.6.0
+         */
+        Boolean ignoreFailures
+
+        /**
+         * A positive integer indicating the minimum token count to trigger a CPD match
+         * @since 0.6.0
+         */
+        int minimumTokenCount = 50
     }
 }

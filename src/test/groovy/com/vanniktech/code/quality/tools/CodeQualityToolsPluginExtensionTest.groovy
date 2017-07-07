@@ -10,7 +10,12 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.failEarly
         assert extension.xmlReports
         assert !extension.htmlReports
+        assert !extension.textReports
 
+        assert extension.detekt.gradlePluginVersion == '1.0.0.M12.3'
+        assert extension.cpd.gradlePluginVersion == '1.0'
+
+        assert extension.cpd.toolVersion == '5.4.2'
         assert extension.detekt.toolVersion == '1.0.0.M12.3'
         assert extension.ktlint.toolVersion == '0.8.3'
         assert extension.findbugs.toolVersion == '3.0.1'
@@ -20,6 +25,7 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.findbugs.source == 'src'
         assert extension.checkstyle.source == 'src'
         assert extension.pmd.source == 'src'
+        assert extension.cpd.source == 'src'
 
         assert extension.checkstyle.include == '**/*.java'
         assert extension.pmd.include == '**/*.java'
@@ -27,10 +33,13 @@ class CodeQualityToolsPluginExtensionTest {
         assert extension.checkstyle.exclude == '**/gen/**'
         assert extension.pmd.exclude == '**/gen/**'
 
+        assert extension.cpd.language == 'java'
+
         assert extension.findbugs.ignoreFailures == null
         assert extension.checkstyle.ignoreFailures == null
         assert extension.checkstyle.showViolations == null
         assert extension.pmd.ignoreFailures == null
+        assert extension.cpd.ignoreFailures == null
 
         assert extension.detekt.config == 'code_quality_tools/detekt.yml'
         assert extension.findbugs.excludeFilter == 'code_quality_tools/findbugs-filter.xml'
