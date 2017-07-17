@@ -92,7 +92,7 @@ codeQualityTools {
     toolVersion = '0.8.3' // type String
   }
 
-  detext {
+  detekt {
     enabled = true // type boolean
     gradlePluginVersion = '1.0.0.M12.3' // type String
     toolVersion = '1.0.0.M12.3' // type String
