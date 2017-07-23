@@ -191,10 +191,10 @@ class CodeQualityToolsPluginExtension {
     boolean enabled = true
 
     /** @since 0.6.0 */
-    String gradlePluginVersion = '1.0.0.M12.3'
+    String gradlePluginVersion = '1.0.0.M13.2'
 
     /** @since 0.6.0 */
-    String toolVersion = '1.0.0.M12.3'
+    String toolVersion = '1.0.0.M13.2'
 
     /** @since 0.6.0 */
     String config = 'code_quality_tools/detekt.yml'
