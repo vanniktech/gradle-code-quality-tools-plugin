@@ -191,9 +191,6 @@ class CodeQualityToolsPluginExtension {
     boolean enabled = true
 
     /** @since 0.6.0 */
-    String gradlePluginVersion = '1.0.0.M13.2'
-
-    /** @since 0.6.0 */
     String toolVersion = '1.0.0.M13.2'
 
     /** @since 0.6.0 */
@@ -206,9 +203,6 @@ class CodeQualityToolsPluginExtension {
      * @since 0.6.0
      */
     boolean enabled = true
-
-    /** @since 0.6.0 */
-    String gradlePluginVersion = '1.0'
 
     /** @since 0.6.0 */
     String toolVersion = '5.4.2'
@@ -238,9 +232,6 @@ class CodeQualityToolsPluginExtension {
      * @since 0.6.0
      */
     boolean enabled = true
-
-    /** @since 0.6.0 */
-    String gradlePluginVersion = '0.0.10'
 
     /** @since 0.6.0 */
     String toolVersion = '2.0.20'
