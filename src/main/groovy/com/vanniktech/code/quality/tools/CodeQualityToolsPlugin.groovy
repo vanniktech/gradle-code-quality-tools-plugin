@@ -19,6 +19,10 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     rootProject.codeQualityTools.extensions.create('cpd', CodeQualityToolsPluginExtension.Cpd)
     rootProject.codeQualityTools.extensions.create('errorProne', CodeQualityToolsPluginExtension.ErrorProne)
 
+    def detektGradlePluginVersion = rootProject.findProperty('codeQualityTools.detekt.gradlePluginVersion') ?: '1.0.0.M13.2'
+    def cpdGradlePluginVersion = rootProject.findProperty('codeQualityTools.cpd.gradlePluginVersion') ?: '1.0'
+    def errorProneGradlePluginVersion = rootProject.findProperty('codeQualityTools.errorProne.gradlePluginVersion') ?: '0.0.10'
+
     rootProject.subprojects { subProject ->
       def extension = rootProject.codeQualityTools
 
@@ -28,7 +32,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
             maven { url "https://plugins.gradle.org/m2/" }
           }
           dependencies {
-            classpath "net.ltgt.gradle:gradle-errorprone-plugin:${extension.errorProne.gradlePluginVersion}"
+            classpath "net.ltgt.gradle:gradle-errorprone-plugin:$errorProneGradlePluginVersion"
           }
         }
       }
@@ -39,14 +43,14 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
             maven { url "https://plugins.gradle.org/m2/" }
           }
           dependencies {
-            classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${extension.detekt.gradlePluginVersion}"
+            classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektGradlePluginVersion"
           }
         }
       }
 
       if (extension.cpd.enabled) {
         subProject.buildscript.dependencies {
-          classpath "de.aaschmid:gradle-cpd-plugin:${extension.cpd.gradlePluginVersion}"
+          classpath "de.aaschmid:gradle-cpd-plugin:$cpdGradlePluginVersion"
         }
       }
 
