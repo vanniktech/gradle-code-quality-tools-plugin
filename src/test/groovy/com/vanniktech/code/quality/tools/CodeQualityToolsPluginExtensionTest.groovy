@@ -24,11 +24,11 @@ class CodeQualityToolsPluginExtensionTest {
     assert extension.pmd.source == 'src'
     assert extension.cpd.source == 'src'
 
-    assert extension.checkstyle.include == '**/*.java'
-    assert extension.pmd.include == '**/*.java'
+    assert extension.checkstyle.include == ['**/*.java']
+    assert extension.pmd.include == ['**/*.java']
 
-    assert extension.checkstyle.exclude == '**/gen/**'
-    assert extension.pmd.exclude == '**/gen/**'
+    assert extension.checkstyle.exclude == ['**/gen/**']
+    assert extension.pmd.exclude == ['**/gen/**']
 
     assert extension.cpd.language == 'java'
 
