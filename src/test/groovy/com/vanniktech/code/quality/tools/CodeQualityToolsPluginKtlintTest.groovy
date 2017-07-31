@@ -27,7 +27,7 @@ public class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest
     def ktlint = project.configurations.getByName('ktlint').dependencies[0]
     assert ktlint.group == 'com.github.shyiko'
     assert ktlint.name == 'ktlint'
-    assert ktlint.version == '0.8.3'
+    assert ktlint.version == '0.9.1'
     assert taskDependsOn(project.check, 'ktlint')
     assert project.getTasksByName('ktlintFormat', false).size() == 1
   }
