@@ -1,6 +1,7 @@
 package com.vanniktech.code.quality.tools
 
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.plugins.quality.*
 import org.junit.Test
 
@@ -8,22 +9,27 @@ public class CodeQualityToolsPluginTest extends CommonCodeQualityToolsTest {
   @Test public void testAddFindbugsJavaDefault() {
     assert CodeQualityToolsPlugin.addFindbugs(javaProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
-    assertFindbugs(javaProject, "/build/classes/main")
+    def task = javaProject.tasks.findByName('findbugs')
+    assertFindbugs(javaProject, task)
+    assert taskDependsOn(task, 'compileJava')
+    assert taskClasses(javaProject, task, '/build/classes/main')
   }
 
   @Test public void testAddFindbugsAndroidAppDefault() {
     assert CodeQualityToolsPlugin.addFindbugs(androidAppProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
-    assertFindbugs(androidAppProject, "/build/intermediates/classes/debug")
+    def task = androidAppProject.tasks.findByName('findbugs')
+    assertFindbugs(androidAppProject, task)
   }
 
   @Test public void testAddFindbugsAndroidLibraryDefault() {
     assert CodeQualityToolsPlugin.addFindbugs(androidLibraryProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
-    assertFindbugs(androidLibraryProject, "/build/intermediates/classes/debug")
+    def task = androidLibraryProject.tasks.findByName('findbugs')
+    assertFindbugs(androidLibraryProject, task)
   }
 
-  private void assertFindbugs(Project project, String classesPath) {
+  private void assertFindbugs(Project project, Task task) {
     assert project.plugins.hasPlugin(FindBugsPlugin)
 
     assert !project.findbugs.ignoreFailures
@@ -32,22 +38,16 @@ public class CodeQualityToolsPluginTest extends CommonCodeQualityToolsTest {
     assert project.findbugs.reportLevel == 'low'
     assert project.findbugs.excludeFilter == rootProject.file('code_quality_tools/findbugs-filter.xml')
 
-    def task = project.tasks.findByName('findbugs')
-
     assert task instanceof FindBugs
 
     task.with {
-      assert description == 'Run findbugs'
+      assert description.contains('Run') && description.contains('findbugs')
       assert group == 'verification'
-
-      assert classesPath == classes.dir.absolutePath.replace(project.projectDir.absolutePath, '')
 
       assert excludeFilter == rootProject.file('code_quality_tools/findbugs-filter.xml')
 
       assert reports.xml.enabled
       assert !reports.html.enabled
-
-      assert taskDependsOn(task, 'assemble')
     }
 
     assert taskDependsOn(project.check, 'findbugs')
@@ -213,21 +213,18 @@ public class CodeQualityToolsPluginTest extends CommonCodeQualityToolsTest {
       assert CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
 
       def findbugsTask = project.tasks.findByName('findbugs')
-
       findbugsTask.with {
         assert reports.xml.enabled == extension.xmlReports
         assert reports.html.enabled == extension.htmlReports
       }
 
       def checkstyleTask = project.tasks.findByName('checkstyle')
-
       checkstyleTask.with {
         assert reports.xml.enabled == extension.xmlReports
         assert reports.html.enabled == extension.htmlReports
       }
 
       def pmdTask = project.tasks.findByName('pmd')
-
       pmdTask.with {
         assert reports.xml.enabled == extension.xmlReports
         assert reports.html.enabled == extension.htmlReports
