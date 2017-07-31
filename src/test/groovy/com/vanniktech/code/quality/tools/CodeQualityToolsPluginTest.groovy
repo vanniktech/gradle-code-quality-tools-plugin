@@ -347,7 +347,7 @@ public class CodeQualityToolsPluginTest extends CommonCodeQualityToolsTest {
 
   @Test public void pmdInclude() {
     def extension = new CodeQualityToolsPluginExceptionForTests()
-    extension.pmd.include = '*.java'
+    extension.pmd.include = ['*.java']
 
     for (def project : projects) {
       assert CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
@@ -362,7 +362,7 @@ public class CodeQualityToolsPluginTest extends CommonCodeQualityToolsTest {
 
   @Test public void pmdExclude() {
     def extension = new CodeQualityToolsPluginExceptionForTests()
-    extension.pmd.exclude = '**/gen'
+    extension.pmd.exclude = ['**/gen']
 
     for (def project : projects) {
       assert CodeQualityToolsPlugin.addPmd(project, rootProject, extension)
@@ -391,7 +391,7 @@ public class CodeQualityToolsPluginTest extends CommonCodeQualityToolsTest {
 
   @Test public void checkstyleInclude() {
     def extension = new CodeQualityToolsPluginExceptionForTests()
-    extension.checkstyle.include = '*.java'
+    extension.checkstyle.include = ['*.java']
 
     for (def project : projects) {
       assert CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)
@@ -406,7 +406,7 @@ public class CodeQualityToolsPluginTest extends CommonCodeQualityToolsTest {
 
   @Test public void checkstyleExclude() {
     def extension = new CodeQualityToolsPluginExceptionForTests()
-    extension.checkstyle.exclude = '**/gen'
+    extension.checkstyle.exclude = ['**/gen']
 
     for (def project : projects) {
       assert CodeQualityToolsPlugin.addCheckstyle(project, rootProject, extension)

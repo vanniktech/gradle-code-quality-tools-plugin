@@ -93,10 +93,10 @@ class CodeQualityToolsPluginExtension {
     String source = 'src'
 
     /** @since 0.4.0 */
-    String include = '**/*.java'
+    List<String> include = ['**/*.java']
 
     /** @since 0.4.0 */
-    String exclude = '**/gen/**'
+    List<String> exclude = ['**/gen/**']
   }
 
   static class Pmd {
@@ -122,10 +122,10 @@ class CodeQualityToolsPluginExtension {
     String source = 'src'
 
     /** @since 0.4.0 */
-    String include = '**/*.java'
+    List<String> include = ['**/*.java']
 
     /** @since 0.4.0 */
-    String exclude = '**/gen/**'
+    List<String> exclude = ['**/gen/**']
   }
 
   static class Lint {
