@@ -18,12 +18,21 @@ public abstract class CommonCodeQualityToolsTest {
 
     javaProject = ProjectBuilder.builder().withName('java').withParent(rootProject).build()
     javaProject.plugins.apply('java')
+    javaProject.repositories {
+      jcenter()
+    }
 
     androidAppProject = ProjectBuilder.builder().withName('android app').build()
     androidAppProject.plugins.apply('com.android.application')
+    androidAppProject.repositories {
+      jcenter()
+    }
 
     androidLibraryProject = ProjectBuilder.builder().withName('android library').build()
     androidLibraryProject.plugins.apply('com.android.library')
+    androidLibraryProject.repositories {
+      jcenter()
+    }
 
     projects = [javaProject, androidAppProject, androidLibraryProject]
   }

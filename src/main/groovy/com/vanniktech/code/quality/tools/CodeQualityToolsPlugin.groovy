@@ -1,11 +1,13 @@
 package com.vanniktech.code.quality.tools
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.FindBugs
 import org.gradle.api.plugins.quality.Pmd
 import org.gradle.api.tasks.JavaExec
+import org.gradle.api.tasks.Exec
 
 class CodeQualityToolsPlugin implements Plugin<Project> {
   @Override void apply(final Project rootProject) {
@@ -238,10 +240,21 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         ktlint "com.github.shyiko:ktlint:${extension.ktlint.toolVersion}"
       }
 
-      subProject.task('ktlint', type: JavaExec) {
-        main = "com.github.shyiko.ktlint.Main"
-        classpath = subProject.configurations.ktlint
-        args "src/**/*.kt"
+      subProject.task('ktlint', type: Exec) {
+        commandLine 'java', '-cp', subProject.configurations.ktlint.join(System.getProperty('path.separator')), 'com.github.shyiko.ktlint.Main', '--reporter=checkstyle', 'src/**/*.kt'
+        def outputDirectory = new File(subProject.buildDir, "reports/ktlint/")
+        outputDirectory.mkdirs()
+
+        def outputFile = new File(outputDirectory, "ktlint-checkstyle-report.xml")
+        standardOutput = new FileOutputStream(outputFile)
+        ignoreExitValue = true
+
+        doLast {
+          standardOutput.close()
+          if (execResult.exitValue != 0) {
+            throw new GradleException("ktlint finished with non-zero exit value ${execResult.exitValue}. Generated report at $outputFile")
+          }
+        }
       }
 
       subProject.task('ktlintFormat', type: JavaExec) {
