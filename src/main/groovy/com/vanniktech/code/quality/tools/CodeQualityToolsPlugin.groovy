@@ -61,8 +61,6 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
           // Reason for checking again in each add method: Unit Tests (they can't handle afterEvaluate properly)
           addPmd(subProject, rootProject, extension)
           addCheckstyle(subProject, rootProject, extension)
-          addFindbugs(subProject, rootProject, extension)
-          addLint(subProject, extension)
           addKtlint(subProject, extension)
           addCpd(subProject, extension)
 
@@ -85,6 +83,10 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
               resolutionStrategy.force "com.google.errorprone:error_prone_core:${extension.errorProne.toolVersion}"
             }
           }
+
+          // Those static code tools take the longest hence we'll add them at the end.
+          addLint(subProject, extension)
+          addFindbugs(subProject, rootProject, extension)
         }
       }
     }
