@@ -17,7 +17,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.6.0'
+    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.7.0'
   }
 }
 
@@ -63,8 +63,8 @@ codeQualityTools {
     ignoreFailures = null // type Boolean
     showViolations // type Boolean
     source = 'src' // type String
-    include = '**/*.java' // type String
-    exclude = '**/gen/**' // type String
+    include = ['**/*.java'] // type List<String>
+    exclude = ['**/gen/**'] // type List<String>
   }
 
   pmd {
@@ -73,8 +73,8 @@ codeQualityTools {
     ruleSetFile = 'code_quality_tools/pmd.xml' // type String
     ignoreFailures = null // type Boolean
     source = 'src' // type String
-    include = '**/*.java' // type String
-    exclude = '**/gen/**' // type String
+    include = ['**/*.java'] // type List<String>
+    exclude = ['**/gen/**'] // type List<String>
   }
 
   lint {
@@ -94,14 +94,12 @@ codeQualityTools {
 
   detekt {
     enabled = true // type boolean
-    gradlePluginVersion = '1.0.0.M12.3' // type String
     toolVersion = '1.0.0.M12.3' // type String
     config = 'code_quality_tools/detekt.yml' // type String
   }
 
   cpd {
     enabled = true // type boolean
-    gradlePluginVersion = '1.0' // type String
     toolVersion = '5.4.2' // type String
     source = 'src' // type String
     language = 'java' // type String
@@ -111,11 +109,20 @@ codeQualityTools {
 
   errorProne {
     enabled = true // type boolean
-    gradlePluginVersion = '0.0.10' // type String
     toolVersion = '2.0.20' // type String
   }
 }
 
+```
+
+In order to specify Gradle Versions for Plugins (Detekt, ErrorProne or CPD), you'll need to do that using `gradle.properties`:
+
+```groovy
+# We need to define those here since adding Gradle Plugins is only allowed before afterEvaluate.
+# Defining values with custom extensions are not visible at this prior step though.
+codeQualityTools.detekt.gradlePluginVersion = 1.0.0.M13.2
+codeQualityTools.errorProne.gradlePluginVersion = 0.0.10
+codeQualityTools.cpd.gradlePluginVersion = 1.0
 ```
 
 # License

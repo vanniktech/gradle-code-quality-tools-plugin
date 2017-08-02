@@ -1,7 +1,14 @@
 # Change Log
 
-Version 0.7.0 *(In development)*
---------------------------------
+Version 0.7.0 *(2017-08-02)*
+---------------------------
+
+- Change task execution order to have Lint & Findbugs at the end. [\#76](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/76) ([vanniktech](https://github.com/vanniktech))
+- ktlint task: Generate checkstyle report. [\#74](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/74) ([vanniktech](https://github.com/vanniktech))
+- Update ktlint to 0.9.1 [\#73](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/73) ([vanniktech](https://github.com/vanniktech))
+- Specify multiple inclusion/exclusion patterns [\#72](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/72) ([budnyjj](https://github.com/budnyjj))
+- Fix configuration for gradlePluginVersion. [\#71](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/71) ([vanniktech](https://github.com/vanniktech))
+- Update Detekt to 1.0.0.M13.2 [\#70](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/70) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.6.0 *(2017-07-08)*
 ----------------------------
