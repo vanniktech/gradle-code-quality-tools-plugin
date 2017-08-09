@@ -1,5 +1,6 @@
 package com.vanniktech.code.quality.tools
 
+import com.android.build.gradle.api.ApplicationVariant
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -10,6 +11,28 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.Exec
 
 class CodeQualityToolsPlugin implements Plugin<Project> {
+  private static final String GROUP_VERIFICATION = 'verification'
+  private static final Collection<String> DEFAULT_EXCLUDES = [
+          '**/R.class',
+          '**/R2.class', // ButterKnife Gradle Plugin
+          '**/R$*.class',
+          '**/R2$*.class', // ButterKnife Gradle Plugin
+          '**/*$$*',
+          '**/*$ViewInjector*.*', // Older ButterKnife Versions
+          '**/*$ViewBinder*.*', // Older ButterKnife Versions
+          '**/*_ViewBinding*.*', // Newer ButterKnife Versions
+          '**/BuildConfig.*',
+          '**/Manifest*.*',
+          '**/*$Lambda$*.*', // Jacoco can not handle several "$" in class name.
+          '**/*Dagger*.*', // Dagger auto-generated code.
+          '**/*MembersInjector*.*', // Dagger auto-generated code.
+          '**/*_Provide*Factory*.*', // Dagger auto-generated code.
+          '**/*$JsonObjectMapper.*', // LoganSquare auto-generated code.
+          '**/*$inlined$*.*', // Kotlin specific, Jacoco can not handle several "$" in class name.
+          '**/*$Icepick.*', // Icepick auto-generated code.
+          '**/*AutoValue_*.*' // AutoValue auto-generated code.
+  ].asImmutable()
+
   @Override void apply(final Project rootProject) {
     rootProject.extensions.create('codeQualityTools', CodeQualityToolsPluginExtension)
     rootProject.codeQualityTools.extensions.create('findbugs', CodeQualityToolsPluginExtension.Findbugs)
@@ -104,7 +127,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.task('pmd', type: Pmd) {
         description = 'Run pmd'
-        group = 'verification'
+        group = GROUP_VERIFICATION
 
         ruleSets = []
 
@@ -139,7 +162,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.task('checkstyle', type: Checkstyle) {
         description = 'Run checkstyle'
-        group = 'verification'
+        group = GROUP_VERIFICATION
 
         source = subProject.fileTree(extension.checkstyle.source)
         include extension.checkstyle.include
@@ -163,10 +186,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
   protected static boolean addFindbugs(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
     if (!shouldIgnore(subProject, extension) && extension.findbugs.enabled) {
-      final String findbugsClassesPath = isAndroidProject(subProject) ? 'build/intermediates/classes/debug/' : 'build/classes/main/'
-
       subProject.plugins.apply('findbugs')
-
       subProject.findbugs {
         sourceSets = []
         ignoreFailures = extension.findbugs.ignoreFailures != null ? extension.findbugs.ignoreFailures : !extension.failEarly
@@ -176,25 +196,50 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         excludeFilter = rootProject.file(extension.findbugs.excludeFilter)
       }
 
-      subProject.task('findbugs', type: FindBugs, dependsOn: 'assemble') {
-        description = 'Run findbugs'
-        group = 'verification'
+      // Create default findbugs task.
+      def defaultTaskName = 'findbugs'
+      def defaultTask = subProject.tasks.create(defaultTaskName, FindBugs)
+      defaultTask.group = GROUP_VERIFICATION
+      defaultTask.description = 'Run findbugs'
+      defaultTask.reports {
+        html.enabled = extension.htmlReports
+        xml.enabled = extension.xmlReports
+      }
+      subProject.check.dependsOn defaultTaskName
 
-        classes = subProject.fileTree(findbugsClassesPath)
-        source = subProject.fileTree(extension.findbugs.source)
-        classpath = subProject.files()
-
-        reports {
-          html.enabled = extension.htmlReports
-          xml.enabled = extension.xmlReports
-        }
+      if (!isAndroidProject(subProject)) {
+        // Setup default task for non-android project.
+        defaultTask.classes = subProject.fileTree('build/classes/main/')
+        // Setup provided sources directory for non-android projects.
+        defaultTask.source = subProject.fileTree(extension.findbugs.source)
+        defaultTask.classpath = subProject.files()
+        defaultTask.dependsOn('compileJava')
+        return true
       }
 
-      subProject.check.dependsOn 'findbugs'
+      // Create a number of findbugs per each flavor and make them dependent on the default one.
+      def plugins = subProject.plugins
+      def androidPlugin = plugins.findPlugin('android') ?: plugins.findPlugin('android-library')
+      def variants = getVariants(subProject, androidPlugin)
+      variants.all { variant ->
+        def taskName = "findbugs${variant.name.capitalize()}"
+        subProject.task(taskName, type: FindBugs, dependsOn: variant.javaCompile) {
+          description = "Run findbugs on ${variant.name}"
+          group = GROUP_VERIFICATION
 
+          classes = subProject.fileTree(dir: variant.javaCompile.destinationDir, excludes: DEFAULT_EXCLUDES)
+          source = variant.sourceSets.java.srcDirs.collect { it.path }.flatten()
+          classpath = variant.javaCompile.classpath
+
+          reports {
+            html.enabled = extension.htmlReports
+            xml.enabled = extension.xmlReports
+          }
+        }
+        defaultTask.dependsOn(taskName)
+      }
       return true
     }
-
     return false
   }
 
@@ -305,6 +350,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     final boolean isAndroidLibrary = project.plugins.hasPlugin('com.android.library')
     final boolean isAndroidApp = project.plugins.hasPlugin('com.android.application')
     return isAndroidLibrary || isAndroidApp
+  }
+
+  protected static Iterable<ApplicationVariant> getVariants(Project project, Plugin plugin) {
+    boolean isLibraryPlugin = plugin.class.name.endsWith('.LibraryPlugin')
+    project.android[isLibraryPlugin ? 'libraryVariants' : 'applicationVariants']
   }
 
   private static boolean shouldIgnore(final Project project, final CodeQualityToolsPluginExtension extension) {

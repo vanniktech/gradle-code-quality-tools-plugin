@@ -50,4 +50,8 @@ public abstract class CommonCodeQualityToolsTest {
 
     return false
   }
+
+  static boolean taskClasses(final Project project, final Task task, final String classes) {
+    return task.classes.dir.absolutePath.replace(project.projectDir.absolutePath, '') == classes
+  }
 }
