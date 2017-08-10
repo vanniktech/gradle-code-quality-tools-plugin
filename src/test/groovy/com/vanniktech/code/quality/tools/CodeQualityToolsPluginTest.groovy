@@ -8,7 +8,7 @@ public class CodeQualityToolsPluginTest extends CommonCodeQualityToolsTest {
   @Test public void testAddFindbugsJavaDefault() {
     assert CodeQualityToolsPlugin.addFindbugs(javaProject, rootProject, new CodeQualityToolsPluginExceptionForTests())
 
-    assertFindbugs(javaProject, "/build/classes/main")
+    assertFindbugs(javaProject, "/build/classes/java/main")
   }
 
   @Test public void testAddFindbugsAndroidAppDefault() {

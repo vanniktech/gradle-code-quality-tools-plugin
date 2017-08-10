@@ -163,7 +163,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
   protected static boolean addFindbugs(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
     if (!shouldIgnore(subProject, extension) && extension.findbugs.enabled) {
-      final String findbugsClassesPath = isAndroidProject(subProject) ? 'build/intermediates/classes/debug/' : 'build/classes/main/'
+      final String findbugsClassesPath = isAndroidProject(subProject) ? 'build/intermediates/classes/debug/' : 'build/classes/java/main/'
 
       subProject.plugins.apply('findbugs')
 
