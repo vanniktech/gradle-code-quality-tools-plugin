@@ -1,7 +1,9 @@
 # Change Log
 
-Version 0.8.0 *(In development)*
---------------------------------
+Version 0.8.0 *(2017-08-12)*
+----------------------------
+
+- Fix findbugs tasks when running on Java Module with Gradle 4.\* [\#81](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/81) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.7.0 *(2017-08-02)*
 ---------------------------
