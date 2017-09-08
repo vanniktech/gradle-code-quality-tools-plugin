@@ -244,7 +244,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.task('ktlint', type: Exec) {
         commandLine 'java', '-cp', subProject.configurations.ktlint.join(System.getProperty('path.separator')), 'com.github.shyiko.ktlint.Main', '--reporter=checkstyle', 'src/**/*.kt'
-        def outputDirectory = "${subProject.buildDir}reports/ktlint/"
+        def outputDirectory = "${subProject.buildDir}/reports/ktlint/"
         def outputFile = "${outputDirectory}ktlint-checkstyle-report.xml"
 
         ignoreExitValue = true
