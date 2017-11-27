@@ -242,27 +242,18 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         ktlint "com.github.shyiko:ktlint:${extension.ktlint.toolVersion}"
       }
 
-      subProject.task('ktlint', type: Exec) {
-        commandLine 'java', '-cp', subProject.configurations.ktlint.join(System.getProperty('path.separator')), 'com.github.shyiko.ktlint.Main', '--reporter=checkstyle', 'src/**/*.kt'
-        def outputDirectory = "${subProject.buildDir}/reports/ktlint"
-        def outputFile = "${outputDirectory}/ktlint-checkstyle-report.xml"
-
-        ignoreExitValue = true
-
-        doFirst {
-          new File(outputDirectory).mkdirs()
-          standardOutput = new FileOutputStream(outputFile)
-        }
-
-        doLast {
-          standardOutput.close()
-          if (execResult.exitValue != 0) {
-            throw new GradleException("ktlint finished with non-zero exit value ${execResult.exitValue}. Generated report at $outputFile")
-          }
-        }
+      subProject.task('ktlint', type: JavaExec) {
+        group = 'verification'
+        description = 'Check Kotlin code style.'
+        main = 'com.github.shyiko.ktlint.Main'
+        classpath = subProject.configurations.ktlint
+        def outputFile = "${subProject.buildDir}/reports/ktlint/ktlint-checkstyle-report.xml"
+        args '--reporter=plain', "--reporter=checkstyle,output=${outputFile}", 'src/**/*.kt'
       }
 
       subProject.task('ktlintFormat', type: JavaExec) {
+        group = 'formatting'
+        description = "Fix Kotlin code style deviations."
         main = "com.github.shyiko.ktlint.Main"
         classpath = subProject.configurations.ktlint
         args "-F", "src/**/*.kt"

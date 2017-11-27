@@ -180,7 +180,7 @@ class CodeQualityToolsPluginExtension {
     boolean enabled = true
 
     /** @since 0.5.0 */
-    String toolVersion = '0.9.1'
+    String toolVersion = '0.13.0'
   }
 
   static class Detekt {
