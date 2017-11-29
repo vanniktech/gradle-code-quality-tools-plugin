@@ -27,9 +27,27 @@ public class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest
     def ktlint = project.configurations.getByName('ktlint').dependencies[0]
     assert ktlint.group == 'com.github.shyiko'
     assert ktlint.name == 'ktlint'
-    assert ktlint.version == '0.9.1'
+    assert ktlint.version == '0.13.0'
     assert taskDependsOn(project.check, 'ktlint')
+
+    assert project.getTasksByName('ktlint', false).size() == 1
+    def ktlintTask = project.getTasksByName('ktlint', false)[0]
+    assert ktlintTask.group == 'verification'
+    assert ktlintTask.description == 'Check Kotlin code style.'
+    assert ktlintTask.main == 'com.github.shyiko.ktlint.Main'
+    assert ktlintTask.args.size() == 3
+    assert ktlintTask.args[0] == '--reporter=plain'
+    assert ktlintTask.args[1] == "--reporter=checkstyle,output=${project.buildDir}/reports/ktlint/ktlint-checkstyle-report.xml"
+    assert ktlintTask.args[2] == 'src/**/*.kt'
+
     assert project.getTasksByName('ktlintFormat', false).size() == 1
+    def ktlintFormatTask = project.getTasksByName('ktlintFormat', false)[0]
+    assert ktlintFormatTask.group == 'formatting'
+    assert ktlintFormatTask.description == 'Fix Kotlin code style deviations.'
+    assert ktlintFormatTask.main == 'com.github.shyiko.ktlint.Main'
+    assert ktlintFormatTask.args.size() == 2
+    assert ktlintFormatTask.args[0] == '-F'
+    assert ktlintFormatTask.args[1] == 'src/**/*.kt'
   }
 
   @Test public void configurations() {
