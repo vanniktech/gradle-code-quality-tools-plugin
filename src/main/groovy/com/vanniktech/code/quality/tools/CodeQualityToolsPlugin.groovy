@@ -32,7 +32,6 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
   private static void addGradlePlugins(final Project project, final CodeQualityToolsPluginExtension extension) {
     addErrorProneGradlePlugin(project, extension)
-    addDetektGradlePlugin(project, extension)
     addCpdGradlePlugin(project, extension)
   }
 
@@ -58,21 +57,6 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.buildscript.dependencies {
         classpath "de.aaschmid:gradle-cpd-plugin:$cpdGradlePluginVersion"
-      }
-    }
-  }
-
-  private static void addDetektGradlePlugin(final Project subProject, final CodeQualityToolsPluginExtension extension) {
-    if (extension.detekt.enabled) {
-      def detektGradlePluginVersion = subProject.findProperty('codeQualityTools.detekt.gradlePluginVersion') ?: '1.0.0.M13.2'
-
-      subProject.buildscript {
-        repositories {
-          maven { url "https://plugins.gradle.org/m2/" }
-        }
-        dependencies {
-          classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektGradlePluginVersion"
-        }
       }
     }
   }
@@ -297,13 +281,20 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
   protected static boolean addDetekt(final Project project, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
     if (!shouldIgnore(project, extension) && extension.detekt.enabled) {
-      project.plugins.apply('io.gitlab.arturbosch.detekt')
-      project.detekt {
-        version = extension.detekt.toolVersion
-        profile("main") {
-          input = "${project.file('.')}"
-          config = rootProject.file(extension.detekt.config)
-        }
+      project.configurations {
+        detektCheck
+      }
+
+      project.dependencies {
+        detektCheck "io.gitlab.arturbosch.detekt:detekt-cli:${extension.detekt.toolVersion}"
+      }
+
+      project.task('detektCheck', type: JavaExec) {
+        group = 'verification'
+        description = 'Runs detekt.'
+        main = 'io.gitlab.arturbosch.detekt.cli.Main'
+        classpath = project.configurations.detektCheck
+        args "--config", rootProject.file(extension.detekt.config), "--input", project.file('.')
       }
 
       project.check.dependsOn 'detektCheck'
