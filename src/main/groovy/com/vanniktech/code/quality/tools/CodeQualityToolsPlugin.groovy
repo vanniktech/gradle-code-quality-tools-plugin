@@ -1,13 +1,11 @@
 package com.vanniktech.code.quality.tools
 
-import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.FindBugs
 import org.gradle.api.plugins.quality.Pmd
 import org.gradle.api.tasks.JavaExec
-import org.gradle.api.tasks.Exec
 
 class CodeQualityToolsPlugin implements Plugin<Project> {
   @Override void apply(final Project rootProject) {
@@ -21,72 +19,74 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     rootProject.codeQualityTools.extensions.create('cpd', CodeQualityToolsPluginExtension.Cpd)
     rootProject.codeQualityTools.extensions.create('errorProne', CodeQualityToolsPluginExtension.ErrorProne)
 
-    def detektGradlePluginVersion = rootProject.findProperty('codeQualityTools.detekt.gradlePluginVersion') ?: '1.0.0.M13.2'
-    def cpdGradlePluginVersion = rootProject.findProperty('codeQualityTools.cpd.gradlePluginVersion') ?: '1.0'
-    def errorProneGradlePluginVersion = rootProject.findProperty('codeQualityTools.errorProne.gradlePluginVersion') ?: '0.0.10'
+    def extension = rootProject.codeQualityTools
 
     rootProject.subprojects { subProject ->
-      def extension = rootProject.codeQualityTools
-
-      if (extension.errorProne.enabled) {
-        subProject.buildscript {
-          repositories {
-            maven { url "https://plugins.gradle.org/m2/" }
-          }
-          dependencies {
-            classpath "net.ltgt.gradle:gradle-errorprone-plugin:$errorProneGradlePluginVersion"
-          }
-        }
-      }
-
-      if (extension.detekt.enabled) {
-        subProject.buildscript {
-          repositories {
-            maven { url "https://plugins.gradle.org/m2/" }
-          }
-          dependencies {
-            classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektGradlePluginVersion"
-          }
-        }
-      }
-
-      if (extension.cpd.enabled) {
-        subProject.buildscript.dependencies {
-          classpath "de.aaschmid:gradle-cpd-plugin:$cpdGradlePluginVersion"
-        }
-      }
+      addGradlePlugins(subProject, extension)
 
       afterEvaluate {
-        if (!shouldIgnore(subProject, extension)) {
-          // Reason for checking again in each add method: Unit Tests (they can't handle afterEvaluate properly)
-          addPmd(subProject, rootProject, extension)
-          addCheckstyle(subProject, rootProject, extension)
-          addKtlint(subProject, extension)
-          addCpd(subProject, extension)
+        addCodeQualityTools(subProject, rootProject, extension)
+      }
+    }
+  }
 
-          if (extension.detekt.enabled) {
-            subProject.plugins.apply('io.gitlab.arturbosch.detekt')
-            subProject.detekt {
-              version = extension.detekt.toolVersion
-              profile("main") {
-                input = "${subProject.file('.')}"
-                config = rootProject.file(extension.detekt.config)
-              }
-            }
+  private static void addGradlePlugins(final Project project, final CodeQualityToolsPluginExtension extension) {
+    addErrorProneGradlePlugin(project, extension)
+    addDetektGradlePlugin(project, extension)
+    addCpdGradlePlugin(project, extension)
+  }
 
-            subProject.check.dependsOn 'detektCheck'
-          }
+  private static void addCodeQualityTools(final Project project, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
+    if (!shouldIgnore(project, extension)) {
+      // Reason for checking again in each add method: Unit Tests (they can't handle afterEvaluate properly)
+      addPmd(project, rootProject, extension)
+      addCheckstyle(project, rootProject, extension)
+      addKtlint(project, extension)
+      addCpd(project, extension)
+      addDetekt(project, rootProject, extension)
+      addErrorProne(project, extension)
 
-          if (extension.errorProne.enabled) {
-            subProject.plugins.apply('net.ltgt.errorprone')
-            subProject.configurations.errorprone {
-              resolutionStrategy.force "com.google.errorprone:error_prone_core:${extension.errorProne.toolVersion}"
-            }
-          }
+      // Those static code tools take the longest hence we'll add them at the end.
+      addLint(project, extension)
+      addFindbugs(project, rootProject, extension)
+    }
+  }
 
-          // Those static code tools take the longest hence we'll add them at the end.
-          addLint(subProject, extension)
-          addFindbugs(subProject, rootProject, extension)
+  private static void addCpdGradlePlugin(final Project subProject, final CodeQualityToolsPluginExtension extension) {
+    if (extension.cpd.enabled) {
+      def cpdGradlePluginVersion = subProject.findProperty('codeQualityTools.cpd.gradlePluginVersion') ?: '1.0'
+
+      subProject.buildscript.dependencies {
+        classpath "de.aaschmid:gradle-cpd-plugin:$cpdGradlePluginVersion"
+      }
+    }
+  }
+
+  private static void addDetektGradlePlugin(final Project subProject, final CodeQualityToolsPluginExtension extension) {
+    if (extension.detekt.enabled) {
+      def detektGradlePluginVersion = subProject.findProperty('codeQualityTools.detekt.gradlePluginVersion') ?: '1.0.0.M13.2'
+
+      subProject.buildscript {
+        repositories {
+          maven { url "https://plugins.gradle.org/m2/" }
+        }
+        dependencies {
+          classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektGradlePluginVersion"
+        }
+      }
+    }
+  }
+
+  private static void addErrorProneGradlePlugin(final Project project, final CodeQualityToolsPluginExtension extension) {
+    if (extension.errorProne.enabled) {
+      def errorProneGradlePluginVersion = project.findProperty('codeQualityTools.errorProne.gradlePluginVersion') ?: '0.0.10'
+
+      project.buildscript {
+        repositories {
+          maven { url "https://plugins.gradle.org/m2/" }
+        }
+        dependencies {
+          classpath "net.ltgt.gradle:gradle-errorprone-plugin:$errorProneGradlePluginVersion"
         }
       }
     }
@@ -288,6 +288,38 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       }
 
       subProject.check.dependsOn 'cpdCheck'
+
+      return true
+    }
+
+    return false
+  }
+
+  protected static boolean addDetekt(final Project project, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
+    if (!shouldIgnore(project, extension) && extension.detekt.enabled) {
+      project.plugins.apply('io.gitlab.arturbosch.detekt')
+      project.detekt {
+        version = extension.detekt.toolVersion
+        profile("main") {
+          input = "${project.file('.')}"
+          config = rootProject.file(extension.detekt.config)
+        }
+      }
+
+      project.check.dependsOn 'detektCheck'
+
+      return true
+    }
+
+    return false
+  }
+
+  protected static boolean addErrorProne(final Project project, final CodeQualityToolsPluginExtension extension) {
+    if (!shouldIgnore(project, extension) && extension.errorProne.enabled) {
+      project.plugins.apply('net.ltgt.errorprone')
+      project.configurations.errorprone {
+        resolutionStrategy.force "com.google.errorprone:error_prone_core:${extension.errorProne.toolVersion}"
+      }
 
       return true
     }
