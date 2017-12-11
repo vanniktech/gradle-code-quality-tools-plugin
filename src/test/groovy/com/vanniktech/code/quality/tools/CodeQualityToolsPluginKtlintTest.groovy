@@ -1,30 +1,36 @@
 package com.vanniktech.code.quality.tools
 
 import org.gradle.api.Project
-import org.junit.Ignore
 import org.junit.Test
 
-public class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest {
-  @Test public void javaDefault() {
-    assert CodeQualityToolsPlugin.addKtlint(javaProject, new CodeQualityToolsPluginExceptionForTests())
+import static com.vanniktech.code.quality.tools.CodeQualityToolsPlugin.addKtlint
 
-    assertKtlint(javaProject)
+class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest {
+  @Test void java() {
+    javaProjects.each { project ->
+      assert !addKtlint(project, new CodeQualityToolsPluginExtensionForTests())
+    }
   }
 
-  @Test @Ignore("buildToolsVersion is not specified.") public void androidAppDefault() {
-    assert CodeQualityToolsPlugin.addKtlint(androidAppProject, new CodeQualityToolsPluginExceptionForTests())
+  @Test void kotlin() {
+    kotlinProjects.each { project ->
+      assert addKtlint(project, new CodeQualityToolsPluginExtensionForTests())
 
-    assertKtlint(androidAppProject)
+      assertKtlint(project)
+    }
   }
 
-  @Test @Ignore("buildToolsVersion is not specified.") public void androidLibraryDefault() {
-    assert CodeQualityToolsPlugin.addKtlint(androidLibraryProject, new CodeQualityToolsPluginExceptionForTests())
-
-    assertKtlint(androidLibraryProject)
+  @Test void android() {
+    androidProjects.each { project ->
+      assert !addKtlint(project, new CodeQualityToolsPluginExtensionForTests())
+    }
   }
 
   private static void assertKtlint(Project project) {
-    def ktlint = project.configurations.getByName('ktlint').dependencies[0]
+    def dependencies = project.configurations.getByName('ktlint').dependencies
+    assert dependencies.size() == 1
+
+    def ktlint = dependencies[0]
     assert ktlint.group == 'com.github.shyiko'
     assert ktlint.name == 'ktlint'
     assert ktlint.version == '0.13.0'
@@ -33,7 +39,7 @@ public class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest
     assert project.getTasksByName('ktlint', false).size() == 1
     def ktlintTask = project.getTasksByName('ktlint', false)[0]
     assert ktlintTask.group == 'verification'
-    assert ktlintTask.description == 'Check Kotlin code style.'
+    assert ktlintTask.description == 'Runs ktlint.'
     assert ktlintTask.main == 'com.github.shyiko.ktlint.Main'
     assert ktlintTask.args.size() == 3
     assert ktlintTask.args[0] == '--reporter=plain'
@@ -43,31 +49,31 @@ public class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest
     assert project.getTasksByName('ktlintFormat', false).size() == 1
     def ktlintFormatTask = project.getTasksByName('ktlintFormat', false)[0]
     assert ktlintFormatTask.group == 'formatting'
-    assert ktlintFormatTask.description == 'Fix Kotlin code style deviations.'
+    assert ktlintFormatTask.description == 'Runs ktlint and autoformats your code.'
     assert ktlintFormatTask.main == 'com.github.shyiko.ktlint.Main'
     assert ktlintFormatTask.args.size() == 2
     assert ktlintFormatTask.args[0] == '-F'
     assert ktlintFormatTask.args[1] == 'src/**/*.kt'
   }
 
-  @Test public void configurations() {
-    def extension = new CodeQualityToolsPluginExceptionForTests()
+  @Test void configurations() {
+    def extension = new CodeQualityToolsPluginExtensionForTests()
     extension.ktlint.toolVersion = '0.8.2'
 
-    assert CodeQualityToolsPlugin.addKtlint(androidLibraryProject, extension)
+    assert addKtlint(kotlinPlatformCommonProject, extension)
 
-    def ktlint = androidLibraryProject.configurations.getByName('ktlint').dependencies[0]
+    def ktlint = kotlinPlatformCommonProject.configurations.getByName('ktlint').dependencies[0]
     assert ktlint.group == 'com.github.shyiko'
     assert ktlint.name == 'ktlint'
     assert ktlint.version == '0.8.2'
   }
 
-  @Test public void enabled() {
-    def extension = new CodeQualityToolsPluginExceptionForTests()
+  @Test void enabled() {
+    def extension = new CodeQualityToolsPluginExtensionForTests()
     extension.ktlint.enabled = false
 
     for (def project : projects) {
-      assert !CodeQualityToolsPlugin.addKtlint(project, extension)
+      assert !addKtlint(project, extension)
     }
   }
 }

@@ -3,8 +3,8 @@ package com.vanniktech.code.quality.tools
 import org.junit.Test
 
 class CodeQualityToolsPluginExtensionTest {
-  @Test public void testDefaults() {
-    def extension = new CodeQualityToolsPluginExceptionForTests()
+  @Test void defaults() {
+    def extension = new CodeQualityToolsPluginExtensionForTests()
 
     assert extension.failEarly
     assert extension.xmlReports

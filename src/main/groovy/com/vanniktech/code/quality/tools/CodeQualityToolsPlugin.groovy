@@ -20,12 +20,19 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     rootProject.codeQualityTools.extensions.create('errorProne', CodeQualityToolsPluginExtension.ErrorProne)
 
     def extension = rootProject.codeQualityTools
+    def hasSubProjects = rootProject.subprojects.size() > 0
 
-    rootProject.subprojects { subProject ->
-      addGradlePlugins(subProject, extension)
+    if (hasSubProjects) {
+      rootProject.subprojects { subProject ->
+        addGradlePlugins(subProject, extension)
 
-      afterEvaluate {
-        addCodeQualityTools(subProject, rootProject, extension)
+        afterEvaluate {
+          addCodeQualityTools(subProject, rootProject, extension, true)
+        }
+      }
+    } else {
+      rootProject.afterEvaluate {
+        addCodeQualityTools(rootProject, rootProject, extension, false)
       }
     }
   }
@@ -33,22 +40,6 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   private static void addGradlePlugins(final Project project, final CodeQualityToolsPluginExtension extension) {
     addErrorProneGradlePlugin(project, extension)
     addCpdGradlePlugin(project, extension)
-  }
-
-  private static void addCodeQualityTools(final Project project, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
-    if (!shouldIgnore(project, extension)) {
-      // Reason for checking again in each add method: Unit Tests (they can't handle afterEvaluate properly)
-      addPmd(project, rootProject, extension)
-      addCheckstyle(project, rootProject, extension)
-      addKtlint(project, extension)
-      addCpd(project, extension)
-      addDetekt(project, rootProject, extension)
-      addErrorProne(project, extension)
-
-      // Those static code tools take the longest hence we'll add them at the end.
-      addLint(project, extension)
-      addFindbugs(project, rootProject, extension)
-    }
   }
 
   private static void addCpdGradlePlugin(final Project subProject, final CodeQualityToolsPluginExtension extension) {
@@ -76,8 +67,25 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     }
   }
 
+  private static void addCodeQualityTools(final Project project, final Project rootProject, final CodeQualityToolsPluginExtension extension, final boolean includeToolsThatRequireGradlePlugin) {
+    addPmd(project, rootProject, extension)
+    addCheckstyle(project, rootProject, extension)
+    addKtlint(project, extension)
+    if (includeToolsThatRequireGradlePlugin) addCpd(project, extension)
+    addDetekt(project, rootProject, extension)
+    if (includeToolsThatRequireGradlePlugin) addErrorProne(project, extension)
+
+    // Those static code tools take the longest hence we'll add them at the end.
+    addLint(project, extension)
+    addFindbugs(project, rootProject, extension)
+  }
+
   protected static boolean addPmd(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
-    if (!shouldIgnore(subProject, extension) && extension.pmd.enabled) {
+    def isNotIgnored = !shouldIgnore(subProject, extension)
+    def isEnabled = extension.pmd.enabled
+    def isPmdSupported = isJavaProject(subProject) || isAndroidProject(subProject)
+
+    if (isNotIgnored && isEnabled && isPmdSupported) {
       subProject.plugins.apply('pmd')
 
       subProject.pmd {
@@ -87,7 +95,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       }
 
       subProject.task('pmd', type: Pmd) {
-        description = 'Run pmd'
+        description = 'Runs pmd.'
         group = 'verification'
 
         ruleSets = []
@@ -111,7 +119,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   }
 
   protected static boolean addCheckstyle(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
-    if (!shouldIgnore(subProject, extension) && extension.checkstyle.enabled) {
+    def isNotIgnored = !shouldIgnore(subProject, extension)
+    def isEnabled = extension.checkstyle.enabled
+    def isCheckstyleSupported = isJavaProject(subProject) || isAndroidProject(subProject)
+
+    if (isNotIgnored && isEnabled && isCheckstyleSupported) {
       subProject.plugins.apply('checkstyle')
 
       subProject.checkstyle {
@@ -122,7 +134,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       }
 
       subProject.task('checkstyle', type: Checkstyle) {
-        description = 'Run checkstyle'
+        description = 'Runs checkstyle.'
         group = 'verification'
 
         source = subProject.fileTree(extension.checkstyle.source)
@@ -146,7 +158,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   }
 
   protected static boolean addFindbugs(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
-    if (!shouldIgnore(subProject, extension) && extension.findbugs.enabled) {
+    def isNotIgnored = !shouldIgnore(subProject, extension)
+    def isEnabled = extension.findbugs.enabled
+    def isFindbugsSupported = isJavaProject(subProject) || isAndroidProject(subProject) || isKotlinProject(subProject)
+
+    if (isNotIgnored && isEnabled && isFindbugsSupported) {
       final String findbugsClassesPath = isAndroidProject(subProject) ? 'build/intermediates/classes/debug/' : 'build/classes/java/main/'
 
       subProject.plugins.apply('findbugs')
@@ -161,7 +177,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       }
 
       subProject.task('findbugs', type: FindBugs, dependsOn: 'assemble') {
-        description = 'Run findbugs'
+        description = 'Runs findbugs.'
         group = 'verification'
 
         classes = subProject.fileTree(findbugsClassesPath)
@@ -183,7 +199,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   }
 
   protected static boolean addLint(final Project subProject, final CodeQualityToolsPluginExtension extension) {
-    if (!shouldIgnore(subProject, extension) && extension.lint.enabled && isAndroidProject(subProject)) {
+    def isNotIgnored = !shouldIgnore(subProject, extension)
+    def isEnabled = extension.lint.enabled
+    def isLintSupported = isAndroidProject(subProject)
+
+    if (isNotIgnored && isEnabled && isLintSupported) {
       subProject.android.lintOptions {
         warningsAsErrors extension.lint.warningsAsErrors != null ? extension.lint.warningsAsErrors : extension.failEarly
         abortOnError extension.lint.abortOnError != null ? extension.lint.abortOnError : extension.failEarly
@@ -217,7 +237,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   }
 
   protected static boolean addKtlint(final Project subProject, final CodeQualityToolsPluginExtension extension) {
-    if (!shouldIgnore(subProject, extension) && extension.ktlint.enabled) {
+    def isNotIgnored = !shouldIgnore(subProject, extension)
+    def isEnabled = extension.ktlint.enabled
+    def isKtlintSupported = isKotlinProject(subProject)
+
+    if (isNotIgnored && isEnabled && isKtlintSupported) {
       subProject.configurations {
         ktlint
       }
@@ -228,7 +252,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.task('ktlint', type: JavaExec) {
         group = 'verification'
-        description = 'Check Kotlin code style.'
+        description = 'Runs ktlint.'
         main = 'com.github.shyiko.ktlint.Main'
         classpath = subProject.configurations.ktlint
         def outputFile = "${subProject.buildDir}/reports/ktlint/ktlint-checkstyle-report.xml"
@@ -237,7 +261,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.task('ktlintFormat', type: JavaExec) {
         group = 'formatting'
-        description = "Fix Kotlin code style deviations."
+        description = "Runs ktlint and autoformats your code."
         main = "com.github.shyiko.ktlint.Main"
         classpath = subProject.configurations.ktlint
         args "-F", "src/**/*.kt"
@@ -252,7 +276,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   }
 
   protected static boolean addCpd(final Project subProject, final CodeQualityToolsPluginExtension extension) {
-    if (!shouldIgnore(subProject, extension) && extension.cpd.enabled) {
+    def isNotIgnored = !shouldIgnore(subProject, extension)
+    def isEnabled = extension.cpd.enabled
+    def isCpdSupported = isJavaProject(subProject) || isAndroidProject(subProject)
+
+    if (isNotIgnored && isEnabled && isCpdSupported) {
       subProject.plugins.apply('cpd')
 
       subProject.cpd {
@@ -280,7 +308,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   }
 
   protected static boolean addDetekt(final Project project, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
-    if (!shouldIgnore(project, extension) && extension.detekt.enabled) {
+    def isNotIgnored = !shouldIgnore(project, extension)
+    def isEnabled = extension.detekt.enabled
+    def isDetektSupported = isKotlinProject(project)
+
+    if (isNotIgnored && isEnabled && isDetektSupported) {
       project.configurations {
         detektCheck
       }
@@ -306,7 +338,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   }
 
   protected static boolean addErrorProne(final Project project, final CodeQualityToolsPluginExtension extension) {
-    if (!shouldIgnore(project, extension) && extension.errorProne.enabled) {
+    def isNotIgnored = !shouldIgnore(project, extension)
+    def isEnabled = extension.errorProne.enabled
+    def isErrorProneSupported = isJavaProject(project) || isAndroidProject(project)
+
+    if (isNotIgnored && isEnabled && isErrorProneSupported) {
       project.plugins.apply('net.ltgt.errorprone')
       project.configurations.errorprone {
         resolutionStrategy.force "com.google.errorprone:error_prone_core:${extension.errorProne.toolVersion}"
@@ -318,10 +354,29 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     return false
   }
 
-  protected static boolean isAndroidProject(final Project project) {
+  private static boolean isKotlinProject(final Project project) {
+    final boolean isKotlin = project.plugins.hasPlugin('kotlin')
+    final boolean isKotlinAndroid = project.plugins.hasPlugin('kotlin-android')
+    final boolean isKotlinPlatformCommon = project.plugins.hasPlugin('kotlin-platform-common')
+    final boolean isKotlinPlatformJvm = project.plugins.hasPlugin('kotlin-platform-jvm')
+    final boolean isKotlinPlatformJs = project.plugins.hasPlugin('kotlin-platform-js')
+    return isKotlin || isKotlinAndroid || isKotlinPlatformCommon || isKotlinPlatformJvm || isKotlinPlatformJs
+  }
+
+  private static boolean isJavaProject(final Project project) {
+    final boolean isJava = project.plugins.hasPlugin('java')
+    final boolean isJavaLibrary = project.plugins.hasPlugin('java-library')
+    final boolean isJavaGradlePlugin = project.plugins.hasPlugin('java-gradle-plugin')
+    return isJava || isJavaLibrary || isJavaGradlePlugin
+  }
+
+  private static boolean isAndroidProject(final Project project) {
     final boolean isAndroidLibrary = project.plugins.hasPlugin('com.android.library')
     final boolean isAndroidApp = project.plugins.hasPlugin('com.android.application')
-    return isAndroidLibrary || isAndroidApp
+    final boolean isAndroidTest = project.plugins.hasPlugin('com.android.test')
+    final boolean isAndroidFeature = project.plugins.hasPlugin('com.android.feature')
+    final boolean isAndroidInstantApp = project.plugins.hasPlugin('com.android.instantapp')
+    return isAndroidLibrary || isAndroidApp || isAndroidTest || isAndroidFeature || isAndroidInstantApp
   }
 
   private static boolean shouldIgnore(final Project project, final CodeQualityToolsPluginExtension extension) {
