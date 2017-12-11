@@ -1,4 +1,6 @@
 buildscript {
+    ext.kotlinVersion = '1.2.0'
+
     repositories {
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
@@ -28,6 +30,7 @@ dependencies {
     compile 'com.android.tools.build:gradle:3.0.1'
 
     testCompile 'junit:junit:4.12'
+    testCompile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
