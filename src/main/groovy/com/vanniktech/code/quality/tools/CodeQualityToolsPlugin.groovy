@@ -183,6 +183,12 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         }
       }
 
+      if (extension.lint.absolutePaths != null) {
+        subProject.android.lintOptions {
+          absolutePaths = extension.lint.absolutePaths
+        }
+      }
+
       if (extension.lint.baselineFileName != null) {
         subProject.android.lintOptions {
           baseline subProject.file(extension.lint.baselineFileName)

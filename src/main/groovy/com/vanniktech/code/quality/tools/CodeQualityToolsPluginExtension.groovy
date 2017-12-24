@@ -170,6 +170,12 @@ class CodeQualityToolsPluginExtension {
      * @since 0.5.0
      */
     String baselineFileName = null
+
+    /**
+     * Returns whether lint should use absolute paths or not
+     * @since 0.9.0
+     */
+    Boolean absolutePaths
   }
 
   static class Ktlint {
