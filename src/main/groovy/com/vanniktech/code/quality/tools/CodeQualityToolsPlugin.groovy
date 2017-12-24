@@ -24,56 +24,24 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
     if (hasSubProjects) {
       rootProject.subprojects { subProject ->
-        addGradlePlugins(subProject, extension)
-
         afterEvaluate {
-          addCodeQualityTools(subProject, rootProject, extension, true)
+          addCodeQualityTools(subProject, rootProject, extension)
         }
       }
     } else {
       rootProject.afterEvaluate {
-        addCodeQualityTools(rootProject, rootProject, extension, false)
+        addCodeQualityTools(rootProject, rootProject, extension)
       }
     }
   }
 
-  private static void addGradlePlugins(final Project project, final CodeQualityToolsPluginExtension extension) {
-    addErrorProneGradlePlugin(project, extension)
-    addCpdGradlePlugin(project, extension)
-  }
-
-  private static void addCpdGradlePlugin(final Project subProject, final CodeQualityToolsPluginExtension extension) {
-    if (extension.cpd.enabled) {
-      def cpdGradlePluginVersion = subProject.findProperty('codeQualityTools.cpd.gradlePluginVersion') ?: '1.0'
-
-      subProject.buildscript.dependencies {
-        classpath "de.aaschmid:gradle-cpd-plugin:$cpdGradlePluginVersion"
-      }
-    }
-  }
-
-  private static void addErrorProneGradlePlugin(final Project project, final CodeQualityToolsPluginExtension extension) {
-    if (extension.errorProne.enabled) {
-      def errorProneGradlePluginVersion = project.findProperty('codeQualityTools.errorProne.gradlePluginVersion') ?: '0.0.10'
-
-      project.buildscript {
-        repositories {
-          maven { url "https://plugins.gradle.org/m2/" }
-        }
-        dependencies {
-          classpath "net.ltgt.gradle:gradle-errorprone-plugin:$errorProneGradlePluginVersion"
-        }
-      }
-    }
-  }
-
-  private static void addCodeQualityTools(final Project project, final Project rootProject, final CodeQualityToolsPluginExtension extension, final boolean includeToolsThatRequireGradlePlugin) {
+  private static void addCodeQualityTools(final Project project, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
     addPmd(project, rootProject, extension)
     addCheckstyle(project, rootProject, extension)
     addKtlint(project, extension)
-    if (includeToolsThatRequireGradlePlugin) addCpd(project, extension)
+    addCpd(project, extension)
     addDetekt(project, rootProject, extension)
-    if (includeToolsThatRequireGradlePlugin) addErrorProne(project, extension)
+    addErrorProne(project, extension)
 
     // Those static code tools take the longest hence we'll add them at the end.
     addLint(project, extension)
