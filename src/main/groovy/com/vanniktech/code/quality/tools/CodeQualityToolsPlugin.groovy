@@ -195,6 +195,12 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         }
       }
 
+      if (extension.lint.lintConfig != null) {
+        subProject.android.lintOptions {
+          lintConfig extension.lint.lintConfig
+        }
+      }
+
       if (extension.lint.textReport != null) {
         subProject.android.lintOptions {
           textReport extension.lint.textReport

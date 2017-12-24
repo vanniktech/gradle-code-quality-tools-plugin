@@ -54,6 +54,7 @@ class CodeQualityToolsPluginLintTest extends CommonCodeQualityToolsTest {
     assert androidAppProject.android.lintOptions.checkAllWarnings == extension.lint.checkAllWarnings
     assert androidAppProject.android.lintOptions.textReport == extension.lint.textReport
     assert androidAppProject.android.lintOptions.absolutePaths
+    assert androidAppProject.android.lintOptions.lintConfig == null
     assert androidAppProject.android.lintOptions.baselineFile == androidAppProject.file("baseline.xml")
     assert androidAppProject.android.lintOptions.textOutput.toString() == extension.lint.textOutput
 
@@ -63,6 +64,7 @@ class CodeQualityToolsPluginLintTest extends CommonCodeQualityToolsTest {
     assert androidLibraryProject.android.lintOptions.checkAllWarnings == extension.lint.checkAllWarnings
     assert androidLibraryProject.android.lintOptions.textReport == extension.lint.textReport
     assert androidLibraryProject.android.lintOptions.absolutePaths
+    assert androidLibraryProject.android.lintOptions.lintConfig == null
     assert androidLibraryProject.android.lintOptions.baselineFile == androidLibraryProject.file("baseline.xml")
     assert androidLibraryProject.android.lintOptions.textOutput.toString() == extension.lint.textOutput
   }
@@ -105,6 +107,18 @@ class CodeQualityToolsPluginLintTest extends CommonCodeQualityToolsTest {
 
     assert addLint(androidLibraryProject, extension)
     assert androidLibraryProject.android.lintOptions.absolutePaths == extension.lint.absolutePaths
+  }
+
+  @Test void lintConfigFile() {
+    def extension = new CodeQualityToolsPluginExtensionForTests()
+
+    extension.lint.lintConfig = androidAppProject.file("lint.xml")
+    assert addLint(androidAppProject, extension)
+    assert androidAppProject.android.lintOptions.lintConfig == extension.lint.lintConfig
+
+    extension.lint.lintConfig = androidLibraryProject.file("lint.xml")
+    assert addLint(androidLibraryProject, extension)
+    assert androidLibraryProject.android.lintOptions.lintConfig == extension.lint.lintConfig
   }
 
   @Test void failEarlyFalse() {
