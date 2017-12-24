@@ -176,6 +176,12 @@ class CodeQualityToolsPluginExtension {
      * @since 0.9.0
      */
     Boolean absolutePaths
+
+    /**
+     * The lint config file (e.g. lint.xml)
+     * @since 0.9.0
+     */
+    File lintConfig = null
   }
 
   static class Ktlint {
