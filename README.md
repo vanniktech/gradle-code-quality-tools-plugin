@@ -3,13 +3,14 @@
 [![Build Status](https://travis-ci.org/vanniktech/gradle-code-quality-tools-plugin.svg?branch=master)](https://travis-ci.org/vanniktech/gradle-code-quality-tools-plugin?branch=master)
 [![Codecov](https://codecov.io/github/vanniktech/gradle-code-quality-tools-plugin/coverage.svg?branch=master)](https://codecov.io/github/vanniktech/gradle-code-quality-tools-plugin?branch=master)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-![Java 7 required](https://img.shields.io/badge/java-7-brightgreen.svg)
 
-Gradle plugin that generates [ErrorProne](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-5.8.0/usage/cpd-usage.html), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint) Tasks for every subproject. In Android projects Lint will also be configured. All of the taks will also automatically hook into the build lifecycle.
+Gradle plugin that generates configures [ErrorProne](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-5.8.0/usage/cpd-usage.html), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task.
 
-Works with the latest Gradle Android Tools version 2.3.3. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
+Works with the latest Gradle Android Tools version 3.0.1.
 
 # Set up
+
+**root/build.gradle**
 
 ```groovy
 buildscript {
