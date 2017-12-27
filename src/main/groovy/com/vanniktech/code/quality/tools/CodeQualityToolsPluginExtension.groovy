@@ -107,7 +107,7 @@ class CodeQualityToolsPluginExtension {
     boolean enabled = true
 
     /** @since 0.2.0 */
-    String toolVersion = '5.8.1'
+    String toolVersion = '6.0.0'
 
     /** @since 0.2.0 */
     String ruleSetFile = 'code_quality_tools/pmd.xml'
