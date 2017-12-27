@@ -246,6 +246,6 @@ class CodeQualityToolsPluginExtension {
     boolean enabled = true
 
     /** @since 0.6.0 */
-    String toolVersion = '2.0.20'
+    String toolVersion = '2.1.3'
   }
 }

@@ -30,7 +30,7 @@ dependencies {
   compile localGroovy()
   compile 'com.android.tools.build:gradle:3.0.1'
   compile 'de.aaschmid:gradle-cpd-plugin:1.1'
-  compile 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
+  compile 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.13'
 
   testCompile 'junit:junit:4.12'
   testCompile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
