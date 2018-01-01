@@ -13,7 +13,7 @@ class CodeQualityToolsPluginExtensionTest {
 
     assert extension.errorProne.toolVersion == '2.1.3'
     assert extension.cpd.toolVersion == '5.4.2'
-    assert extension.detekt.toolVersion == '1.0.0.M13.2'
+    assert extension.detekt.toolVersion == '1.0.0.RC6'
     assert extension.ktlint.toolVersion == '0.14.0'
     assert extension.findbugs.toolVersion == '3.0.1'
     assert extension.checkstyle.toolVersion == '7.8.2'

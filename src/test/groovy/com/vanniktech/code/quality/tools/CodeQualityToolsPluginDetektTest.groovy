@@ -33,7 +33,7 @@ class CodeQualityToolsPluginDetektTest extends CommonCodeQualityToolsTest {
     def detektCheck = dependencies[0]
     assert detektCheck.group == 'io.gitlab.arturbosch.detekt'
     assert detektCheck.name == 'detekt-cli'
-    assert detektCheck.version == '1.0.0.M13.2'
+    assert detektCheck.version == '1.0.0.RC6'
     assert taskDependsOn(project.check, 'detektCheck')
 
     assert project.getTasksByName('detektCheck', false).size() == 1

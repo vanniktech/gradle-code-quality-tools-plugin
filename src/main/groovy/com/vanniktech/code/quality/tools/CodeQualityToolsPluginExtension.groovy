@@ -203,7 +203,7 @@ class CodeQualityToolsPluginExtension {
     boolean enabled = true
 
     /** @since 0.6.0 */
-    String toolVersion = '1.0.0.M13.2'
+    String toolVersion = '1.0.0.RC6'
 
     /** @since 0.6.0 */
     String config = 'code_quality_tools/detekt.yml'
