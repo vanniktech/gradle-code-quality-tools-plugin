@@ -38,7 +38,7 @@ class CodeQualityToolsPluginCheckstyleTest extends CommonCodeQualityToolsTest {
 
     assert !project.checkstyle.ignoreFailures
     assert project.checkstyle.showViolations
-    assert project.checkstyle.toolVersion == '7.8.2'
+    assert project.checkstyle.toolVersion == '8.6'
     assert project.checkstyle.configFile == rootProject.file("code_quality_tools/checkstyle.xml")
 
     def task = project.tasks.findByName('checkstyle')

@@ -16,7 +16,7 @@ class CodeQualityToolsPluginExtensionTest {
     assert extension.detekt.toolVersion == '1.0.0.RC6'
     assert extension.ktlint.toolVersion == '0.14.0'
     assert extension.findbugs.toolVersion == '3.0.1'
-    assert extension.checkstyle.toolVersion == '7.8.2'
+    assert extension.checkstyle.toolVersion == '8.6'
     assert extension.pmd.toolVersion == '6.0.0'
 
     assert extension.findbugs.source == 'src'
