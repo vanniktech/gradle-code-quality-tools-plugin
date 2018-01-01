@@ -6,6 +6,12 @@ import org.junit.Test
 import static com.vanniktech.code.quality.tools.CodeQualityToolsPlugin.addLint
 
 class CodeQualityToolsPluginLintTest extends CommonCodeQualityToolsTest {
+  @Test void empty() {
+    emptyProjects.each { project ->
+      assert !addLint(project, new CodeQualityToolsPluginExtensionForTests())
+    }
+  }
+
   @Test void java() {
     javaProjects.each { project ->
       assert !addLint(project, new CodeQualityToolsPluginExtensionForTests())

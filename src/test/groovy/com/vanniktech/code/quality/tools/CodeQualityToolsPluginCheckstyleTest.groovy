@@ -8,6 +8,12 @@ import org.junit.Test
 import static com.vanniktech.code.quality.tools.CodeQualityToolsPlugin.addCheckstyle
 
 class CodeQualityToolsPluginCheckstyleTest extends CommonCodeQualityToolsTest {
+  @Test void empty() {
+    emptyProjects.each { project ->
+      assert !addCheckstyle(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
+    }
+  }
+
   @Test void java() {
     javaProjects.each { project ->
       assert addCheckstyle(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
@@ -82,14 +88,12 @@ class CodeQualityToolsPluginCheckstyleTest extends CommonCodeQualityToolsTest {
     def extension = new CodeQualityToolsPluginExtensionForTests()
     extension.checkstyle.include = ['*.java']
 
-    for (def project : projects) {
-      assert addCheckstyle(project, rootProject, extension)
-      def task = project.tasks.findByName('checkstyle')
+    assert addCheckstyle(javaProject, rootProject, extension)
+    def task = javaProject.tasks.findByName('checkstyle')
 
-      task.with {
-        assert includes.size() == 1
-        assert includes.contains('*.java')
-      }
+    task.with {
+      assert includes.size() == 1
+      assert includes.contains('*.java')
     }
   }
 
@@ -97,14 +101,12 @@ class CodeQualityToolsPluginCheckstyleTest extends CommonCodeQualityToolsTest {
     def extension = new CodeQualityToolsPluginExtensionForTests()
     extension.checkstyle.exclude = ['**/gen']
 
-    for (def project : projects) {
-      assert addCheckstyle(project, rootProject, extension)
-      def task = project.tasks.findByName('checkstyle')
+    assert addCheckstyle(javaProject, rootProject, extension)
+    def task = javaProject.tasks.findByName('checkstyle')
 
-      task.with {
-        assert excludes.size() == 1
-        assert excludes.contains('**/gen')
-      }
+    task.with {
+      assert excludes.size() == 1
+      assert excludes.contains('**/gen')
     }
   }
 

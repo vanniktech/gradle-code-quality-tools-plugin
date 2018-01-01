@@ -8,6 +8,12 @@ import org.junit.Test
 import static com.vanniktech.code.quality.tools.CodeQualityToolsPlugin.addPmd
 
 class CodeQualityToolsPluginPmdTest extends CommonCodeQualityToolsTest {
+  @Test void empty() {
+    emptyProjects.each { project ->
+      assert !addPmd(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
+    }
+  }
+
   @Test void java() {
     javaProjects.each { project ->
       assert addPmd(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
@@ -96,14 +102,12 @@ class CodeQualityToolsPluginPmdTest extends CommonCodeQualityToolsTest {
     def extension = new CodeQualityToolsPluginExtensionForTests()
     extension.pmd.include = ['*.java']
 
-    for (def project : projects) {
-      assert addPmd(project, rootProject, extension)
-      def task = project.tasks.findByName('pmd')
+    assert addPmd(javaProject, rootProject, extension)
+    def task = javaProject.tasks.findByName('pmd')
 
-      task.with {
-        assert includes.size() == 1
-        assert includes.contains('*.java')
-      }
+    task.with {
+      assert includes.size() == 1
+      assert includes.contains('*.java')
     }
   }
 
@@ -111,14 +115,12 @@ class CodeQualityToolsPluginPmdTest extends CommonCodeQualityToolsTest {
     def extension = new CodeQualityToolsPluginExtensionForTests()
     extension.pmd.exclude = ['**/gen']
 
-    for (def project : projects) {
-      assert addPmd(project, rootProject, extension)
-      def task = project.tasks.findByName('pmd')
+    assert addPmd(javaProject, rootProject, extension)
+    def task = javaProject.tasks.findByName('pmd')
 
-      task.with {
-        assert excludes.size() == 1
-        assert excludes.contains('**/gen')
-      }
+    task.with {
+      assert excludes.size() == 1
+      assert excludes.contains('**/gen')
     }
   }
 
