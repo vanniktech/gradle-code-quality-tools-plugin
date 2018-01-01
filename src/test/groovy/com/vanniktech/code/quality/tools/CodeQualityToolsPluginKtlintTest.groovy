@@ -6,6 +6,12 @@ import org.junit.Test
 import static com.vanniktech.code.quality.tools.CodeQualityToolsPlugin.addKtlint
 
 class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest {
+  @Test void empty() {
+    emptyProjects.each { project ->
+      assert !addKtlint(project, new CodeQualityToolsPluginExtensionForTests())
+    }
+  }
+
   @Test void java() {
     javaProjects.each { project ->
       assert !addKtlint(project, new CodeQualityToolsPluginExtensionForTests())

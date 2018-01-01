@@ -6,6 +6,12 @@ import org.junit.Test
 import static com.vanniktech.code.quality.tools.CodeQualityToolsPlugin.addDetekt
 
 class CodeQualityToolsPluginDetektTest extends CommonCodeQualityToolsTest {
+  @Test void empty() {
+    emptyProjects.each { project ->
+      assert !addDetekt(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
+    }
+  }
+
   @Test void java() {
     javaProjects.each { project ->
       assert !addDetekt(project, rootProject, new CodeQualityToolsPluginExtensionForTests())

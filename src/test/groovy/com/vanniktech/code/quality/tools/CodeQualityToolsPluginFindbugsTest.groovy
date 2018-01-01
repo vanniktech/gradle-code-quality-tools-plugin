@@ -8,6 +8,12 @@ import org.junit.Test
 import static com.vanniktech.code.quality.tools.CodeQualityToolsPlugin.addFindbugs
 
 class CodeQualityToolsPluginFindbugsTest extends CommonCodeQualityToolsTest {
+  @Test void empty() {
+    emptyProjects.each { project ->
+      assert !addFindbugs(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
+    }
+  }
+
   @Test void java() {
     javaProjects.each { project ->
       assert addFindbugs(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
@@ -94,20 +100,16 @@ class CodeQualityToolsPluginFindbugsTest extends CommonCodeQualityToolsTest {
     def extension = new CodeQualityToolsPluginExtensionForTests()
     extension.findbugs.effort = 'medium'
 
-    for (def project : projects) {
-      assert addFindbugs(project, rootProject, extension)
-      assert project.findbugs.effort == 'medium'
-    }
+    assert addFindbugs(javaProject, rootProject, extension)
+    assert javaProject.findbugs.effort == 'medium'
   }
 
   @Test void reportLevel() {
     def extension = new CodeQualityToolsPluginExtensionForTests()
     extension.findbugs.reportLevel = 'medium'
 
-    for (def project : projects) {
-      assert addFindbugs(project, rootProject, extension)
-      assert project.findbugs.reportLevel == 'medium'
-    }
+    assert addFindbugs(javaProject, rootProject, extension)
+    assert javaProject.findbugs.reportLevel == 'medium'
   }
 
   @Test void failEarlyFalse() {

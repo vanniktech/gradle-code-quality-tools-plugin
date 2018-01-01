@@ -17,6 +17,9 @@ import org.junit.Before
 abstract class CommonCodeQualityToolsTest {
   Project rootProject
 
+  Project[] emptyProjects
+  Project emptyProject
+
   Project[] javaProjects
   Project javaProject
   Project javaLibraryProject
@@ -40,6 +43,8 @@ abstract class CommonCodeQualityToolsTest {
 
   @Before void setUp() {
     rootProject = ProjectBuilder.builder().withName('root').build()
+
+    emptyProject = ProjectBuilder.builder().withName('empty').withParent(rootProject).build()
 
     javaProject = ProjectBuilder.builder().withName('java').withParent(rootProject).build()
     javaProject.plugins.apply(JavaPlugin)
@@ -68,6 +73,10 @@ abstract class CommonCodeQualityToolsTest {
     androidFeatureProject = ProjectBuilder.builder().withName('android feature').build()
     androidFeatureProject.plugins.apply(FeaturePlugin)
 
+    emptyProjects = [
+        emptyProject
+    ]
+
     javaProjects = [
         javaProject,
         javaLibraryProject
@@ -86,7 +95,7 @@ abstract class CommonCodeQualityToolsTest {
         androidFeatureProject
     ]
 
-    projects = javaProjects + kotlinProjects + androidProjects
+    projects = emptyProjects + javaProjects + kotlinProjects + androidProjects
   }
 
   static boolean taskDependsOn(final Task task, final String taskName) {
