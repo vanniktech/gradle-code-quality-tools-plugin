@@ -217,9 +217,6 @@ class CodeQualityToolsPluginExtension {
     boolean enabled = true
 
     /** @since 0.6.0 */
-    String toolVersion = '5.4.2'
-
-    /** @since 0.6.0 */
     String source = 'src'
 
     /** @since 0.6.0 */
