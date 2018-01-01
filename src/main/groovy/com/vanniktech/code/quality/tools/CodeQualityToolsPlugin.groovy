@@ -265,7 +265,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.cpd {
         language = extension.cpd.language
-        toolVersion = extension.cpd.toolVersion
+        toolVersion = extension.pmd.toolVersion
       }
 
       subProject.cpdCheck {
