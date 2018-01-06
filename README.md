@@ -4,9 +4,7 @@
 [![Codecov](https://codecov.io/github/vanniktech/gradle-code-quality-tools-plugin/coverage.svg?branch=master)](https://codecov.io/github/vanniktech/gradle-code-quality-tools-plugin?branch=master)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-Gradle plugin that generates configures [ErrorProne](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-5.8.0/usage/cpd-usage.html), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task.
-
-Works with the latest Gradle Android Tools version 3.0.1.
+Gradle plugin that configures [ErrorProne](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how eacch of those plugins are configured.
 
 # Set up
 
@@ -16,9 +14,10 @@ Works with the latest Gradle Android Tools version 3.0.1.
 buildscript {
   repositories {
     mavenCentral()
+    gradlePluginPortal()
   }
   dependencies {
-    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.8.0'
+    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.9.0'
   }
 }
 
@@ -37,94 +36,117 @@ classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.9.0-SNAPSHOT'
 
 ## Configuration
 
-Those are all available configurations - shown with default values and their types. More information can be found in the [Java Documentation of the Extension](src/main/groovy/com/vanniktech/code/quality/tools/CodeQualityToolsPluginExtension.groovy).
+The philosophy of this plugin is to fail early. This means having zero warnings / errors reported from any tools. If you're just getting started with this in a large code base you might not be able to achieve this right away in which case you might want to set `failEarly` to `false` and then apply at a finer more granular scope how each tool should behave e.g. `checkstyle { ignoreFailures = false }`.
+
+Those are all the available configurations - shown with default values and their types. More information can be found in the [Java Documentation of the Extension](src/main/groovy/com/vanniktech/code/quality/tools/CodeQualityToolsPluginExtension.groovy).
 
 ```groovy
 codeQualityTools {
-  failEarly = true // type boolean
-  xmlReports = true // type boolean
-  htmlReports = false // type boolean
-  textReports = false // type boolean
-  ignoreProjects = [] // type String array
+  boolean failEarly = true
+  boolean xmlReports = true
+  boolean htmlReports = false
+  boolean textReports = false
+  String[] ignoreProjects = []
 
   findbugs {
-    enabled = true // type boolean
-    toolVersion = '3.0.1' // type String
-    excludeFilter = 'code_quality_tools/findbugs-filter.xml' // type String
-    ignoreFailures = null // type Boolean
-    source = 'src' // type String
-    effort = 'max' // type String
-    reportLevel = 'low' // type String
+    boolean enabled = true
+    String toolVersion = '3.0.1'
+    String excludeFilter = 'code_quality_tools/findbugs-filter.xml'
+    Boolean ignoreFailures = null
+    String source = 'src'
+    String effort = 'max'
+    String reportLevel = 'low'
   }
-
   checkstyle {
-    enabled = true // type boolean
-    toolVersion = '7.8.2' // type String
-    configFile = 'code_quality_tools/checkstyle.xml' // type String
-    ignoreFailures = null // type Boolean
-    showViolations // type Boolean
-    source = 'src' // type String
-    include = ['**/*.java'] // type List<String>
-    exclude = ['**/gen/**'] // type List<String>
+    boolean enabled = true
+    String toolVersion = '8.6'
+    String configFile = 'code_quality_tools/checkstyle.xml'
+    Boolean ignoreFailures = null
+    Boolean showViolations = null
+    String source = 'src'
+    List<String> include = ['**/*.java']
+    List<String> exclude = ['**/gen/**']
   }
-
   pmd {
-    enabled = true // type boolean
-    toolVersion = '5.8.1' // type String
-    ruleSetFile = 'code_quality_tools/pmd.xml' // type String
-    ignoreFailures = null // type Boolean
-    source = 'src' // type String
-    include = ['**/*.java'] // type List<String>
-    exclude = ['**/gen/**'] // type List<String>
+    boolean enabled = true
+    String toolVersion = '6.0.0'
+    String ruleSetFile = 'code_quality_tools/pmd.xml'
+    Boolean ignoreFailures = null
+    String source = 'src'
+    List<String> include = ['**/*.java']
+    List<String> exclude = ['**/gen/**']
   }
-
   lint {
-    enabled = true // type boolean
-    textReport = null // type Boolean
-    textOutput = 'stdout' // type String
-    abortOnError = null // type Boolean
-    warningsAsErrors = null // type Boolean
-    checkAllWarnings = null // type Boolean
-    baselineFileName = null // type String
+    boolean enabled = true
+    Boolean textReport = null
+    String textOutput = 'stdout'
+    Boolean abortOnError = null
+    Boolean warningsAsErrors = null
+    Boolean checkAllWarnings = null
+    String baselineFileName = null
+    Boolean absolutePaths = null
+    File lintConfig = null
   }
-
   ktlint {
-    enabled = true // type boolean
-    toolVersion = '0.8.3' // type String
+    boolean enabled = true
+    String toolVersion = '0.14.0'
   }
-
   detekt {
-    enabled = true // type boolean
-    toolVersion = '1.0.0.M12.3' // type String
-    config = 'code_quality_tools/detekt.yml' // type String
+    boolean enabled = true
+    String toolVersion = '1.0.0.RC6'
+    String config = 'code_quality_tools/detekt.yml'
   }
-
   cpd {
-    enabled = true // type boolean
-    toolVersion = '5.4.2' // type String
-    source = 'src' // type String
-    language = 'java' // type String
-    ignoreFailures = null // type Boolean
-    minimumTokenCount = 50 // type int
+    boolean enabled = true
+    String source = 'src'
+    String language = 'java'
+    Boolean ignoreFailures = null
+    int minimumTokenCount = 50
   }
-
-  errorProne {
-    enabled = true // type boolean
-    toolVersion = '2.0.20' // type String
+  errorprone {
+    boolean enabled = true
+    String toolVersion = '2.1.3'
   }
 }
-
 ```
 
-In order to specify Gradle Versions for Plugins (Detekt, ErrorProne or CPD), you'll need to do that using `gradle.properties`:
+## Tools
 
-```groovy
-# We need to define those here since adding Gradle Plugins is only allowed before afterEvaluate.
-# Defining values with custom extensions are not visible at this prior step though.
-codeQualityTools.detekt.gradlePluginVersion = 1.0.0.M13.2
-codeQualityTools.errorProne.gradlePluginVersion = 0.0.10
-codeQualityTools.cpd.gradlePluginVersion = 1.0
-```
+Here I'll give a bit more information about how each of the tools will be applied. If there's a Gradle task that this plugin will generate it will also be hooked up into the `check` Gradle task. This means that when you execute `check` all of the rools will be running for you.
+
+### ErrorProne
+
+It'll apply the [ErrorProne Gradle Plugin](https://github.com/tbroyer/gradle-errorprone-plugin) which will run together with `assemble`. There's no report generated for this but you'll get compile warnings & errors.
+
+### Findbugs
+
+It'll apply the [Findbugs Plugin](https://docs.gradle.org/current/userguide/findbugs_plugin.html) and generate the `findbugs` task that will execute findbugs. The configuration properties of `codeQualityTools -> findbugs` mirror the [properties from the plugin](https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugsExtension.html).
+
+### Checkstyle
+
+It'll apply the [Checkstyle Plugin](https://docs.gradle.org/current/userguide/checkstyle_plugin.html) and generate the `checkstyle` task that will execute checkstyle. The configuration properties of `codeQualityTools -> checkstyle` mirror the [properties from the plugin](https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html).
+
+### PMD
+
+It'll apply the [PMD Plugin](https://docs.gradle.org/current/userguide/pmd_plugin.html) and generate the `pmd` task that will execute pmd. The configuration properties of `codeQualityTools -> pmd` mirror the [properties from the plugin](https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.PmdExtension.html).
+
+### CPD
+
+It'll apply the [CPD Plugin](https://github.com/aaschmid/gradle-cpd-plugin) and generate the `cpdCheck` task that will execute cpd. The configuration properties of `codeQualityTools -> cpd` mirror the [properties from the plugin](https://github.com/aaschmid/gradle-cpd-plugin#options).
+
+### Lint
+
+This will only work when one of the Android Plugins (`com.android.application`, `com.android.library`, etc.) are applied. The configuration properties of `codeQualityTools -> lint` mirror the [properties from the lintOptions](https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.LintOptions.html).
+
+### Detekt
+
+It'll use the specified detekt version and generate the `detektCheck` task which will run detekt on your code base.
+
+### Ktlint
+
+It'll use the specified ktlint version and then generate two tasks. `ktlint` which will run ktlint over your code and flag issues. `ktlintFormat` will reformat your code.
+
+**Note:** There might be some configuration properties that are not mirrored in which case feel free to open a PR. Personally, I don't have the need for all of them.
 
 # License
 
