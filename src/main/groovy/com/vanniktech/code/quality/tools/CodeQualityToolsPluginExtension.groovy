@@ -52,7 +52,7 @@ class CodeQualityToolsPluginExtension {
      * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
      * @since 0.3.0
      */
-    Boolean ignoreFailures
+    Boolean ignoreFailures = null
 
     /** @since 0.4.0 */
     String source = 'src'
@@ -81,13 +81,13 @@ class CodeQualityToolsPluginExtension {
      * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
      * @since 0.3.0
      */
-    Boolean ignoreFailures
+    Boolean ignoreFailures = null
 
     /**
      * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
      * @since 0.3.0
      */
-    Boolean showViolations
+    Boolean showViolations = null
 
     /** @since 0.4.0 */
     String source = 'src'
@@ -116,7 +116,7 @@ class CodeQualityToolsPluginExtension {
      * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
      * @since 0.3.0
      */
-    Boolean ignoreFailures
+    Boolean ignoreFailures = null
 
     /** @since 0.4.0 */
     String source = 'src'
@@ -151,19 +151,19 @@ class CodeQualityToolsPluginExtension {
      * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
      * @since 0.2.0
      */
-    Boolean abortOnError
+    Boolean abortOnError = null
 
     /**
      * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
      * @since 0.2.0
      */
-    Boolean warningsAsErrors
+    Boolean warningsAsErrors = null
 
     /**
      * Returns whether lint should check all warnings, including those off by default
      * @since 0.5.0
      */
-    Boolean checkAllWarnings
+    Boolean checkAllWarnings = null
 
     /**
      * The baseline file name (e.g. baseline.xml) which will be saved under each project.
@@ -175,7 +175,7 @@ class CodeQualityToolsPluginExtension {
      * Returns whether lint should use absolute paths or not
      * @since 0.9.0
      */
-    Boolean absolutePaths
+    Boolean absolutePaths = null
 
     /**
      * The lint config file (e.g. lint.xml)
@@ -226,7 +226,7 @@ class CodeQualityToolsPluginExtension {
      * if set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}
      * @since 0.6.0
      */
-    Boolean ignoreFailures
+    Boolean ignoreFailures = null
 
     /**
      * A positive integer indicating the minimum token count to trigger a CPD match
