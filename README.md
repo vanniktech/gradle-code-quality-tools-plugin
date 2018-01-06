@@ -4,7 +4,7 @@
 [![Codecov](https://codecov.io/github/vanniktech/gradle-code-quality-tools-plugin/coverage.svg?branch=master)](https://codecov.io/github/vanniktech/gradle-code-quality-tools-plugin?branch=master)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-Gradle plugin that configures [ErrorProne](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how eacch of those plugins are configured.
+Gradle plugin that configures [Error Prone](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how eacch of those plugins are configured.
 
 # Set up
 
@@ -103,7 +103,7 @@ codeQualityTools {
     Boolean ignoreFailures = null
     int minimumTokenCount = 50
   }
-  errorprone {
+  errorProne {
     boolean enabled = true
     String toolVersion = '2.1.3'
   }
@@ -114,9 +114,9 @@ codeQualityTools {
 
 Here I'll give a bit more information about how each of the tools will be applied. If there's a Gradle task that this plugin will generate it will also be hooked up into the `check` Gradle task. This means that when you execute `check` all of the rools will be running for you.
 
-### ErrorProne
+### Error Prone
 
-It'll apply the [ErrorProne Gradle Plugin](https://github.com/tbroyer/gradle-errorprone-plugin) which will run together with `assemble`. There's no report generated for this but you'll get compile warnings & errors.
+It'll apply the [Error Prone Gradle Plugin](https://github.com/tbroyer/gradle-errorprone-plugin) which will run together with `assemble`. There's no report generated for this but you'll get compile warnings & errors.
 
 ### Findbugs
 
