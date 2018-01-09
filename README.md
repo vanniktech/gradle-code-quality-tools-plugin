@@ -4,7 +4,7 @@
 [![Codecov](https://codecov.io/github/vanniktech/gradle-code-quality-tools-plugin/coverage.svg?branch=master)](https://codecov.io/github/vanniktech/gradle-code-quality-tools-plugin?branch=master)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-Gradle plugin that configures [Error Prone](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how eacch of those plugins are configured.
+Gradle plugin that configures [Error Prone](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how each of those plugins are configured.
 
 # Set up
 
