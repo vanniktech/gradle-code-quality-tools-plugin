@@ -269,6 +269,9 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       }
 
       subProject.cpdCheck {
+        description = 'Runs cpd.'
+        group = 'verification'
+
         reports {
           xml.enabled = extension.xmlReports
           text.enabled = extension.textReports

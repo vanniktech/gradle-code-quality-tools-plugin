@@ -24,7 +24,7 @@ class CodeQualityToolsPluginPmdTest extends CommonCodeQualityToolsTest {
 
   @Test void kotlin() {
     kotlinProjects.each { project ->
-    // Ideally we don't want to be running this in kotlin projects but since it uses the java library under the hood we can't do much.
+      // Ideally we don't want to be running this in kotlin projects but since it uses the java library under the hood we can't do much.
       assert addPmd(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
 
       assertPmd(project)
