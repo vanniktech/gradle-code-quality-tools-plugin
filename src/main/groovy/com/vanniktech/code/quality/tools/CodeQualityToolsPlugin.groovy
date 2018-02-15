@@ -230,16 +230,23 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         ktlint "com.github.shyiko:ktlint:${extension.ktlint.toolVersion}"
       }
 
+      def outputDir = "${subProject.buildDir}/reports/ktlint/"
+      def inputFiles = subProject.fileTree(dir: "src", include: "**/*.kt")
+
       subProject.task('ktlint', type: JavaExec) {
+        inputs.files(inputFiles)
+        outputs.dir(outputDir)
         group = 'verification'
         description = 'Runs ktlint.'
         main = 'com.github.shyiko.ktlint.Main'
         classpath = subProject.configurations.ktlint
-        def outputFile = "${subProject.buildDir}/reports/ktlint/ktlint-checkstyle-report.xml"
+        def outputFile = "${outputDir}ktlint-checkstyle-report.xml"
         args '--reporter=plain', "--reporter=checkstyle,output=${outputFile}", 'src/**/*.kt'
       }
 
       subProject.task('ktlintFormat', type: JavaExec) {
+        inputs.files(inputFiles)
+        outputs.upToDateWhen { true } // We only need the input as it'll change when we reformat.
         group = 'formatting'
         description = "Runs ktlint and autoformats your code."
         main = "com.github.shyiko.ktlint.Main"
