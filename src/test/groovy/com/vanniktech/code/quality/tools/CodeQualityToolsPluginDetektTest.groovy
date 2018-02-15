@@ -47,11 +47,13 @@ class CodeQualityToolsPluginDetektTest extends CommonCodeQualityToolsTest {
     assert detektCheckTask.group == 'verification'
     assert detektCheckTask.description == 'Runs detekt.'
     assert detektCheckTask.main == 'io.gitlab.arturbosch.detekt.cli.Main'
-    assert detektCheckTask.args.size() == 4
+    assert detektCheckTask.args.size() == 6
     assert detektCheckTask.args[0] == '--config'
     assert detektCheckTask.args[1] == rootProject.file('code_quality_tools/detekt.yml').toString()
     assert detektCheckTask.args[2] == '--input'
     assert detektCheckTask.args[3] == project.file('.').toString()
+    assert detektCheckTask.args[4] == '--output'
+    assert detektCheckTask.args[5] == new File(project.buildDir, "reports/detekt").toString()
   }
 
   @Test void configurations() {

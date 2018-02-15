@@ -309,7 +309,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         description = 'Runs detekt.'
         main = 'io.gitlab.arturbosch.detekt.cli.Main'
         classpath = project.configurations.detektCheck
-        args "--config", rootProject.file(extension.detekt.config), "--input", project.file('.')
+        args = [
+            "--config", rootProject.file(extension.detekt.config),
+            "--input", project.file("."),
+            "--output", new File(project.buildDir, "reports/detekt/")
+        ]
       }
 
       project.check.dependsOn 'detektCheck'
