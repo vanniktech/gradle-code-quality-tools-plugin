@@ -311,7 +311,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         detektCheck "io.gitlab.arturbosch.detekt:detekt-cli:${extension.detekt.toolVersion}"
       }
 
+      def output = new File(project.buildDir, "reports/detekt/")
+
       project.task('detektCheck', type: JavaExec) {
+        inputs.files(project.fileTree(dir: "src", include: "**/*.kt"))
+        outputs.dir(output.toString())
         group = 'verification'
         description = 'Runs detekt.'
         main = 'io.gitlab.arturbosch.detekt.cli.Main'
@@ -319,7 +323,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         args = [
             "--config", rootProject.file(extension.detekt.config),
             "--input", project.file("."),
-            "--output", new File(project.buildDir, "reports/detekt/")
+            "--output", output
         ]
       }
 
