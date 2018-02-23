@@ -8,6 +8,9 @@ import org.gradle.api.plugins.quality.Pmd
 import org.gradle.api.tasks.JavaExec
 
 class CodeQualityToolsPlugin implements Plugin<Project> {
+  private static final String GROUP_VERIFICATION = 'verification'
+  private static final String GROUP_FORMATTING = 'formatting'
+
   @Override void apply(final Project rootProject) {
     rootProject.extensions.create('codeQualityTools', CodeQualityToolsPluginExtension)
     rootProject.codeQualityTools.extensions.create('findbugs', CodeQualityToolsPluginExtension.Findbugs)
@@ -64,7 +67,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.task('pmd', type: Pmd) {
         description = 'Runs pmd.'
-        group = 'verification'
+        group = GROUP_VERIFICATION
 
         ruleSets = []
 
@@ -103,7 +106,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.task('checkstyle', type: Checkstyle) {
         description = 'Runs checkstyle.'
-        group = 'verification'
+        group = GROUP_VERIFICATION
 
         source = subProject.fileTree(extension.checkstyle.source)
         include extension.checkstyle.include
@@ -146,7 +149,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.task('findbugs', type: FindBugs, dependsOn: 'assemble') {
         description = 'Runs findbugs.'
-        group = 'verification'
+        group = GROUP_VERIFICATION
 
         classes = subProject.fileTree(findbugsClassesPath)
         source = subProject.fileTree(extension.findbugs.source)
@@ -236,7 +239,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       subProject.task('ktlint', type: JavaExec) {
         inputs.files(inputFiles)
         outputs.dir(outputDir)
-        group = 'verification'
+        group = GROUP_VERIFICATION
         description = 'Runs ktlint.'
         main = 'com.github.shyiko.ktlint.Main'
         classpath = subProject.configurations.ktlint
@@ -247,7 +250,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       subProject.task('ktlintFormat', type: JavaExec) {
         inputs.files(inputFiles)
         outputs.upToDateWhen { true } // We only need the input as it'll change when we reformat.
-        group = 'formatting'
+        group = GROUP_FORMATTING
         description = "Runs ktlint and autoformats your code."
         main = "com.github.shyiko.ktlint.Main"
         classpath = subProject.configurations.ktlint
@@ -277,7 +280,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       subProject.cpdCheck {
         description = 'Runs cpd.'
-        group = 'verification'
+        group = GROUP_VERIFICATION
 
         reports {
           xml.enabled = extension.xmlReports
@@ -316,7 +319,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       project.task('detektCheck', type: JavaExec) {
         inputs.files(project.fileTree(dir: "src", include: "**/*.kt"))
         outputs.dir(output.toString())
-        group = 'verification'
+        group = GROUP_VERIFICATION
         description = 'Runs detekt.'
         main = 'io.gitlab.arturbosch.detekt.cli.Main'
         classpath = project.configurations.detektCheck
