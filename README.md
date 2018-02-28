@@ -14,6 +14,7 @@ Gradle plugin that configures [Error Prone](http://errorprone.info/), [Findbugs]
 buildscript {
   repositories {
     mavenCentral()
+    google()
     gradlePluginPortal()
   }
   dependencies {
