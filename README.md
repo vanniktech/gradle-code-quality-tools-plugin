@@ -10,7 +10,7 @@ Gradle plugin that configures [Error Prone](http://errorprone.info/), [Findbugs]
 
 **root/build.gradle**
 
-```groovy
+```gradle
 buildscript {
   repositories {
     mavenCentral()
@@ -18,21 +18,28 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.9.0'
+    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.9.0"
   }
 }
 
-apply plugin: 'com.vanniktech.code.quality.tools'
+apply plugin: "com.vanniktech.code.quality.tools"
 ```
 
 Information: [This plugin is also available on Gradle plugins](https://plugins.gradle.org/plugin/com.vanniktech.code.quality.tools)
 
-### Snapshots
+### Snapshot
 
-Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-code-quality-tools-plugin). Current one is:
+```gradle
+buildscript {
+  repositories {
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+  }
+  dependencies {
+    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.10.0-SNAPSHOT"
+  }
+}
 
-```groovy
-classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.10.0-SNAPSHOT'
+apply plugin: "com.vanniktech.code.quality.tools"
 ```
 
 ## Configuration
