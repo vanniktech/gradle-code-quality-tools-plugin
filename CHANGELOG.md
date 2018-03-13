@@ -1,7 +1,18 @@
 # Change Log
 
-Version 0.10.0 *(In development)*
----------------------------------
+Version 0.10.0 *(2018-03-13)*
+-----------------------------
+
+- Add option for Lint.checkReleaseBuilds and default to false. [\#125](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/125) ([vanniktech](https://github.com/vanniktech))
+- Update README to include google\(\) repository in buildscript repositories. [\#123](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/123) ([vanniktech](https://github.com/vanniktech))
+- Extract groups as constants. [\#121](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/121) ([vanniktech](https://github.com/vanniktech))
+- Detekt: Make detektCheck task incremental. [\#119](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/119) ([vanniktech](https://github.com/vanniktech))
+- ktlint: Make ktlint & ktlintFormat incremental. [\#118](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/118) ([vanniktech](https://github.com/vanniktech))
+- Detekt: Generate reports from execution. [\#117](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/117) ([vanniktech](https://github.com/vanniktech))
+- Add tests for ErrorProne. [\#114](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/114) ([vanniktech](https://github.com/vanniktech))
+- Add tests for CPD. [\#113](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/113) ([vanniktech](https://github.com/vanniktech))
+- Fix casing of errorprone. [\#111](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/111) ([vanniktech](https://github.com/vanniktech))
+- CodeQualityToolsPluginExtension: Explicitly set Booleans to null. [\#110](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/110) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.9.0 *(2018-01-06)*
 ----------------------------

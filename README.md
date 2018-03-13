@@ -18,7 +18,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.9.0"
+    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.10.0"
   }
 }
 
