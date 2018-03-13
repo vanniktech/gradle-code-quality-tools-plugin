@@ -61,6 +61,7 @@ class CodeQualityToolsPluginLintTest extends CommonCodeQualityToolsTest {
     assert androidAppProject.android.lintOptions.textReport == extension.lint.textReport
     assert androidAppProject.android.lintOptions.absolutePaths
     assert androidAppProject.android.lintOptions.lintConfig == null
+    assert !androidAppProject.android.lintOptions.checkReleaseBuilds
     assert androidAppProject.android.lintOptions.baselineFile == androidAppProject.file("baseline.xml")
     assert androidAppProject.android.lintOptions.textOutput.toString() == extension.lint.textOutput
 
@@ -71,6 +72,7 @@ class CodeQualityToolsPluginLintTest extends CommonCodeQualityToolsTest {
     assert androidLibraryProject.android.lintOptions.textReport == extension.lint.textReport
     assert androidLibraryProject.android.lintOptions.absolutePaths
     assert androidLibraryProject.android.lintOptions.lintConfig == null
+    assert !androidLibraryProject.android.lintOptions.checkReleaseBuilds
     assert androidLibraryProject.android.lintOptions.baselineFile == androidLibraryProject.file("baseline.xml")
     assert androidLibraryProject.android.lintOptions.textOutput.toString() == extension.lint.textOutput
   }
@@ -113,6 +115,17 @@ class CodeQualityToolsPluginLintTest extends CommonCodeQualityToolsTest {
 
     assert addLint(androidLibraryProject, extension)
     assert androidLibraryProject.android.lintOptions.absolutePaths == extension.lint.absolutePaths
+  }
+
+  @Test void checkReleaseBuilds() {
+    def extension = new CodeQualityToolsPluginExtensionForTests()
+    extension.lint.checkReleaseBuilds = true
+
+    assert addLint(androidAppProject, extension)
+    assert androidAppProject.android.lintOptions.checkReleaseBuilds == extension.lint.checkReleaseBuilds
+
+    assert addLint(androidLibraryProject, extension)
+    assert androidLibraryProject.android.lintOptions.checkReleaseBuilds == extension.lint.checkReleaseBuilds
   }
 
   @Test void lintConfigFile() {

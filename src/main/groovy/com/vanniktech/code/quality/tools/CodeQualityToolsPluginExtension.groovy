@@ -182,6 +182,14 @@ class CodeQualityToolsPluginExtension {
      * @since 0.9.0
      */
     File lintConfig = null
+
+    /**
+     * Returns whether lint should check release builds or not.
+     * Since this plugin hooks lint into the check task we'll assume that you're always running
+     * the full lint suite and hence checking release builds is not necessary.
+     * @since 0.10.0
+     */
+    Boolean checkReleaseBuilds = false
   }
 
   static class Ktlint {
