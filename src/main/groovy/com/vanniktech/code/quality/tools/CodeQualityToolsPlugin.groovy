@@ -134,7 +134,19 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     def isFindbugsSupported = isJavaProject(subProject) || isAndroidProject(subProject) || isKotlinProject(subProject)
 
     if (isNotIgnored && isEnabled && isFindbugsSupported) {
-      final String findbugsClassesPath = isAndroidProject(subProject) ? 'build/intermediates/classes/debug/' : 'build/classes/java/main/'
+      def buildDirIncludes = new ArrayList()
+
+      if (isAndroidProject(subProject)) {
+        buildDirIncludes.add("intermediates/classes/debug/**")
+      } else {
+        if (isKotlinProject(subProject)) {
+          buildDirIncludes.add("classes/kotlin/main/**")
+        }
+
+        if (isJavaProject(subProject)) {
+          buildDirIncludes.add("classes/java/main/**")
+        }
+      }
 
       subProject.plugins.apply('findbugs')
 
@@ -151,7 +163,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         description = 'Runs findbugs.'
         group = GROUP_VERIFICATION
 
-        classes = subProject.fileTree(findbugsClassesPath)
+        classes = subProject.fileTree(subProject.buildDir).include(buildDirIncludes)
         source = subProject.fileTree(extension.findbugs.source)
         classpath = subProject.files()
 
