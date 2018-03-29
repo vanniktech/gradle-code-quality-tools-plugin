@@ -18,7 +18,7 @@ class CodeQualityToolsPluginFindbugsTest extends CommonCodeQualityToolsTest {
     javaProjects.each { project ->
       assert addFindbugs(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
 
-      assertFindbugs(project, "/build/classes/java/main")
+      assertFindbugs(project)
     }
   }
 
@@ -26,7 +26,7 @@ class CodeQualityToolsPluginFindbugsTest extends CommonCodeQualityToolsTest {
     kotlinProjects.each { project ->
       assert addFindbugs(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
 
-      assertFindbugs(project, "/build/classes/java/main")
+      assertFindbugs(project)
     }
   }
 
@@ -34,11 +34,11 @@ class CodeQualityToolsPluginFindbugsTest extends CommonCodeQualityToolsTest {
     androidProjects.each { project ->
       assert addFindbugs(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
 
-      assertFindbugs(project, "/build/intermediates/classes/debug")
+      assertFindbugs(project)
     }
   }
 
-  private void assertFindbugs(Project project, String classesPath) {
+  private void assertFindbugs(Project project) {
     assert project.plugins.hasPlugin(FindBugsPlugin)
 
     assert !project.findbugs.ignoreFailures
@@ -54,8 +54,6 @@ class CodeQualityToolsPluginFindbugsTest extends CommonCodeQualityToolsTest {
     task.with {
       assert description == 'Runs findbugs.'
       assert group == 'verification'
-
-      assert classesPath == classes.dir.absolutePath.replace(project.projectDir.absolutePath, '')
 
       assert excludeFilter == rootProject.file('code_quality_tools/findbugs-filter.xml')
 
