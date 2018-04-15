@@ -8,19 +8,19 @@ import static com.vanniktech.code.quality.tools.CodeQualityToolsPlugin.addKtlint
 class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest {
   @Test void empty() {
     emptyProjects.each { project ->
-      assert !addKtlint(project, new CodeQualityToolsPluginExtensionForTests())
+      assert !addKtlint(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
     }
   }
 
   @Test void java() {
     javaProjects.each { project ->
-      assert !addKtlint(project, new CodeQualityToolsPluginExtensionForTests())
+      assert !addKtlint(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
     }
   }
 
   @Test void kotlin() {
     kotlinProjects.each { project ->
-      assert addKtlint(project, new CodeQualityToolsPluginExtensionForTests())
+      assert addKtlint(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
 
       assertKtlint(project)
     }
@@ -28,7 +28,7 @@ class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest {
 
   @Test void android() {
     androidProjects.each { project ->
-      assert !addKtlint(project, new CodeQualityToolsPluginExtensionForTests())
+      assert !addKtlint(project, rootProject, new CodeQualityToolsPluginExtensionForTests())
     }
   }
 
@@ -66,7 +66,7 @@ class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest {
     def extension = new CodeQualityToolsPluginExtensionForTests()
     extension.ktlint.toolVersion = '0.8.2'
 
-    assert addKtlint(kotlinPlatformCommonProject, extension)
+    assert addKtlint(kotlinPlatformCommonProject, rootProject, extension)
 
     def ktlint = kotlinPlatformCommonProject.configurations.getByName('ktlint').dependencies[0]
     assert ktlint.group == 'com.github.shyiko'
@@ -79,7 +79,7 @@ class CodeQualityToolsPluginKtlintTest extends CommonCodeQualityToolsTest {
     extension.ktlint.enabled = false
 
     for (def project : projects) {
-      assert !addKtlint(project, extension)
+      assert !addKtlint(project, rootProject, extension)
     }
   }
 }

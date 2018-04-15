@@ -41,7 +41,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   private static void addCodeQualityTools(final Project project, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
     addPmd(project, rootProject, extension)
     addCheckstyle(project, rootProject, extension)
-    addKtlint(project, extension)
+    addKtlint(project, rootProject, extension)
     addCpd(project, extension)
     addDetekt(project, rootProject, extension)
     addErrorProne(project, extension)
@@ -238,7 +238,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     return false
   }
 
-  protected static boolean addKtlint(final Project subProject, final CodeQualityToolsPluginExtension extension) {
+  protected static boolean addKtlint(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
     def isNotIgnored = !shouldIgnore(subProject, extension)
     def isEnabled = extension.ktlint.enabled
     def isKtlintSupported = isKotlinProject(subProject)
@@ -253,10 +253,11 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       }
 
       def outputDir = "${subProject.buildDir}/reports/ktlint/"
+      def configurationFiles = rootProject.fileTree(dir: ".", include: "**/.editorconfig")
       def inputFiles = subProject.fileTree(dir: "src", include: "**/*.kt")
 
       subProject.task('ktlint', type: JavaExec) {
-        inputs.files(inputFiles)
+        inputs.files(inputFiles, configurationFiles)
         outputs.dir(outputDir)
         group = GROUP_VERIFICATION
         description = 'Runs ktlint.'
@@ -267,7 +268,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       }
 
       subProject.task('ktlintFormat', type: JavaExec) {
-        inputs.files(inputFiles)
+        inputs.files(inputFiles, configurationFiles)
         outputs.upToDateWhen { true } // We only need the input as it'll change when we reformat.
         group = GROUP_FORMATTING
         description = "Runs ktlint and autoformats your code."
