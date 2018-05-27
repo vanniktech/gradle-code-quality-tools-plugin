@@ -1,5 +1,5 @@
 buildscript {
-  ext.kotlinVersion = '1.2.0'
+  ext.kotlinVersion = '1.2.41'
 
   repositories {
     mavenCentral()
@@ -8,19 +8,29 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.gradle.publish:plugin-publish-plugin:0.9.9'
+    classpath 'com.gradle.publish:plugin-publish-plugin:0.9.10'
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0'
-    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.1.0'
+    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.2.0'
   }
 }
 
 apply plugin: 'groovy'
-apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'java-gradle-plugin'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'com.vanniktech.android.junit.jacoco'
 apply plugin: "com.vanniktech.maven.publish"
+
+gradlePlugin {
+  plugins {
+    codeQualityToolsPlugin {
+      id = 'com.vanniktech.code.quality.tools'
+      implementationClass = 'com.vanniktech.code.quality.tools.CodeQualityToolsPlugin'
+    }
+  }
+}
 
 repositories {
   mavenCentral()
@@ -29,14 +39,16 @@ repositories {
 }
 
 dependencies {
-  compile gradleApi()
-  compile localGroovy()
-  compile 'com.android.tools.build:gradle:3.0.1'
-  compile 'de.aaschmid:gradle-cpd-plugin:1.1'
-  compile 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.13'
+  api gradleApi()
+  api localGroovy()
+  api 'de.aaschmid:gradle-cpd-plugin:1.1'
+  api 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.14'
 
-  testCompile 'junit:junit:4.12'
-  testCompile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+  compileOnly 'com.android.tools.build:gradle:3.1.2'
+
+  testImplementation 'com.android.tools.build:gradle:3.1.2'
+  testImplementation 'junit:junit:4.12'
+  testImplementation "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
@@ -56,6 +68,6 @@ pluginBundle {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '4.5'
+  gradleVersion = '4.7'
   distributionType = Wrapper.DistributionType.ALL
 }
