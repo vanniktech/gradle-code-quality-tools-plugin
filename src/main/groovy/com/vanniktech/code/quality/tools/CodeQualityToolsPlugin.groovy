@@ -18,7 +18,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     rootProject.codeQualityTools.extensions.create('pmd', CodeQualityToolsPluginExtension.Pmd)
     rootProject.codeQualityTools.extensions.create('lint', CodeQualityToolsPluginExtension.Lint)
     rootProject.codeQualityTools.extensions.create('ktlint', CodeQualityToolsPluginExtension.Ktlint)
-    rootProject.codeQualityTools.extensions.create('detekt', CodeQualityToolsPluginExtension.Detekt)
+    rootProject.codeQualityTools.extensions.create('detekt', DetektExtension)
     rootProject.codeQualityTools.extensions.create('cpd', CodeQualityToolsPluginExtension.Cpd)
     rootProject.codeQualityTools.extensions.create('errorProne', CodeQualityToolsPluginExtension.ErrorProne)
 
@@ -326,32 +326,21 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     def isDetektSupported = isKotlinProject(project)
 
     if (isNotIgnored && isEnabled && isDetektSupported) {
-      project.configurations {
-        detektCheck
+      def task = project.tasks.create("detektCheck", DetektCheckTask)
+      task.version = extension.detekt.toolVersion
+      task.group = GROUP_VERIFICATION
+      task.description = "Runs detekt."
+      task.outputDirectory = new File(project.buildDir, "reports/detekt/")
+      task.configFile = rootProject.file(extension.detekt.config)
+      task.inputs.files(project.fileTree(dir: ".", include: "**/*.kt"))
+
+      task.inputs.property("baseline-file-exists", false)
+
+      if (extension.detekt.baselineFileName != null) {
+        def file = project.file(extension.detekt.baselineFileName)
+        task.baselineFilePath = file.toString()
+        task.inputs.property("baseline-file-exists", file.exists())
       }
-
-      project.dependencies {
-        detektCheck "io.gitlab.arturbosch.detekt:detekt-cli:${extension.detekt.toolVersion}"
-      }
-
-      def output = new File(project.buildDir, "reports/detekt/")
-
-      project.task('detektCheck', type: JavaExec) {
-        def configFile = rootProject.file(extension.detekt.config)
-        inputs.files(project.fileTree(dir: "src", include: "**/*.kt"), configFile)
-        outputs.dir(output.toString())
-        group = GROUP_VERIFICATION
-        description = 'Runs detekt.'
-        main = 'io.gitlab.arturbosch.detekt.cli.Main'
-        classpath = project.configurations.detektCheck
-        args = [
-            "--config", configFile,
-            "--input", project.file("."),
-            "--output", output
-        ]
-      }
-
-      project.check.dependsOn 'detektCheck'
 
       return true
     }

@@ -203,20 +203,6 @@ class CodeQualityToolsPluginExtension {
     String toolVersion = '0.14.0'
   }
 
-  static class Detekt {
-    /**
-     * ability to enable or disable only detekt for every subproject that is not ignored
-     * @since 0.6.0
-     */
-    boolean enabled = true
-
-    /** @since 0.6.0 */
-    String toolVersion = '1.0.0.RC6'
-
-    /** @since 0.6.0 */
-    String config = 'code_quality_tools/detekt.yml'
-  }
-
   static class Cpd {
     /**
      * ability to enable or disable only cpd for every subproject that is not ignored
