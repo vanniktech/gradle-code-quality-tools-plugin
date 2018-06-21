@@ -138,7 +138,6 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       if (isAndroidProject(subProject)) {
         buildDirIncludes.add("intermediates/classes/debug/**")
-        buildDirIncludes.add("intermediates/packaged-classes/debug/**") // AGP 3.2.0 and higher.
       } else {
         if (isKotlinProject(subProject)) {
           buildDirIncludes.add("classes/kotlin/main/**")
