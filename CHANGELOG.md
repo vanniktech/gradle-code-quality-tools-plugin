@@ -1,7 +1,10 @@
 # Change Log
 
-Version 0.11.0 *(In development)*
+Version 0.12.0 *(In development)*
 ---------------------------------
+
+Version 0.11.0 *(2018-06-24)*
+-----------------------------
 
 - Detekt: Add baseline feature and rewrite the internals. [\#138](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/138) ([vanniktech](https://github.com/vanniktech))
 - Unify setup, improve a few things and bump versions. [\#136](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/136) ([vanniktech](https://github.com/vanniktech))
