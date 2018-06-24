@@ -14,7 +14,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.10.0"
+    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.11.0"
   }
 }
 
@@ -99,6 +99,7 @@ codeQualityTools {
     boolean enabled = true
     String toolVersion = '1.0.0.RC6'
     String config = 'code_quality_tools/detekt.yml'
+    String baselineFileName = null
   }
   cpd {
     boolean enabled = true

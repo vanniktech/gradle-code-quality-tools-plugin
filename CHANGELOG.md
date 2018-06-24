@@ -3,6 +3,13 @@
 Version 0.11.0 *(In development)*
 ---------------------------------
 
+- Detekt: Add baseline feature and rewrite the internals. [\#138](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/138) ([vanniktech](https://github.com/vanniktech))
+- Unify setup, improve a few things and bump versions. [\#136](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/136) ([vanniktech](https://github.com/vanniktech))
+- Use Gradle Maven Publish Plugin for publishing. [\#135](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/135) ([vanniktech](https://github.com/vanniktech))
+- Ktlint: Consider .editorconfig files as task inputs. [\#132](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/132) ([vanniktech](https://github.com/vanniktech))
+- Detekt: Consider configuration file as task input. [\#131](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/131) ([vanniktech](https://github.com/vanniktech))
+- Fix classes for Findbugs in Kotlin only project. [\#126](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/126) ([vanniktech](https://github.com/vanniktech))
+
 Version 0.10.0 *(2018-03-13)*
 -----------------------------
 
