@@ -1,7 +1,9 @@
 # Change Log
 
-Version 0.12.0 *(In development)*
----------------------------------
+Version 0.12.0 *(2018-06-24)*
+-----------------------------
+
+- Reupload 0.11.0 binary with a new version since mavenCentral upload was flaky.
 
 Version 0.11.0 *(2018-06-24)*
 -----------------------------
