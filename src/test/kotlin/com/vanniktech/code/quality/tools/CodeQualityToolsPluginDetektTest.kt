@@ -83,12 +83,20 @@ class CodeQualityToolsPluginDetektTest {
         .fails()
   }
 
+  @Test fun checkTaskRunsDetekt() {
+    Roboter(testProjectDir, taskToRun = "check")
+        .withConfiguration("failFast: true")
+        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo() = Unit")
+        .fails()
+  }
+
   class Roboter(
     private val directory: TemporaryFolder,
     private val config: String = "code_quality_tools/detekt.yml",
     enabled: Boolean = true,
     version: String = "1.0.0.RC6",
-    private val baselineFileName: String? = null
+    private val baselineFileName: String? = null,
+    private val taskToRun: String = "detektCheck"
   ) {
     init {
       directory.newFile("build.gradle").writeText("""
@@ -139,7 +147,7 @@ class CodeQualityToolsPluginDetektTest {
       assertThat(File(directory.root, baselineFileName).readText()).contains(content)
     }
 
-    private fun run() = GradleRunner.create().withPluginClasspath().withProjectDir(directory.root).withArguments("detektCheck")
+    private fun run() = GradleRunner.create().withPluginClasspath().withProjectDir(directory.root).withArguments(taskToRun)
   }
 }
 

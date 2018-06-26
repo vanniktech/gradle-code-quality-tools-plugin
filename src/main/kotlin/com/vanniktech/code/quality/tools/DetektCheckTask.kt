@@ -33,8 +33,6 @@ open class DetektCheckTask : DefaultTask() {
     }
 
     executeDetekt(configuration)
-
-    project.tasks.getByName("check").dependsOn("detektCheck")
   }
 
   private fun executeDetekt(configuration: FileCollection, shouldCreateBaseLine: Boolean = false) {
