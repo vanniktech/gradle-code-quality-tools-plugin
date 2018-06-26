@@ -341,6 +341,8 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         task.inputs.property("baseline-file-exists", file.exists())
       }
 
+      project.check.dependsOn 'detektCheck'
+
       return true
     }
 
