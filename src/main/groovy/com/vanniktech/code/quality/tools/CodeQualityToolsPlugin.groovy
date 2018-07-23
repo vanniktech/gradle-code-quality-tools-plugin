@@ -16,7 +16,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     rootProject.codeQualityTools.extensions.create('findbugs', CodeQualityToolsPluginExtension.Findbugs)
     rootProject.codeQualityTools.extensions.create('checkstyle', CodeQualityToolsPluginExtension.Checkstyle)
     rootProject.codeQualityTools.extensions.create('pmd', CodeQualityToolsPluginExtension.Pmd)
-    rootProject.codeQualityTools.extensions.create('lint', CodeQualityToolsPluginExtension.Lint)
+    rootProject.codeQualityTools.extensions.create('lint', LintExtension)
     rootProject.codeQualityTools.extensions.create('ktlint', CodeQualityToolsPluginExtension.Ktlint)
     rootProject.codeQualityTools.extensions.create('detekt', DetektExtension)
     rootProject.codeQualityTools.extensions.create('cpd', CodeQualityToolsPluginExtension.Cpd)
@@ -220,6 +220,10 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         subProject.android.lintOptions {
           checkReleaseBuilds extension.lint.checkReleaseBuilds
         }
+      }
+
+      if (extension.lint.checkTestSources != null) {
+        subProject.android.lintOptions.checkTestSources = extension.lint.checkTestSources
       }
 
       if (extension.lint.textReport != null) {

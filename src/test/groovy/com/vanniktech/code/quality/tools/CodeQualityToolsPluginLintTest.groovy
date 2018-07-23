@@ -128,6 +128,17 @@ class CodeQualityToolsPluginLintTest extends CommonCodeQualityToolsTest {
     assert androidLibraryProject.android.lintOptions.checkReleaseBuilds == extension.lint.checkReleaseBuilds
   }
 
+  @Test void checkTestSources() {
+    def extension = new CodeQualityToolsPluginExtensionForTests()
+    extension.lint.checkTestSources = true
+
+    assert addLint(androidAppProject, extension)
+    assert androidAppProject.android.lintOptions.checkTestSources == extension.lint.checkTestSources
+
+    assert addLint(androidLibraryProject, extension)
+    assert androidLibraryProject.android.lintOptions.checkTestSources == extension.lint.checkTestSources
+  }
+
   @Test void lintConfigFile() {
     def extension = new CodeQualityToolsPluginExtensionForTests()
 
