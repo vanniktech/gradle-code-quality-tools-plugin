@@ -5,7 +5,7 @@ package com.vanniktech.code.quality.tools
   CodeQualityToolsPluginExtension.Findbugs findbugs = new CodeQualityToolsPluginExtension.Findbugs()
   CodeQualityToolsPluginExtension.Checkstyle checkstyle = new CodeQualityToolsPluginExtension.Checkstyle()
   CodeQualityToolsPluginExtension.Pmd pmd = new CodeQualityToolsPluginExtension.Pmd()
-  CodeQualityToolsPluginExtension.Lint lint = new CodeQualityToolsPluginExtension.Lint()
+  LintExtension lint = new LintExtension()
   CodeQualityToolsPluginExtension.Ktlint ktlint = new CodeQualityToolsPluginExtension.Ktlint()
   DetektExtension detekt = new DetektExtension()
   CodeQualityToolsPluginExtension.Cpd cpd = new CodeQualityToolsPluginExtension.Cpd()
