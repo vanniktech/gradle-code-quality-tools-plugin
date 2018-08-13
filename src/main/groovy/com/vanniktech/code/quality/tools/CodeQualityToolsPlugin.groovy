@@ -1,5 +1,7 @@
 package com.vanniktech.code.quality.tools
 
+import com.android.build.gradle.LintPlugin
+import com.android.build.gradle.internal.dsl.LintOptions
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.quality.Checkstyle
@@ -184,58 +186,57 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   protected static boolean addLint(final Project subProject, final CodeQualityToolsPluginExtension extension) {
     def isNotIgnored = !shouldIgnore(subProject, extension)
     def isEnabled = extension.lint.enabled
-    def isLintSupported = isAndroidProject(subProject)
+    def isAndroidProject = isAndroidProject(subProject)
+    def isJavaProject = isJavaProject(subProject)
 
-    if (isNotIgnored && isEnabled && isLintSupported) {
-      subProject.android.lintOptions {
-        warningsAsErrors extension.lint.warningsAsErrors != null ? extension.lint.warningsAsErrors : extension.failEarly
-        abortOnError extension.lint.abortOnError != null ? extension.lint.abortOnError : extension.failEarly
+    if (isNotIgnored && isEnabled) {
+      def lintOptions
+
+      if (isAndroidProject) {
+        lintOptions = subProject.android.lintOptions
+      } else if (isJavaProject) {
+        subProject.plugins.apply(LintPlugin)
+        lintOptions = subProject.extensions.getByType(LintOptions)
+      } else {
+        lintOptions = null
       }
 
-      if (extension.lint.checkAllWarnings != null) {
-        subProject.android.lintOptions {
-          checkAllWarnings = extension.lint.checkAllWarnings
+      if (lintOptions != null) {
+        lintOptions.setWarningsAsErrors(extension.lint.warningsAsErrors != null ? extension.lint.warningsAsErrors : extension.failEarly)
+        lintOptions.setAbortOnError(extension.lint.abortOnError != null ? extension.lint.abortOnError : extension.failEarly)
+
+        if (extension.lint.checkAllWarnings != null) {
+          lintOptions.setCheckAllWarnings(extension.lint.checkAllWarnings)
         }
-      }
 
-      if (extension.lint.absolutePaths != null) {
-        subProject.android.lintOptions {
-          absolutePaths = extension.lint.absolutePaths
+        if (extension.lint.absolutePaths != null) {
+          lintOptions.setAbsolutePaths(extension.lint.absolutePaths)
         }
-      }
 
-      if (extension.lint.baselineFileName != null) {
-        subProject.android.lintOptions {
-          baseline subProject.file(extension.lint.baselineFileName)
+        if (extension.lint.baselineFileName != null) {
+          lintOptions.setBaselineFile(subProject.file(extension.lint.baselineFileName))
         }
-      }
 
-      if (extension.lint.lintConfig != null) {
-        subProject.android.lintOptions {
-          lintConfig extension.lint.lintConfig
+        if (extension.lint.lintConfig != null) {
+          lintOptions.setLintConfig(extension.lint.lintConfig)
         }
-      }
 
-      if (extension.lint.checkReleaseBuilds != null) {
-        subProject.android.lintOptions {
-          checkReleaseBuilds extension.lint.checkReleaseBuilds
+        if (extension.lint.checkReleaseBuilds != null) {
+          lintOptions.setCheckReleaseBuilds(extension.lint.checkReleaseBuilds)
         }
-      }
 
-      if (extension.lint.checkTestSources != null) {
-        subProject.android.lintOptions.checkTestSources = extension.lint.checkTestSources
-      }
-
-      if (extension.lint.textReport != null) {
-        subProject.android.lintOptions {
-          textReport extension.lint.textReport
-          textOutput extension.lint.textOutput
+        if (extension.lint.checkTestSources != null) {
+          lintOptions.setCheckTestSources(extension.lint.checkTestSources)
         }
+
+        if (extension.lint.textReport != null) {
+          lintOptions.setTextReport(extension.lint.textReport)
+          lintOptions.textOutput(extension.lint.textOutput)
+        }
+
+        subProject.check.dependsOn 'lint'
+        return true
       }
-
-      subProject.check.dependsOn 'lint'
-
-      return true
     }
 
     return false
