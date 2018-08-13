@@ -14,13 +14,13 @@ class CodeQualityToolsPluginLintTest extends CommonCodeQualityToolsTest {
 
   @Test void java() {
     javaProjects.each { project ->
-      assert !addLint(project, new CodeQualityToolsPluginExtensionForTests())
+      assert addLint(project, new CodeQualityToolsPluginExtensionForTests())
     }
   }
 
   @Test void kotlin() {
     kotlinProjects.each { project ->
-      assert !addLint(project, new CodeQualityToolsPluginExtensionForTests())
+      assert addLint(project, new CodeQualityToolsPluginExtensionForTests())
     }
   }
 
