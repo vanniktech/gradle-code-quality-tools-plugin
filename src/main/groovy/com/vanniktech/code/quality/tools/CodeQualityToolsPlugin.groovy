@@ -229,6 +229,10 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
           lintOptions.setCheckTestSources(extension.lint.checkTestSources)
         }
 
+        if (extension.lint.checkDependencies != null) {
+          lintOptions.setCheckDependencies(extension.lint.checkDependencies)
+        }
+
         if (extension.lint.textReport != null) {
           lintOptions.setTextReport(extension.lint.textReport)
           lintOptions.textOutput(extension.lint.textOutput)
