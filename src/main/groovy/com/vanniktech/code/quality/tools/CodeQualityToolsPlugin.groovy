@@ -328,29 +328,29 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     return false
   }
 
-  protected static boolean addDetekt(final Project project, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
-    def isNotIgnored = !shouldIgnore(project, extension)
+  protected static boolean addDetekt(final Project subProject, final Project rootProject, final CodeQualityToolsPluginExtension extension) {
+    def isNotIgnored = !shouldIgnore(subProject, extension)
     def isEnabled = extension.detekt.enabled
-    def isDetektSupported = isKotlinProject(project)
+    def isDetektSupported = isKotlinProject(subProject)
 
     if (isNotIgnored && isEnabled && isDetektSupported) {
-      def task = project.tasks.create("detektCheck", DetektCheckTask)
+      def task = subProject.tasks.create("detektCheck", DetektCheckTask)
       task.version = extension.detekt.toolVersion
       task.group = GROUP_VERIFICATION
       task.description = "Runs detekt."
-      task.outputDirectory = new File(project.buildDir, "reports/detekt/")
+      task.outputDirectory = new File(subProject.buildDir, "reports/detekt/")
       task.configFile = rootProject.file(extension.detekt.config)
-      task.inputs.files(project.fileTree(dir: ".", include: "**/*.kt"))
+      task.inputs.files(subProject.fileTree(dir: ".", includes: ["**/*.kt", "**/*.kts"]))
 
       task.inputs.property("baseline-file-exists", false)
 
       if (extension.detekt.baselineFileName != null) {
-        def file = project.file(extension.detekt.baselineFileName)
+        def file = subProject.file(extension.detekt.baselineFileName)
         task.baselineFilePath = file.toString()
         task.inputs.property("baseline-file-exists", file.exists())
       }
 
-      project.check.dependsOn 'detektCheck'
+      subProject.check.dependsOn 'detektCheck'
 
       return true
     }

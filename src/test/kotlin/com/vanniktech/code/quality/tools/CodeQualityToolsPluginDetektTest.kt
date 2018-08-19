@@ -18,6 +18,12 @@ class CodeQualityToolsPluginDetektTest {
         .succeeds()
   }
 
+  @Test fun noSrcFolder() {
+    Roboter(testProjectDir)
+        .withConfiguration("failFast: true")
+        .succeeds()
+  }
+
   @Test fun differentConfigFile() {
     Roboter(testProjectDir, config = "code_quality_tools/config-detekt.yml")
         .withConfiguration("failFast: true")
@@ -29,6 +35,13 @@ class CodeQualityToolsPluginDetektTest {
     Roboter(testProjectDir)
         .withConfiguration("failFast: true")
         .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo() = Unit")
+        .fails()
+  }
+
+  @Test fun failsOnKotlinScript() {
+    Roboter(testProjectDir)
+        .withConfiguration("failFast: true")
+        .withKotlinFile("build.gradle.kts", "fun foo() = Unit")
         .fails()
   }
 
