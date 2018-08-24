@@ -42,6 +42,7 @@ open class DetektCheckTask : DefaultTask() {
       task.args(
           "--config", configFile,
           "--input", project.file("."),
+          "--filters", ".*build/.*",
           "--output", outputDirectory
       )
 

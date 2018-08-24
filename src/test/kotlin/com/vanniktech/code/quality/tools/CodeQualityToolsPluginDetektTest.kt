@@ -38,6 +38,13 @@ class CodeQualityToolsPluginDetektTest {
         .fails()
   }
 
+  @Test fun ignoresFileInBuildDirectory() {
+    Roboter(testProjectDir)
+        .withConfiguration("failFast: true")
+        .withKotlinFile("build/Foo.kt", "fun foo() = Unit")
+        .succeeds()
+  }
+
   @Test fun failsOnKotlinScript() {
     Roboter(testProjectDir)
         .withConfiguration("failFast: true")

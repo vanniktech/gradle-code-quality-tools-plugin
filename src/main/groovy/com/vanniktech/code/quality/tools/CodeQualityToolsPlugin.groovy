@@ -340,7 +340,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       task.description = "Runs detekt."
       task.outputDirectory = new File(subProject.buildDir, "reports/detekt/")
       task.configFile = rootProject.file(extension.detekt.config)
-      task.inputs.files(subProject.fileTree(dir: ".", includes: ["**/*.kt", "**/*.kts"]))
+      task.inputs.files(subProject.fileTree(dir: ".", exclude: "**/build/**", includes: ["**/*.kt", "**/*.kts"]))
 
       task.inputs.property("baseline-file-exists", false)
 
