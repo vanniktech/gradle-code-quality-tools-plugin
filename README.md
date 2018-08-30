@@ -31,7 +31,7 @@ buildscript {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
   dependencies {
-    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.13.0-SNAPSHOT"
+    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.14.0-SNAPSHOT"
   }
 }
 
