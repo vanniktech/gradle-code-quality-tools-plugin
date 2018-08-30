@@ -107,8 +107,7 @@ pluginBundle {
   vcsUrl = POM_SCM_URL
 
   plugins {
-    codeQualityTools {
-      id = 'com.vanniktech.code.quality.tools'
+    codeQualityToolsPlugin {
       displayName = POM_NAME
       tags = ['gradle', 'android', 'java', 'findbugs', 'pmd', 'cpd', 'detekt', 'kotlin', 'ktlint', 'checkstyle', 'errorprone', 'multiprojects', 'app module', 'library module', 'lint']
       description = POM_DESCRIPTION

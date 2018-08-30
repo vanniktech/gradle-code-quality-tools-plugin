@@ -1,7 +1,15 @@
 # Change Log
 
-Version 0.13.0 *(In development)*
----------------------------------
+Version 0.13.0 *(2018-08-30)*
+-----------------------------
+
+- Detekt: Ignore build directory. [\#148](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/148) ([vanniktech](https://github.com/vanniktech))
+- Detekt: Add Kotlin Script file support. [\#147](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/147) ([vanniktech](https://github.com/vanniktech))
+- Add checkDependencies extension point for Lint. [\#146](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/146) ([vanniktech](https://github.com/vanniktech))
+- Apply LintPlugin to Java projects to leverage lint from non-android projects. [\#145](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/145) ([vanniktech](https://github.com/vanniktech))
+- Add checkTestSources extension point for Lint. [\#144](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/144) ([vanniktech](https://github.com/vanniktech))
+- Update Gradle Wrapper to 4.9 [\#143](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/143) ([vanniktech](https://github.com/vanniktech))
+- Regression: Run detektCheck as part of check task. [\#140](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/140) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.12.0 *(2018-06-24)*
 -----------------------------
