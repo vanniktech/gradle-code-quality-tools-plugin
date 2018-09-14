@@ -14,7 +14,14 @@ class CodeQualityToolsPluginDetektTest {
   @Test fun success() {
     Roboter(testProjectDir)
         .withConfiguration("failFast: true")
-        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo() = Unit\n")
+        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
+        .succeeds()
+  }
+
+  @Test fun successBreakingReportChange() {
+    Roboter(testProjectDir, version = "1.0.0.RC9")
+        .withConfiguration("failFast: true")
+        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
         .succeeds()
   }
 
@@ -27,7 +34,7 @@ class CodeQualityToolsPluginDetektTest {
   @Test fun differentConfigFile() {
     Roboter(testProjectDir, config = "code_quality_tools/config-detekt.yml")
         .withConfiguration("failFast: true")
-        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo() = Unit\n")
+        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
         .succeeds()
   }
 
@@ -153,10 +160,18 @@ class CodeQualityToolsPluginDetektTest {
 
     fun succeeds() = apply {
       assertThat(run().build().task(":detektCheck")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+      assertReportsExist()
     }
 
     fun fails() = apply {
       assertThat(run().buildAndFail().task(":detektCheck")?.outcome).isEqualTo(TaskOutcome.FAILED)
+      assertReportsExist()
+    }
+
+    private fun assertReportsExist() {
+      assertThat(File(directory.root, "build/reports/detekt/detekt-report.html")).exists()
+      assertThat(File(directory.root, "build/reports/detekt/detekt-checkstyle.xml")).exists()
+      assertThat(File(directory.root, "build/reports/detekt/detekt-plain.txt")).exists()
     }
 
     fun doesNothing() = apply {
