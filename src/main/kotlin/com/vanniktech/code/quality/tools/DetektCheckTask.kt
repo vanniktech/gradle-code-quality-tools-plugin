@@ -1,5 +1,6 @@
 package com.vanniktech.code.quality.tools
 
+import com.android.ide.common.repository.GradleVersion
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.file.FileCollection
@@ -37,6 +38,16 @@ import java.io.File
   }
 
   private fun executeDetekt(configuration: FileCollection, shouldCreateBaseLine: Boolean = false) {
+    val fixedVersion = version.replace(".RC", "-RC") // GradleVersion does not understand . as a - in this case. Let's fix it and hope it does not break.
+    val shouldUseReport = GradleVersion.parse(fixedVersion) >= VERSION_REPORT_CHANGE
+    val reportKey = if (shouldUseReport) "--report" else "--output"
+    val reportValue = if (shouldUseReport) {
+      listOf(ReportingMetaInformation("plain", "txt", "plain"), ReportingMetaInformation("xml", "xml", "checkstyle"), ReportingMetaInformation("html", "html", "report"))
+          .joinToString(separator = ",") { it.reportId + ":" + File(outputDirectory, "detekt-${it.fileNameSuffix}.${it.fileEnding}").absolutePath }
+    } else {
+      outputDirectory.absolutePath
+    }
+
     project.javaexec { task ->
       task.main = "io.gitlab.arturbosch.detekt.cli.Main"
       task.classpath = configuration
@@ -44,7 +55,7 @@ import java.io.File
           "--config", configFile,
           "--input", project.file("."),
           "--filters", ".*build/.*",
-          "--output", outputDirectory
+          reportKey, reportValue
       )
 
       if (shouldCreateBaseLine) {
@@ -55,5 +66,16 @@ import java.io.File
         task.args("--baseline", it)
       }
     }
+  }
+
+  // Can merge reportId and fileEnding after https://github.com/arturbosch/detekt/issues/1111
+  internal data class ReportingMetaInformation(
+    val reportId: String,
+    val fileEnding: String,
+    val fileNameSuffix: String
+  )
+
+  internal companion object {
+    internal val VERSION_REPORT_CHANGE = GradleVersion.parse("1.0.0-RC9")
   }
 }
