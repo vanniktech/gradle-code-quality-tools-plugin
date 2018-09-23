@@ -83,8 +83,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         }
       }
 
-      subProject.check.dependsOn 'pmd'
-
+      subProject.tasks.named("check").configure { it.dependsOn("pmd") }
       return true
     }
 
@@ -122,8 +121,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         }
       }
 
-      subProject.check.dependsOn 'checkstyle'
-
+      subProject.tasks.named("check").configure { it.dependsOn("checkstyle") }
       return true
     }
 
@@ -175,8 +173,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         }
       }
 
-      subProject.check.dependsOn 'findbugs'
-
+      subProject.tasks.named("check").configure { it.dependsOn("findbugs") }
       return true
     }
 
@@ -238,7 +235,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
           lintOptions.textOutput(extension.lint.textOutput)
         }
 
-        subProject.check.dependsOn 'lint'
+        subProject.tasks.named("check").configure { it.dependsOn("lint") }
         return true
       }
     }
@@ -285,8 +282,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         args "-F", "src/**/*.kt"
       }
 
-      subProject.check.dependsOn 'ktlint'
-
+      subProject.tasks.named("check").configure { it.dependsOn("ktlint") }
       return true
     }
 
@@ -320,8 +316,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
         ignoreFailures = extension.cpd.ignoreFailures != null ? extension.cpd.ignoreFailures : !extension.failEarly
       }
 
-      subProject.check.dependsOn 'cpdCheck'
-
+      subProject.tasks.named("check").configure { it.dependsOn("cpdCheck") }
       return true
     }
 
@@ -334,24 +329,24 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     def isDetektSupported = isKotlinProject(subProject)
 
     if (isNotIgnored && isEnabled && isDetektSupported) {
-      def task = subProject.tasks.create("detektCheck", DetektCheckTask)
-      task.version = extension.detekt.toolVersion
-      task.group = GROUP_VERIFICATION
-      task.description = "Runs detekt."
-      task.outputDirectory = new File(subProject.buildDir, "reports/detekt/")
-      task.configFile = rootProject.file(extension.detekt.config)
-      task.inputs.files(subProject.fileTree(dir: ".", exclude: "**/build/**", includes: ["**/*.kt", "**/*.kts"]))
+      subProject.tasks.register("detektCheck", DetektCheckTask) { task ->
+        task.version = extension.detekt.toolVersion
+        task.group = GROUP_VERIFICATION
+        task.description = "Runs detekt."
+        task.outputDirectory = new File(subProject.buildDir, "reports/detekt/")
+        task.configFile = rootProject.file(extension.detekt.config)
+        task.inputs.files(subProject.fileTree(dir: ".", exclude: "**/build/**", includes: ["**/*.kt", "**/*.kts"]))
 
-      task.inputs.property("baseline-file-exists", false)
+        task.inputs.property("baseline-file-exists", false)
 
-      if (extension.detekt.baselineFileName != null) {
-        def file = subProject.file(extension.detekt.baselineFileName)
-        task.baselineFilePath = file.toString()
-        task.inputs.property("baseline-file-exists", file.exists())
+        if (extension.detekt.baselineFileName != null) {
+          def file = subProject.file(extension.detekt.baselineFileName)
+          task.baselineFilePath = file.toString()
+          task.inputs.property("baseline-file-exists", file.exists())
+        }
       }
 
-      subProject.check.dependsOn 'detektCheck'
-
+      subProject.tasks.named("check").configure { it.dependsOn("detektCheck") }
       return true
     }
 
