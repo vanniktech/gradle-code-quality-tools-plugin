@@ -32,6 +32,13 @@ class CodeQualityToolsPluginDetektTest {
         .succeeds()
   }
 
+  @Test fun successBreakingReportChangeRC10() {
+    Roboter(testProjectDir, version = "1.0.0-RC10")
+        .withConfiguration("failFast: true")
+        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
+        .succeeds()
+  }
+
   @Test fun noSrcFolder() {
     Roboter(testProjectDir)
         .withConfiguration("failFast: true")
