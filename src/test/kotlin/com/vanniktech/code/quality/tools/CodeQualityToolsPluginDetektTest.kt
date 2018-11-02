@@ -118,10 +118,10 @@ class CodeQualityToolsPluginDetektTest {
   }
 
   @Test fun checkTaskRunsDetekt() {
-    Roboter(testProjectDir, taskToRun = "check")
+    Roboter(testProjectDir)
         .withConfiguration("failFast: true")
         .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo() = Unit")
-        .fails()
+        .fails(taskToRun = "check", taskToCheck = "detektCheck")
   }
 
   class Roboter(
@@ -129,8 +129,7 @@ class CodeQualityToolsPluginDetektTest {
     private val config: String = "code_quality_tools/detekt.yml",
     enabled: Boolean = true,
     version: String = "1.0.0.RC6",
-    private val baselineFileName: String? = null,
-    private val taskToRun: String = "detektCheck"
+    private val baselineFileName: String? = null
   ) {
     init {
       directory.newFile("build.gradle").writeText("""
@@ -146,6 +145,12 @@ class CodeQualityToolsPluginDetektTest {
           |    toolVersion = "$version"
           |    baselineFileName = ${baselineFileName.wrap("\"")}
           |  }
+          |  ktlint.enabled = false
+          |  checkstyle.enabled = false
+          |  pmd.enabled = false
+          |  findbugs.enabled = false
+          |  cpd.enabled = false
+          |  errorProne.enabled = false
           |}
           |
           |repositories {
@@ -165,13 +170,13 @@ class CodeQualityToolsPluginDetektTest {
       directory.newFile(path).writeText(content)
     }
 
-    fun succeeds() = apply {
-      assertThat(run().build().task(":detektCheck")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+    fun succeeds(taskToRun: String = "detektCheck") = apply {
+      assertThat(run(taskToRun).build().task(":$taskToRun")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
       assertReportsExist()
     }
 
-    fun fails() = apply {
-      assertThat(run().buildAndFail().task(":detektCheck")?.outcome).isEqualTo(TaskOutcome.FAILED)
+    fun fails(taskToRun: String = "detektCheck", taskToCheck: String = taskToRun) = apply {
+      assertThat(run(taskToRun).buildAndFail().task(":$taskToCheck")?.outcome).isEqualTo(TaskOutcome.FAILED)
       assertReportsExist()
     }
 
@@ -181,15 +186,15 @@ class CodeQualityToolsPluginDetektTest {
       assertThat(File(directory.root, "build/reports/detekt/detekt-plain.txt")).exists()
     }
 
-    fun doesNothing() = apply {
-      assertThat(run().buildAndFail().task(":detektCheck")).isNull()
+    fun doesNothing(taskToRun: String = "detektCheck") = apply {
+      assertThat(run(taskToRun).buildAndFail().task(":$taskToRun")).isNull()
     }
 
     fun baseLineContains(content: String) {
       assertThat(File(directory.root, baselineFileName).readText()).contains(content)
     }
 
-    private fun run() = GradleRunner.create().withPluginClasspath().withProjectDir(directory.root).withArguments(taskToRun)
+    private fun run(taskToRun: String) = GradleRunner.create().withPluginClasspath().withProjectDir(directory.root).withArguments(taskToRun)
   }
 }
 
