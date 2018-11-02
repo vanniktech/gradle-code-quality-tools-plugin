@@ -22,8 +22,13 @@ import java.io.File
 
   @OutputDirectory lateinit var outputDirectory: File
 
+  init {
+    group = "verification"
+    description = "Runs detekt."
+  }
+
   @TaskAction fun run() {
-    val configuration = project.configurations.create("detekt")
+    val configuration = project.configurations.maybeCreate("detekt")
 
     project.dependencies.add("detekt", "io.gitlab.arturbosch.detekt:detekt-cli:$version")
 

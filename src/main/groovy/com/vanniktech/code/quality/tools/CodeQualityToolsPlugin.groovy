@@ -7,11 +7,9 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.FindBugs
 import org.gradle.api.plugins.quality.Pmd
-import org.gradle.api.tasks.JavaExec
 
 class CodeQualityToolsPlugin implements Plugin<Project> {
   private static final String GROUP_VERIFICATION = 'verification'
-  private static final String GROUP_FORMATTING = 'formatting'
 
   @Override void apply(final Project rootProject) {
     rootProject.extensions.create('codeQualityTools', CodeQualityToolsPluginExtension)
@@ -19,7 +17,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     rootProject.codeQualityTools.extensions.create('checkstyle', CodeQualityToolsPluginExtension.Checkstyle)
     rootProject.codeQualityTools.extensions.create('pmd', CodeQualityToolsPluginExtension.Pmd)
     rootProject.codeQualityTools.extensions.create('lint', LintExtension)
-    rootProject.codeQualityTools.extensions.create('ktlint', CodeQualityToolsPluginExtension.Ktlint)
+    rootProject.codeQualityTools.extensions.create('ktlint', KtlintExtension)
     rootProject.codeQualityTools.extensions.create('detekt', DetektExtension)
     rootProject.codeQualityTools.extensions.create('cpd', CodeQualityToolsPluginExtension.Cpd)
     rootProject.codeQualityTools.extensions.create('errorProne', CodeQualityToolsPluginExtension.ErrorProne)
@@ -249,37 +247,21 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     def isKtlintSupported = isKotlinProject(subProject)
 
     if (isNotIgnored && isEnabled && isKtlintSupported) {
-      subProject.configurations {
-        ktlint
-      }
-
-      subProject.dependencies {
-        ktlint "com.github.shyiko:ktlint:${extension.ktlint.toolVersion}"
-      }
-
-      def outputDir = "${subProject.buildDir}/reports/ktlint/"
+      def outputDir = new File(subProject.buildDir, "reports/ktlint/")
       def configurationFiles = rootProject.fileTree(dir: ".", include: "**/.editorconfig")
-      def inputFiles = subProject.fileTree(dir: "src", include: "**/*.kt")
+      def inputFiles = subProject.fileTree(dir: ".", exclude: "**/build/**", includes: ["**/*.kt", "**/*.kts"])
 
-      subProject.task('ktlint', type: JavaExec) {
-        inputs.files(inputFiles, configurationFiles)
-        outputs.dir(outputDir)
-        group = GROUP_VERIFICATION
-        description = 'Runs ktlint.'
-        main = 'com.github.shyiko.ktlint.Main'
-        classpath = subProject.configurations.ktlint
-        def outputFile = "${outputDir}ktlint-checkstyle-report.xml"
-        args '--reporter=plain', "--reporter=checkstyle,output=${outputFile}", 'src/**/*.kt'
+      subProject.tasks.register("ktlint", KtLintTask) { task ->
+        task.version = extension.ktlint.toolVersion
+        task.checkStyleOutputFile = new File(outputDir, "ktlint-checkstyle-report.xml")
+        task.inputs.files(inputFiles, configurationFiles)
       }
 
-      subProject.task('ktlintFormat', type: JavaExec) {
-        inputs.files(inputFiles, configurationFiles)
-        outputs.upToDateWhen { true } // We only need the input as it'll change when we reformat.
-        group = GROUP_FORMATTING
-        description = "Runs ktlint and autoformats your code."
-        main = "com.github.shyiko.ktlint.Main"
-        classpath = subProject.configurations.ktlint
-        args "-F", "src/**/*.kt"
+      subProject.tasks.register("ktlintFormat", KtLintFormatTask) { task ->
+        task.version = extension.ktlint.toolVersion
+        task.checkStyleOutputFile = new File(outputDir, "ktlint-checkstyle-report.xml")
+        task.inputs.files(inputFiles, configurationFiles)
+        task.outputs.upToDateWhen { true } // We only need the input as it'll change when we reformat.
       }
 
       subProject.tasks.named("check").configure { it.dependsOn("ktlint") }
@@ -331,8 +313,6 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     if (isNotIgnored && isEnabled && isDetektSupported) {
       subProject.tasks.register("detektCheck", DetektCheckTask) { task ->
         task.version = extension.detekt.toolVersion
-        task.group = GROUP_VERIFICATION
-        task.description = "Runs detekt."
         task.outputDirectory = new File(subProject.buildDir, "reports/detekt/")
         task.configFile = rootProject.file(extension.detekt.config)
         task.inputs.files(subProject.fileTree(dir: ".", exclude: "**/build/**", includes: ["**/*.kt", "**/*.kts"]))

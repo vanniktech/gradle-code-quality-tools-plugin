@@ -128,17 +128,6 @@ class CodeQualityToolsPluginExtension {
     List<String> exclude = ['**/gen/**']
   }
 
-  static class Ktlint {
-    /**
-     * ability to enable or disable only ktlint for every subproject that is not ignored
-     * @since 0.5.0
-     */
-    boolean enabled = true
-
-    /** @since 0.5.0 */
-    String toolVersion = '0.14.0'
-  }
-
   static class Cpd {
     /**
      * ability to enable or disable only cpd for every subproject that is not ignored
