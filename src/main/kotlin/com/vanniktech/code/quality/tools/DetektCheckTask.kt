@@ -43,12 +43,22 @@ import java.io.File
   }
 
   private fun executeDetekt(configuration: FileCollection, shouldCreateBaseLine: Boolean = false) {
-    val fixedVersion = version.replace(".RC", "-RC") // GradleVersion does not understand . as a - in this case. Let's fix it and hope it does not break.
-    val shouldUseReport = GradleVersion.parse(fixedVersion) >= VERSION_REPORT_CHANGE
+    val fixedVersion = GradleVersion.parse(version.replace(".RC", "-RC")) // GradleVersion does not understand . as a - in this case. Let's fix it and hope it does not break.
+    val possibleRcVersion = Regex("RC[\\d]+").find(version)?.value?.replace("RC", "")?.toIntOrNull()
+    val isAtLeastRc10 = possibleRcVersion != null && possibleRcVersion >= RC_BREAKING_POINT // GradleVersion thinks RC10 is smaller than RC9.
+    val shouldUseReport = fixedVersion >= VERSION_REPORT_CHANGE || isAtLeastRc10
+    val canUseFileEnding = fixedVersion >= VERSION_REPORT_EXTENSION_CHANGE && isAtLeastRc10
+
     val reportKey = if (shouldUseReport) "--report" else "--output"
     val reportValue = if (shouldUseReport) {
-      listOf(ReportingMetaInformation("plain", "txt", "plain"), ReportingMetaInformation("xml", "xml", "checkstyle"), ReportingMetaInformation("html", "html", "report"))
-          .joinToString(separator = ",") { it.reportId + ":" + File(outputDirectory, "detekt-${it.fileNameSuffix}.${it.fileEnding}").absolutePath }
+      listOf(
+          ReportingMetaInformation("plain", "txt", "plain"),
+          ReportingMetaInformation("xml", "xml", "checkstyle"),
+          ReportingMetaInformation("html", "html", "report")
+      ).joinToString(separator = ",") {
+        val reportId = if (canUseFileEnding) it.fileEnding else it.reportId
+        reportId + ":" + File(outputDirectory, "detekt-${it.fileNameSuffix}.${it.fileEnding}").absolutePath
+      }
     } else {
       outputDirectory.absolutePath
     }
@@ -73,7 +83,6 @@ import java.io.File
     }
   }
 
-  // Can merge reportId and fileEnding after https://github.com/arturbosch/detekt/issues/1111
   internal data class ReportingMetaInformation(
     val reportId: String,
     val fileEnding: String,
@@ -81,6 +90,8 @@ import java.io.File
   )
 
   internal companion object {
+    internal const val RC_BREAKING_POINT = 10
     internal val VERSION_REPORT_CHANGE = GradleVersion.parse("1.0.0-RC9")
+    internal val VERSION_REPORT_EXTENSION_CHANGE = GradleVersion.parse("1.0.0-RC10")
   }
 }
