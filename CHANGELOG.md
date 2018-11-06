@@ -1,7 +1,16 @@
 # Change Log
 
-Version 0.14.0 *(In development)*
----------------------------------
+Version 0.14.0 *(2018-11-06)*
+-----------------------------
+
+- Refactor ktlint integration to use Tasks and Gradle Configuration Avoidance API. [\#157](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/157) ([vanniktech](https://github.com/vanniktech))
+- Update Kotlin to 1.3.0, Android Gradle Plugin to 3.2.1, ktlint to 0.29.0, Gradle to 4.10.2 & Junit JaCoCo Plugin to 0.13.0 [\#156](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/156) ([vanniktech](https://github.com/vanniktech))
+- Implement breaking changes for Detekt 1.0.0.RC10 [\#155](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/155) ([vanniktech](https://github.com/vanniktech))
+- Verify that Detekt 1.0.0.RC9.2 works. [\#154](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/154) ([vanniktech](https://github.com/vanniktech))
+- Implement Task Configuration avoidance for Detekt and check task dependencies. Requires Gradle 4.9 or higher. [\#153](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/153) ([vanniktech](https://github.com/vanniktech))
+- Update dependencies. [\#152](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/152) ([vanniktech](https://github.com/vanniktech))
+- Support Detekt 1.0.0.RC9 [\#151](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/151) ([vanniktech](https://github.com/vanniktech))
+- Support Cacheable Task with DetektCheckTask. [\#149](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/149) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.13.0 *(2018-08-30)*
 -----------------------------
