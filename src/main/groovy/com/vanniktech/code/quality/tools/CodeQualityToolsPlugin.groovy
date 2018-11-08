@@ -189,7 +189,7 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
 
       if (isAndroidProject) {
         lintOptions = subProject.android.lintOptions
-      } else if (isJavaProject) {
+      } else if (isJavaProject && hasLintPlugin()) {
         subProject.plugins.apply(LintPlugin)
         lintOptions = subProject.extensions.getByType(LintOptions)
       } else {
@@ -348,6 +348,15 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     }
 
     return false
+  }
+
+  private static boolean hasLintPlugin() {
+    try {
+      Class.forName("com.android.build.gradle.LintPlugin")
+      return true
+    } catch (ClassNotFoundException ignored) {
+      return false
+    }
   }
 
   private static boolean isKotlinProject(final Project project) {
