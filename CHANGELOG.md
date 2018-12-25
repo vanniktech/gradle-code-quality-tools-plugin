@@ -1,7 +1,14 @@
 # Change Log
 
-Version 0.15.0 *(In development)*
----------------------------------
+Version 0.15.0 *(2018-12-25)*
+-----------------------------
+
+- Fix Findbugs with Android Gradle Plugin 3.2.x [\#164](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/164) ([vanniktech](https://github.com/vanniktech))
+- Verify that Detekt 1.0.0-RC12 works. [\#163](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/163) ([vanniktech](https://github.com/vanniktech))
+- Remove sudo: false from travis config. [\#162](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/162) ([vanniktech](https://github.com/vanniktech))
+- Verify that Detekt 1.0.0-RC11 works. [\#161](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/161) ([vanniktech](https://github.com/vanniktech))
+- Fix Kotlin only projects without Android Gradle Plugin. [\#159](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/159) ([vanniktech](https://github.com/vanniktech))
+- Use org.gradle.util.VersionNumber instead of com.android.ide.common.repository.GradleVersion [\#158](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/158) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.14.0 *(2018-11-06)*
 -----------------------------
