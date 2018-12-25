@@ -1,7 +1,13 @@
 package com.vanniktech.code.quality.tools
 
+import com.android.build.gradle.AndroidGradleOptions
 import com.android.build.gradle.LintPlugin
+import com.android.build.gradle.api.AndroidBasePlugin
+import com.android.build.gradle.internal.NonFinalPluginExpiry
 import com.android.build.gradle.internal.dsl.LintOptions
+import com.android.builder.model.AndroidLibrary
+import com.android.builder.model.Version
+import com.android.repository.Revision
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.quality.Checkstyle
@@ -135,7 +141,13 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
       def buildDirIncludes = new ArrayList()
 
       if (isAndroidProject(subProject)) {
-        buildDirIncludes.add("intermediates/classes/debug/**")
+        def androidGradlePluginVersion = androidGradlePluginVersion()
+
+        if (androidGradlePluginVersion >= Revision.parseRevision("3.2.0", Revision.Precision.PREVIEW)) {
+          buildDirIncludes.add("intermediates/javac/debug/**")
+        } else {
+          buildDirIncludes.add("intermediates/classes/debug/**")
+        }
       } else {
         if (isKotlinProject(subProject)) {
           buildDirIncludes.add("classes/kotlin/main/**")
@@ -176,6 +188,18 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     }
 
     return false
+  }
+
+  private static Revision androidGradlePluginVersion() {
+    try {
+      return Revision.parseRevision(Class.forName("com.android.builder.Version").getDeclaredField("ANDROID_GRADLE_PLUGIN_VERSION").get(this).toString(), Revision.Precision.PREVIEW)
+    } catch (Exception ignored) {}
+
+    try {
+      return Revision.parseRevision(Class.forName("com.android.builder.model.Version").getDeclaredField("ANDROID_GRADLE_PLUGIN_VERSION").get(this).toString(), Revision.Precision.PREVIEW)
+    } catch (Exception ignored) {}
+
+    throw new IllegalArgumentException("Can't get Android Gradle Plugin version")
   }
 
   protected static boolean addLint(final Project subProject, final CodeQualityToolsPluginExtension extension) {
