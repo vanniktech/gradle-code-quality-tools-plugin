@@ -1,14 +1,17 @@
 package com.vanniktech.code.quality.tools
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity.NONE
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-open class KtLintFormatTask : DefaultTask() {
+@CacheableTask open class KtLintFormatTask : DefaultTask() {
   @Input lateinit var version: String
-  @OutputFile lateinit var checkStyleOutputFile: File
+  @OutputDirectory @PathSensitive(NONE) lateinit var outputDirectory: File
 
   init {
     group = "formatting"
@@ -16,14 +19,10 @@ open class KtLintFormatTask : DefaultTask() {
   }
 
   @TaskAction fun run() {
-    val configuration = project.configurations.maybeCreate("ktlint")
-
-    project.dependencies.add("ktlint", "com.github.shyiko:ktlint:$version")
-
     project.javaexec { task ->
       task.main = "com.github.shyiko.ktlint.Main"
-      task.classpath = configuration
-      task.args("--reporter=plain", "--reporter=checkstyle,output=$checkStyleOutputFile", "-F", "**/*.kt", "**/*.kts", "!build/")
+      task.classpath = project.configurations.getByName("ktlint")
+      task.args("--reporter=plain", "--reporter=checkstyle,output=${File(outputDirectory, "ktlint-checkstyle-report.xml")}", "-F", "**/*.kt", "**/*.kts", "!build/")
     }
   }
 }

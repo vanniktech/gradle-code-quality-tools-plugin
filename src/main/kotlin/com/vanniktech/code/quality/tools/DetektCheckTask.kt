@@ -8,6 +8,9 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity.NONE
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskExecutionException
 import org.gradle.util.VersionNumber
@@ -18,9 +21,8 @@ import java.io.File
 
   // Ideally this would be an optional input file - https://github.com/gradle/gradle/issues/2016
   @Input @Optional var baselineFilePath: String? = null
-  @InputFile lateinit var configFile: File
-
-  @OutputDirectory lateinit var outputDirectory: File
+  @InputFile @PathSensitive(RELATIVE) lateinit var configFile: File
+  @OutputDirectory @PathSensitive(NONE) lateinit var outputDirectory: File
 
   init {
     group = "verification"
@@ -28,9 +30,7 @@ import java.io.File
   }
 
   @TaskAction fun run() {
-    val configuration = project.configurations.maybeCreate("detekt")
-
-    project.dependencies.add("detekt", "io.gitlab.arturbosch.detekt:detekt-cli:$version")
+    val configuration = project.configurations.getByName("detekt")
 
     baselineFilePath?.let { file ->
       if (!File(file).exists()) {
