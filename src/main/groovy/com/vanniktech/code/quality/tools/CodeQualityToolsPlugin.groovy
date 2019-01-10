@@ -1,15 +1,11 @@
 package com.vanniktech.code.quality.tools
 
-import com.android.build.gradle.AndroidGradleOptions
 import com.android.build.gradle.LintPlugin
-import com.android.build.gradle.api.AndroidBasePlugin
-import com.android.build.gradle.internal.NonFinalPluginExpiry
 import com.android.build.gradle.internal.dsl.LintOptions
-import com.android.builder.model.AndroidLibrary
-import com.android.builder.model.Version
 import com.android.repository.Revision
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.ConfigurableFileTree
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.FindBugs
 import org.gradle.api.plugins.quality.Pmd
@@ -271,21 +267,20 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     def isKtlintSupported = isKotlinProject(subProject)
 
     if (isNotIgnored && isEnabled && isKtlintSupported) {
-      def outputDir = new File(subProject.buildDir, "reports/ktlint/")
-      def configurationFiles = rootProject.fileTree(dir: ".", include: "**/.editorconfig")
-      def inputFiles = subProject.fileTree(dir: ".", exclude: "**/build/**", includes: ["**/*.kt", "**/*.kts"])
+      subProject.configurations.create("ktlint").defaultDependencies {
+        it.add(subProject.dependencies.create("com.github.shyiko:ktlint:${extension.ktlint.toolVersion}"))
+      }
 
       subProject.tasks.register("ktlint", KtLintTask) { task ->
         task.version = extension.ktlint.toolVersion
-        task.checkStyleOutputFile = new File(outputDir, "ktlint-checkstyle-report.xml")
-        task.inputs.files(inputFiles, configurationFiles)
+        task.outputDirectory = new File(subProject.buildDir, "reports/ktlint/")
+        task.inputs.files(kotlinFiles(subProject), editorconfigFiles(rootProject))
       }
 
       subProject.tasks.register("ktlintFormat", KtLintFormatTask) { task ->
         task.version = extension.ktlint.toolVersion
-        task.checkStyleOutputFile = new File(outputDir, "ktlint-checkstyle-report.xml")
-        task.inputs.files(inputFiles, configurationFiles)
-        task.outputs.upToDateWhen { true } // We only need the input as it'll change when we reformat.
+        task.outputDirectory = new File(subProject.buildDir, "reports/ktlint/")
+        task.inputs.files(kotlinFiles(subProject), editorconfigFiles(rootProject))
       }
 
       subProject.tasks.named("check").configure { it.dependsOn("ktlint") }
@@ -293,6 +288,14 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     }
 
     return false
+  }
+
+  static ConfigurableFileTree kotlinFiles(final Project project) {
+    project.fileTree(dir: ".", exclude: "**/build/**", includes: ["**/*.kt", "**/*.kts"])
+  }
+
+  static ConfigurableFileTree editorconfigFiles(final Project project) {
+    project.fileTree(dir: ".", include: "**/.editorconfig")
   }
 
   protected static boolean addCpd(final Project subProject, final CodeQualityToolsPluginExtension extension) {
@@ -335,11 +338,15 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
     def isDetektSupported = isKotlinProject(subProject)
 
     if (isNotIgnored && isEnabled && isDetektSupported) {
+      subProject.configurations.create("detekt").defaultDependencies {
+        it.add(subProject.dependencies.create("io.gitlab.arturbosch.detekt:detekt-cli:${extension.detekt.toolVersion}"))
+      }
+
       subProject.tasks.register("detektCheck", DetektCheckTask) { task ->
         task.version = extension.detekt.toolVersion
         task.outputDirectory = new File(subProject.buildDir, "reports/detekt/")
         task.configFile = rootProject.file(extension.detekt.config)
-        task.inputs.files(subProject.fileTree(dir: ".", exclude: "**/build/**", includes: ["**/*.kt", "**/*.kts"]))
+        task.inputs.files(kotlinFiles(subProject))
 
         task.inputs.property("baseline-file-exists", false)
 
