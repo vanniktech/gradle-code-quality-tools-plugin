@@ -2,7 +2,7 @@ package com.vanniktech.code.quality.tools
 
 open class KtlintExtension {
   /**
-   * ability to enable or disable only ktlint for every subproject that is not ignored.
+   * Ability to enable or disable only ktlint for every subproject that is not ignored.
    * @since 0.5.0
    */
   var enabled: Boolean = true
