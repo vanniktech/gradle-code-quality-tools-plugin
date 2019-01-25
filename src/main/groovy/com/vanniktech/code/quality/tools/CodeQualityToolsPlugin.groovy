@@ -14,17 +14,16 @@ class CodeQualityToolsPlugin implements Plugin<Project> {
   private static final String GROUP_VERIFICATION = 'verification'
 
   @Override void apply(final Project rootProject) {
-    rootProject.extensions.create('codeQualityTools', CodeQualityToolsPluginExtension)
-    rootProject.codeQualityTools.extensions.create('findbugs', CodeQualityToolsPluginExtension.Findbugs)
-    rootProject.codeQualityTools.extensions.create('checkstyle', CodeQualityToolsPluginExtension.Checkstyle)
-    rootProject.codeQualityTools.extensions.create('pmd', CodeQualityToolsPluginExtension.Pmd)
-    rootProject.codeQualityTools.extensions.create('lint', LintExtension)
-    rootProject.codeQualityTools.extensions.create('ktlint', KtlintExtension)
-    rootProject.codeQualityTools.extensions.create('detekt', DetektExtension)
-    rootProject.codeQualityTools.extensions.create('cpd', CodeQualityToolsPluginExtension.Cpd)
-    rootProject.codeQualityTools.extensions.create('errorProne', CodeQualityToolsPluginExtension.ErrorProne)
+    def extension = rootProject.extensions.create('codeQualityTools', CodeQualityToolsPluginExtension)
+    extension.extensions.create('findbugs', FindbugsExtension)
+    extension.extensions.create('checkstyle', CheckstyleExtension)
+    extension.extensions.create('pmd', PmdExtension)
+    extension.extensions.create('lint', LintExtension)
+    extension.extensions.create('ktlint', KtlintExtension)
+    extension.extensions.create('detekt', DetektExtension)
+    extension.extensions.create('cpd', CpdExtension)
+    extension.extensions.create('errorProne', ErrorProneExtension)
 
-    def extension = rootProject.codeQualityTools
     def hasSubProjects = rootProject.subprojects.size() > 0
 
     if (hasSubProjects) {
