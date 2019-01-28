@@ -1,7 +1,11 @@
 # Change Log
 
-Version 0.16.0 *(In development)*
----------------------------------
+Version 0.16.0 *(2019-01-28)*
+-----------------------------
+
+- Convert everything to Kotlin. [\#172](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/172) ([vanniktech](https://github.com/vanniktech))
+- Convert all Extension classes to Kotlin. [\#170](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/170) ([vanniktech](https://github.com/vanniktech))
+- Detekt + ktlint: Create configurations once when plugin is applied. Leverage @PathSensitive. [\#169](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/169) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.15.0 *(2018-12-25)*
 -----------------------------
