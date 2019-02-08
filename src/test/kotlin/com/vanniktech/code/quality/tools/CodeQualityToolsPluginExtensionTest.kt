@@ -32,11 +32,11 @@ class CodeQualityToolsPluginExtensionTest {
 
     assertThat(extension.cpd.language).isEqualTo("java")
 
-    assertThat(extension.findbugs.ignoreFailures).isEqualTo(null)
-    assertThat(extension.checkstyle.ignoreFailures).isEqualTo(null)
-    assertThat(extension.checkstyle.showViolations).isEqualTo(null)
-    assertThat(extension.pmd.ignoreFailures).isEqualTo(null)
-    assertThat(extension.cpd.ignoreFailures).isEqualTo(null)
+    assertThat(extension.findbugs.ignoreFailures).isNull()
+    assertThat(extension.checkstyle.ignoreFailures).isNull()
+    assertThat(extension.checkstyle.showViolations).isNull()
+    assertThat(extension.pmd.ignoreFailures).isNull()
+    assertThat(extension.cpd.ignoreFailures).isNull()
 
     assertThat(extension.detekt.config).isEqualTo("code_quality_tools/detekt.yml")
     assertThat(extension.findbugs.excludeFilter).isEqualTo("code_quality_tools/findbugs-filter.xml")
@@ -54,11 +54,18 @@ class CodeQualityToolsPluginExtensionTest {
     assertThat(extension.checkstyle.enabled).isTrue()
     assertThat(extension.pmd.enabled).isTrue()
 
-    assertThat(extension.lint.textReport).isEqualTo(null)
+    assertThat(extension.lint.textReport).isNull()
     assertThat(extension.lint.textOutput).isEqualTo("stdout")
-    assertThat(extension.lint.abortOnError).isEqualTo(null)
-    assertThat(extension.lint.warningsAsErrors).isEqualTo(null)
-    assertThat(extension.lint.checkAllWarnings).isEqualTo(null)
-    assertThat(extension.lint.baselineFileName).isEqualTo(null)
+    assertThat(extension.lint.abortOnError).isNull()
+    assertThat(extension.lint.warningsAsErrors).isNull()
+    assertThat(extension.lint.checkAllWarnings).isNull()
+    assertThat(extension.lint.baselineFileName).isNull()
+    assertThat(extension.lint.absolutePaths).isNull()
+    assertThat(extension.lint.lintConfig).isNull()
+    assertThat(extension.lint.checkReleaseBuilds).isFalse()
+    assertThat(extension.lint.checkTestSources).isTrue()
+    assertThat(extension.lint.checkDependencies).isNull()
+
+    assertThat(extension.kotlin.allWarningsAsErrors).isTrue()
   }
 }

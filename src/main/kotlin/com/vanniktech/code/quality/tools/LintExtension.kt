@@ -69,7 +69,7 @@ open class LintExtension {
    * Returns whether lint should check test sources or not.
    * @since 0.13.0
    */
-  var checkTestSources: Boolean? = null
+  var checkTestSources: Boolean? = true
 
   /**
    * Returns whether lint should check dependencies or not.
