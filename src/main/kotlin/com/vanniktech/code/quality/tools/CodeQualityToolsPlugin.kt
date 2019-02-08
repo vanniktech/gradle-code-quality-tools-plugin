@@ -23,6 +23,7 @@ import org.gradle.api.plugins.quality.PmdExtension
 import org.gradle.api.plugins.quality.PmdPlugin
 import org.gradle.language.base.plugins.LifecycleBasePlugin.ASSEMBLE_TASK_NAME
 import org.gradle.language.base.plugins.LifecycleBasePlugin.CHECK_TASK_NAME
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 
 const val GROUP_VERIFICATION = "verification"
@@ -50,6 +51,7 @@ class CodeQualityToolsPlugin : Plugin<Project> {
     project.addPmd(rootProject, extension)
     project.addCheckstyle(rootProject, extension)
     project.addKtlint(rootProject, extension)
+    project.addKotlin(extension)
     project.addCpd(extension)
     project.addDetekt(rootProject, extension)
     project.addErrorProne(extension)
@@ -272,6 +274,20 @@ fun Project.addFindbugs(rootProject: Project, extension: CodeQualityToolsPluginE
       tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("lint") }
       return true
     }
+  }
+
+  return false
+}
+
+fun Project.addKotlin(extension: CodeQualityToolsPluginExtension): Boolean {
+  val isNotIgnored = !shouldIgnore(extension)
+  val isKotlinProject = isKotlinProject()
+
+  if (isNotIgnored && isKotlinProject) {
+    project.tasks.withType(KotlinCompile::class.java) {
+      it.kotlinOptions.allWarningsAsErrors = extension.kotlin.allWarningsAsErrors
+    }
+    return true
   }
 
   return false

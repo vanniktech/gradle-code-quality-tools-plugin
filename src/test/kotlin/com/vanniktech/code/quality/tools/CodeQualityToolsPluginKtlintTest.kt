@@ -13,7 +13,7 @@ class CodeQualityToolsPluginKtlintTest {
 
   @Test fun success() {
     Roboter(testProjectDir)
-        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
+        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
         .succeeds()
   }
 
@@ -23,8 +23,8 @@ class CodeQualityToolsPluginKtlintTest {
             |[*.{kt,kts}]
             |insert_final_newline=true
             """.trimMargin())
-        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param")
-        .fails()
+        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param")
+        .fails(containsMessage = "/src/main/kotlin/com/vanniktech/test/Foo.kt:1:1: File must end with a newline (\\n)")
   }
 
   @Test fun autoFormat() {
@@ -33,9 +33,9 @@ class CodeQualityToolsPluginKtlintTest {
             |[*.{kt,kts}]
             |insert_final_newline=true
             """.trimMargin())
-        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param")
+        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param")
         .succeeds(taskToRun = "ktlintFormat")
-        .hasKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
+        .hasKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
   }
 
   @Test fun noSrcFolder() {
@@ -45,8 +45,8 @@ class CodeQualityToolsPluginKtlintTest {
 
   @Test fun fails() {
     Roboter(testProjectDir)
-        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo( ) = Unit")
-        .fails()
+        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo( ) = Unit")
+        .fails(containsMessage = "src/main/kotlin/com/vanniktech/test/Foo.kt:1:9: Unexpected spacing after \"(\"")
   }
 
   @Test fun ignoresFileInBuildDirectory() {
@@ -58,7 +58,7 @@ class CodeQualityToolsPluginKtlintTest {
   @Test fun failsOnKotlinScript() {
     Roboter(testProjectDir)
         .withKotlinFile("build.gradle.kts", "fun foo( ) = Unit")
-        .fails()
+        .fails(containsMessage = "build.gradle.kts:1:9: Unexpected spacing after \"(\"")
   }
 
   @Test fun autoCorrectKotlinScript() {
@@ -70,14 +70,14 @@ class CodeQualityToolsPluginKtlintTest {
 
   @Test fun disabled() {
     Roboter(testProjectDir, enabled = false)
-        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo( ) = Unit")
+        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo( ) = Unit")
         .doesNothing()
   }
 
   @Test fun checkTaskRunsKtlint() {
     Roboter(testProjectDir)
-        .withKotlinFile("src/main/com/vanniktech/test/Foo.kt", "fun foo( ) = Unit")
-        .fails(taskToRun = "check", taskToCheck = "ktlint")
+        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo( ) = Unit")
+        .fails(taskToRun = "check", taskToCheck = "ktlint", containsMessage = "src/main/kotlin/com/vanniktech/test/Foo.kt:1:9: Unexpected spacing after \"(\"")
   }
 
   class Roboter(
@@ -129,8 +129,10 @@ class CodeQualityToolsPluginKtlintTest {
       assertReportsExist()
     }
 
-    fun fails(taskToRun: String = "ktlint", taskToCheck: String = taskToRun) = apply {
-      assertThat(run(taskToRun).buildAndFail().task(":$taskToCheck")?.outcome).isEqualTo(TaskOutcome.FAILED)
+    fun fails(taskToRun: String = "ktlint", taskToCheck: String = taskToRun, containsMessage: String) = apply {
+      val buildResult = run(taskToRun).buildAndFail()
+      assertThat(buildResult.task(":$taskToCheck")?.outcome).isEqualTo(TaskOutcome.FAILED)
+      assertThat(buildResult.output).contains(containsMessage)
       assertReportsExist()
     }
 
