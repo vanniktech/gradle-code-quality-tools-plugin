@@ -81,6 +81,7 @@ dependencies {
   api 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.14'
 
   compileOnly "com.android.tools.build:gradle:$androidGradlePluginVersion"
+  compileOnly "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
   testImplementation "com.android.tools.build:gradle:$androidGradlePluginVersion"
   testImplementation 'junit:junit:4.12'
