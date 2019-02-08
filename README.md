@@ -90,6 +90,9 @@ codeQualityTools {
     String baselineFileName = null
     Boolean absolutePaths = null
     File lintConfig = null
+    Boolean checkReleaseBuilds = false
+    Boolean checkTestSources = null
+    Boolean checkDependencies = null
   }
   ktlint {
     boolean enabled = true
