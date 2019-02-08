@@ -61,6 +61,8 @@ class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
     assertThat(androidAppProject.lintOptions.isAbsolutePaths).isTrue()
     assertThat(androidAppProject.lintOptions.lintConfig).isEqualTo(null)
     assertThat(androidAppProject.lintOptions.isCheckReleaseBuilds).isFalse()
+    assertThat(androidAppProject.lintOptions.isCheckTestSources).isTrue()
+    assertThat(androidAppProject.lintOptions.isCheckDependencies).isFalse()
     assertThat(androidAppProject.lintOptions.baselineFile).isEqualTo(androidAppProject.file("baseline.xml"))
     assertThat(androidAppProject.lintOptions.textOutput.toString()).isEqualTo(extension.lint.textOutput)
 
@@ -72,6 +74,8 @@ class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
     assertThat(androidLibraryProject.lintOptions.isAbsolutePaths).isTrue()
     assertThat(androidLibraryProject.lintOptions.lintConfig).isEqualTo(null)
     assertThat(androidLibraryProject.lintOptions.isCheckReleaseBuilds).isFalse()
+    assertThat(androidLibraryProject.lintOptions.isCheckTestSources).isTrue()
+    assertThat(androidLibraryProject.lintOptions.isCheckDependencies).isFalse()
     assertThat(androidLibraryProject.lintOptions.baselineFile).isEqualTo(androidLibraryProject.file("baseline.xml"))
     assertThat(androidLibraryProject.lintOptions.textOutput.toString()).isEqualTo(extension.lint.textOutput)
   }
@@ -129,13 +133,13 @@ class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
 
   @Test fun checkTestSources() {
     val extension = defaultExtensions()
-    extension.lint.checkTestSources = true
+    extension.lint.checkTestSources = false
 
     assertThat(androidAppProject.addLint(extension)).isTrue()
-    assertThat(androidAppProject.lintOptions.isCheckTestSources).isTrue()
+    assertThat(androidAppProject.lintOptions.isCheckTestSources).isFalse()
 
     assertThat(androidLibraryProject.addLint(extension)).isTrue()
-    assertThat(androidLibraryProject.lintOptions.isCheckTestSources).isTrue()
+    assertThat(androidLibraryProject.lintOptions.isCheckTestSources).isFalse()
   }
 
   @Test fun checkDependencies() {
