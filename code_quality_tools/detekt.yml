@@ -6,11 +6,17 @@ potential-bugs:
   LateinitUsage:
     active: false # We know what we're doing.
 
+exceptions:
+  SwallowedException:
+    active: false # https://github.com/arturbosch/detekt/issues/1408
+
 style:
   TopLevelPropertyNaming:
     active: false
   MaxLineLength:
     active: false
+  UnnecessaryApply:
+    active: false # https://github.com/arturbosch/detekt/issues/1305
 
 comments:
   UndocumentedPublicClass:

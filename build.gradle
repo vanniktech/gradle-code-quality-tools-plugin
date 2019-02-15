@@ -1,6 +1,6 @@
 buildscript {
-  ext.kotlinVersion = '1.3.11'
-  ext.androidGradlePluginVersion = '3.3.0'
+  ext.kotlinVersion = '1.3.21'
+  ext.androidGradlePluginVersion = '3.3.1'
 
   repositories {
     mavenCentral()
@@ -10,11 +10,11 @@ buildscript {
 
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    classpath 'com.gradle.publish:plugin-publish-plugin:0.10.0'
+    classpath 'com.gradle.publish:plugin-publish-plugin:0.10.1'
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
-    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.12.0'
+    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.16.0'
     classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.13.0'
-    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.7.0'
+    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.8.0'
   }
 }
 
@@ -29,10 +29,10 @@ apply plugin: 'com.gradle.plugin-publish'
 
 codeQualityTools {
   ktlint {
-    toolVersion = '0.29.0'
+    toolVersion = '0.30.0'
   }
   detekt {
-    toolVersion = '1.0.0.RC8'
+    toolVersion = '1.0.0-RC12'
   }
   findbugs {
     enabled = false
@@ -77,15 +77,15 @@ tasks.getByName('pluginUnderTestMetadata').getPluginClasspath().from(configurati
 
 dependencies {
   api gradleApi()
-  api 'de.aaschmid:gradle-cpd-plugin:1.1'
+  api 'de.aaschmid:gradle-cpd-plugin:1.2'
   api 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.14'
 
   compileOnly "com.android.tools.build:gradle:$androidGradlePluginVersion"
   compileOnly "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
   testImplementation "com.android.tools.build:gradle:$androidGradlePluginVersion"
-  testImplementation 'junit:junit:4.12'
-  testImplementation 'org.assertj:assertj-core:3.11.1'
+  testImplementation 'junit:junit:4.13-beta-2'
+  testImplementation 'org.assertj:assertj-core:3.12.0'
   testImplementation "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
   fixtureClasspath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
