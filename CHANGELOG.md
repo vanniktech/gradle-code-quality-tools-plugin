@@ -1,7 +1,12 @@
 # Change Log
 
-Version 0.17.0 *(In development)*
----------------------------------
+Version 0.17.0 *(2019-02-18)*
+-----------------------------
+
+- Update dependencies to latest and greatest. [\#177](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/177) ([vanniktech](https://github.com/vanniktech))
+- Android Lint: Check test sources by default. [\#176](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/176) ([vanniktech](https://github.com/vanniktech))
+- Kotlin: Treat warnings as errors by default. [\#175](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/175) ([vanniktech](https://github.com/vanniktech))
+- Update README to reflect new lint extension properties. [\#174](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/174) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.16.0 *(2019-01-28)*
 -----------------------------
