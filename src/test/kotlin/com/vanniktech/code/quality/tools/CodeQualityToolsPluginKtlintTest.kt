@@ -120,7 +120,8 @@ class CodeQualityToolsPluginKtlintTest {
     }
 
     private fun write(path: String, content: String) = apply {
-      directory.newFolder(*path.split("/").dropLast(1).toTypedArray())
+      val paths = path.split("/").dropLast(1).toTypedArray()
+      if (paths.isNotEmpty()) directory.newFolder(*paths)
       directory.newFile(path).writeText(content)
     }
 
