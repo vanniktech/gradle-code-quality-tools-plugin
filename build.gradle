@@ -78,6 +78,7 @@ tasks.getByName('pluginUnderTestMetadata').getPluginClasspath().from(configurati
 dependencies {
   api gradleApi()
   api 'de.aaschmid:gradle-cpd-plugin:1.2'
+  api 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.10'
   api 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.14'
 
   compileOnly "com.android.tools.build:gradle:$androidGradlePluginVersion"

@@ -40,6 +40,9 @@ open class CodeQualityToolsPluginExtension @Inject constructor(
   val findbugs = objectFactory.newInstance(FindbugsExtension::class.java)
   fun findbugs(action: Action<in FindbugsExtension>) = action.execute(findbugs)
 
+  val spotbugs = objectFactory.newInstance(SpotbugsExtension::class.java)
+  fun spotbugs(action: Action<in SpotbugsExtension>) = action.execute(spotbugs)
+  
   val checkstyle = objectFactory.newInstance(CheckstyleExtension::class.java)
   fun checkstyle(action: Action<in CheckstyleExtension>) = action.execute(checkstyle)
 

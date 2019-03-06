@@ -6,6 +6,9 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LintPlugin
 import com.android.build.gradle.internal.dsl.LintOptions
 import com.android.repository.Revision
+import com.github.spotbugs.SpotBugsExtension
+import com.github.spotbugs.SpotBugsPlugin
+import com.github.spotbugs.SpotBugsTask
 import de.aaschmid.gradle.plugins.cpd.Cpd
 import de.aaschmid.gradle.plugins.cpd.CpdExtension
 import de.aaschmid.gradle.plugins.cpd.CpdPlugin
@@ -59,6 +62,7 @@ class CodeQualityToolsPlugin : Plugin<Project> {
     // Those static code tools take the longest hence we'll add them at the end.
     project.addLint(extension)
     project.addFindbugs(rootProject, extension)
+    project.addSpotbugs(rootProject, extension)
   }
 }
 
@@ -212,6 +216,63 @@ fun Project.addFindbugs(rootProject: Project, extension: CodeQualityToolsPluginE
     }
 
     tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("findbugs") }
+    return true
+  }
+
+  return false
+}
+
+fun Project.addSpotbugs(rootProject: Project, extension: CodeQualityToolsPluginExtension): Boolean {
+  val isNotIgnored = !shouldIgnore(extension)
+  val isEnabled = extension.spotbugs.enabled
+  val iSpotbugsSupported = isJavaProject() || isAndroidProject() || isKotlinProject()
+
+  if (isNotIgnored && isEnabled && iSpotbugsSupported) {
+    val buildDirIncludes = mutableListOf<String>()
+
+    if (isAndroidProject()) {
+      val androidGradlePluginVersion = androidGradlePluginVersion()
+
+      if (androidGradlePluginVersion >= Revision.parseRevision("3.2.0", Revision.Precision.PREVIEW)) {
+        buildDirIncludes.add("intermediates/javac/debug/**")
+      } else {
+        buildDirIncludes.add("intermediates/classes/debug/**")
+      }
+    } else {
+      if (isKotlinProject()) {
+        buildDirIncludes.add("classes/kotlin/main/**")
+      }
+
+      if (isJavaProject()) {
+        buildDirIncludes.add("classes/java/main/**")
+      }
+    }
+
+    plugins.apply(SpotBugsPlugin::class.java)
+
+    extensions.configure(SpotBugsExtension::class.java) {
+      it.sourceSets = emptyList()
+      it.isIgnoreFailures = extension.spotbugs.ignoreFailures ?: !extension.failEarly
+      it.toolVersion = extension.spotbugs.toolVersion
+      it.effort = extension.spotbugs.effort
+      it.reportLevel = extension.spotbugs.reportLevel
+      it.excludeFilter = rootProject.file(extension.spotbugs.excludeFilter)
+    }
+
+    tasks.register("spotbugs", SpotBugsTask::class.java) {
+      it.description = "Runs spotbugs."
+      it.group = GROUP_VERIFICATION
+
+      it.classes = fileTree(buildDir).include(buildDirIncludes) as FileTree
+      it.source = fileTree(extension.spotbugs.source)
+      it.classpath = files()
+
+      it.reports.html.isEnabled = extension.htmlReports
+      it.reports.xml.isEnabled = extension.xmlReports
+      it.dependsOn(ASSEMBLE_TASK_NAME)
+    }
+
+    tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("spotbugs") }
     return true
   }
 

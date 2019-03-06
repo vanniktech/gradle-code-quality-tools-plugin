@@ -1,6 +1,8 @@
 package com.vanniktech.code.quality.tools
 
 import com.android.build.gradle.BaseExtension
+import com.github.spotbugs.SpotBugsExtension
+import com.github.spotbugs.SpotBugsTask
 import de.aaschmid.gradle.plugins.cpd.Cpd
 import de.aaschmid.gradle.plugins.cpd.CpdExtension
 import org.gradle.api.Project
@@ -26,6 +28,9 @@ val Project.cpdTask get() = tasks.getByName("cpdCheck") as Cpd
 
 val Project.checkstyle get() = extensions.getByType(org.gradle.api.plugins.quality.CheckstyleExtension::class.java)
 val Project.checkstyleTask get() = tasks.getByName("checkstyle") as Checkstyle
+
+val Project.spotbugs get() = extensions.getByType(SpotBugsExtension::class.java)
+val Project.spotbugsTask get() = tasks.getByName("spotbugs") as SpotBugsTask
 
 val Project.findbugs get() = extensions.getByType(FindBugsExtension::class.java)
 val Project.findbugsTask get() = tasks.getByName("findbugs") as FindBugs
