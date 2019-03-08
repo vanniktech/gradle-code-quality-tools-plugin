@@ -17,6 +17,7 @@ import org.gradle.util.VersionNumber
 import java.io.File
 
 @CacheableTask open class DetektCheckTask : DefaultTask() {
+  @Input var failFast: Boolean = true
   @Input lateinit var version: String
 
   // Ideally this would be an optional input file - https://github.com/gradle/gradle/issues/2016
@@ -42,12 +43,14 @@ import java.io.File
     executeDetekt(configuration)
   }
 
+  @Suppress("Detekt.ComplexMethod") // Can remove all of the compatibility crap once Detekt reached 1.0.0
   private fun executeDetekt(configuration: FileCollection, shouldCreateBaseLine: Boolean = false) {
     val fixedVersion = VersionNumber.parse(version.replace(".RC", "-RC")) // GradleVersion does not understand . as a - in this case. Let's fix it and hope it does not break.
     val possibleRcVersion = Regex("RC[\\d]+").find(version)?.value?.replace("RC", "")?.toIntOrNull()
     val isAtLeastRc10 = possibleRcVersion != null && possibleRcVersion >= RC_BREAKING_POINT // GradleVersion thinks RC10 is smaller than RC9.
     val shouldUseReport = fixedVersion >= VERSION_REPORT_CHANGE || isAtLeastRc10
     val canUseFileEnding = fixedVersion >= VERSION_REPORT_EXTENSION_CHANGE && isAtLeastRc10
+    val shouldUseFailFastCliFlag = fixedVersion >= VERSION_FAIL_FAST_CHANGE && isAtLeastRc10
 
     val reportKey = if (shouldUseReport) "--report" else "--output"
     val reportValue = if (shouldUseReport) {
@@ -73,6 +76,10 @@ import java.io.File
           reportKey, reportValue
       )
 
+      if (shouldUseFailFastCliFlag && failFast) {
+        task.args("--fail-fast")
+      }
+
       if (shouldCreateBaseLine) {
         task.args("--create-baseline")
       }
@@ -93,5 +100,6 @@ import java.io.File
     internal const val RC_BREAKING_POINT = 10
     internal val VERSION_REPORT_CHANGE = VersionNumber.parse("1.0.0-RC9")
     internal val VERSION_REPORT_EXTENSION_CHANGE = VersionNumber.parse("1.0.0-RC10")
+    internal val VERSION_FAIL_FAST_CHANGE = VersionNumber.parse("1.0.0-RC13")
   }
 }

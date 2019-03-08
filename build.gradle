@@ -11,7 +11,7 @@ buildscript {
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     classpath 'com.gradle.publish:plugin-publish-plugin:0.10.1'
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
     classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.16.0'
     classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.13.0'
     classpath 'com.vanniktech:gradle-maven-publish-plugin:0.8.0'
@@ -108,6 +108,6 @@ pluginBundle {
 }
 
 wrapper {
-  gradleVersion = '5.1.1'
+  gradleVersion = '5.2.1'
   distributionType = Wrapper.DistributionType.ALL
 }

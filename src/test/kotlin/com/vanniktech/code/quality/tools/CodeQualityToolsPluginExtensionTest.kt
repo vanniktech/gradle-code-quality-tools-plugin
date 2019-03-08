@@ -66,6 +66,9 @@ class CodeQualityToolsPluginExtensionTest {
     assertThat(extension.lint.checkTestSources).isTrue()
     assertThat(extension.lint.checkDependencies).isNull()
 
+    assertThat(extension.detekt.baselineFileName).isNull()
+    assertThat(extension.detekt.failFast).isTrue()
+
     assertThat(extension.kotlin.allWarningsAsErrors).isTrue()
   }
 }

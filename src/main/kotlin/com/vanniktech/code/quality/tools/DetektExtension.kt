@@ -21,4 +21,10 @@ open class DetektExtension {
    * @since 0.11.0
    */
   var baselineFileName: String? = null
+
+  /**
+   * Whether to failFast or not. This will be forwarded to the CLI starting with Detekt 1.0.0 RC13
+   * @since 0.18.0
+   */
+  var failFast: Boolean = true
 }
