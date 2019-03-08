@@ -53,6 +53,20 @@ class CodeQualityToolsPluginDetektTest {
         .succeeds()
   }
 
+  @Test fun worksWithRC13() {
+    Roboter(testProjectDir, version = "1.0.0-RC13")
+        .withConfiguration("") // Fail Fast is configured via the CLI parameter.
+        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
+        .succeeds()
+  }
+
+  @Test fun worksWithRC14() {
+    Roboter(testProjectDir, version = "1.0.0-RC14")
+        .withConfiguration("") // Fail Fast is configured via the CLI parameter.
+        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
+        .succeeds()
+  }
+
   @Test fun noSrcFolder() {
     Roboter(testProjectDir)
         .withConfiguration("failFast: true")
