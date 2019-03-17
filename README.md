@@ -2,6 +2,8 @@
 
 Gradle plugin that configures [Error Prone](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how each of those plugins are configured.
 
+This plugin requires Gradle 5.0 or later.
+
 # Set up
 
 **root/build.gradle**
