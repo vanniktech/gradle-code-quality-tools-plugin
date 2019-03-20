@@ -44,7 +44,7 @@ apply plugin: "com.vanniktech.code.quality.tools"
 
 The philosophy of this plugin is to fail early. This means having zero warnings / errors reported from any tools. If you're just getting started with this in a large code base you might not be able to achieve this right away in which case you might want to set `failEarly` to `false` and then apply at a finer more granular scope how each tool should behave e.g. `checkstyle { ignoreFailures = false }`.
 
-Those are all the available configurations - shown with default values and their types. More information can be found in the [Java Documentation of the Extension](src/main/groovy/com/vanniktech/code/quality/tools/CodeQualityToolsPluginExtension.groovy).
+Those are all the available configurations - shown with default values and their types. More information can be found in the [Kotlin Documentation of the Extension](src/main/kotlin/com/vanniktech/code/quality/tools/CodeQualityToolsPluginExtension.kt) and the respective extensions for designated integrations.
 
 ```groovy
 codeQualityTools {
