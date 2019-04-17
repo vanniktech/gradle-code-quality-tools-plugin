@@ -183,7 +183,6 @@ class CodeQualityToolsPluginDetektTest {
           |  ktlint.enabled = false
           |  checkstyle.enabled = false
           |  pmd.enabled = false
-          |  findbugs.enabled = false
           |  cpd.enabled = false
           |  errorProne.enabled = false
           |}
