@@ -15,9 +15,6 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.plugins.quality.CheckstylePlugin
-import org.gradle.api.plugins.quality.FindBugs
-import org.gradle.api.plugins.quality.FindBugsExtension
-import org.gradle.api.plugins.quality.FindBugsPlugin
 import org.gradle.api.plugins.quality.Pmd
 import org.gradle.api.plugins.quality.PmdExtension
 import org.gradle.api.plugins.quality.PmdPlugin
@@ -55,10 +52,7 @@ class CodeQualityToolsPlugin : Plugin<Project> {
     project.addCpd(extension)
     project.addDetekt(rootProject, extension)
     project.addErrorProne(extension)
-
-    // Those static code tools take the longest hence we'll add them at the end.
     project.addLint(extension)
-    project.addFindbugs(rootProject, extension)
   }
 }
 
@@ -155,63 +149,6 @@ fun Project.addCheckstyle(rootProject: Project, extension: CodeQualityToolsPlugi
     }
 
     tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("checkstyle") }
-    return true
-  }
-
-  return false
-}
-
-fun Project.addFindbugs(rootProject: Project, extension: CodeQualityToolsPluginExtension): Boolean {
-  val isNotIgnored = !shouldIgnore(extension)
-  val isEnabled = extension.findbugs.enabled
-  val isFindbugsSupported = isJavaProject() || isAndroidProject() || isKotlinProject()
-
-  if (isNotIgnored && isEnabled && isFindbugsSupported) {
-    val buildDirIncludes = mutableListOf<String>()
-
-    if (isAndroidProject()) {
-      val androidGradlePluginVersion = androidGradlePluginVersion()
-
-      if (androidGradlePluginVersion >= Revision.parseRevision("3.2.0", Revision.Precision.PREVIEW)) {
-        buildDirIncludes.add("intermediates/javac/debug/**")
-      } else {
-        buildDirIncludes.add("intermediates/classes/debug/**")
-      }
-    } else {
-      if (isKotlinProject()) {
-        buildDirIncludes.add("classes/kotlin/main/**")
-      }
-
-      if (isJavaProject()) {
-        buildDirIncludes.add("classes/java/main/**")
-      }
-    }
-
-    plugins.apply(FindBugsPlugin::class.java)
-
-    extensions.configure(FindBugsExtension::class.java) {
-      it.sourceSets = emptyList()
-      it.isIgnoreFailures = extension.findbugs.ignoreFailures ?: !extension.failEarly
-      it.toolVersion = extension.findbugs.toolVersion
-      it.effort = extension.findbugs.effort
-      it.reportLevel = extension.findbugs.reportLevel
-      it.excludeFilter = rootProject.file(extension.findbugs.excludeFilter)
-    }
-
-    tasks.register("findbugs", FindBugs::class.java) {
-      it.description = "Runs findbugs."
-      it.group = GROUP_VERIFICATION
-
-      it.classes = fileTree(buildDir).include(buildDirIncludes) as FileTree
-      it.source = fileTree(extension.findbugs.source)
-      it.classpath = files()
-
-      it.reports.html.isEnabled = extension.htmlReports
-      it.reports.xml.isEnabled = extension.xmlReports
-      it.dependsOn(ASSEMBLE_TASK_NAME)
-    }
-
-    tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("findbugs") }
     return true
   }
 
