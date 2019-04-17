@@ -8,5 +8,11 @@ open class KtlintExtension {
   var enabled: Boolean = true
 
   /** @since 0.5.0 */
-  var toolVersion: String = "0.14.0"
+  var toolVersion: String = "0.31.0"
+
+  /**
+   * Ability to enable or disable the experimental rules for ktlint. Requires ktlint 0.31.0 or later.
+   * @since 0.18.0
+   */
+  var experimental: Boolean = false
 }

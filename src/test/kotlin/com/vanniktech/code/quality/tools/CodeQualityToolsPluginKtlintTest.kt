@@ -49,6 +49,12 @@ class CodeQualityToolsPluginKtlintTest {
         .fails(containsMessage = "src/main/kotlin/com/vanniktech/test/Foo.kt:1:9: Unexpected spacing after \"(\"")
   }
 
+  @Test fun experimental() {
+    Roboter(testProjectDir, experimental = true)
+        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo() =\n   Unit")
+        .fails(containsMessage = "src/main/kotlin/com/vanniktech/test/Foo.kt:2:1: Unexpected indentation (3) (it should be 4) (cannot be auto-corrected)")
+  }
+
   @Test fun ignoresFileInBuildDirectory() {
     Roboter(testProjectDir)
         .withKotlinFile("build/Foo.kt", "fun foo( ) = Unit")
@@ -83,7 +89,8 @@ class CodeQualityToolsPluginKtlintTest {
   class Roboter(
     private val directory: TemporaryFolder,
     enabled: Boolean = true,
-    version: String = "0.29.0"
+    version: String = "0.31.0",
+    experimental: Boolean = false
   ) {
     init {
       directory.newFile("build.gradle").writeText("""
@@ -96,6 +103,7 @@ class CodeQualityToolsPluginKtlintTest {
           |  ktlint {
           |    enabled = $enabled
           |    toolVersion = "$version"
+          |    experimental = $experimental
           |  }
           |  detekt.enabled = false
           |  checkstyle.enabled = false
