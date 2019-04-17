@@ -241,12 +241,14 @@ fun Project.addKtlint(rootProject: Project, extension: CodeQualityToolsPluginExt
     }
 
     tasks.register(ktlint, KtLintTask::class.java) { task ->
+      task.experimental = extension.ktlint.experimental
       task.version = extension.ktlint.toolVersion
       task.outputDirectory = File(buildDir, "reports/ktlint/")
       task.inputs.files(kotlinFiles(), rootProject.editorconfigFiles())
     }
 
     tasks.register("ktlintFormat", KtLintFormatTask::class.java) { task ->
+      task.experimental = extension.ktlint.experimental
       task.version = extension.ktlint.toolVersion
       task.outputDirectory = File(buildDir, "reports/ktlint/")
       task.inputs.files(kotlinFiles(), rootProject.editorconfigFiles())
