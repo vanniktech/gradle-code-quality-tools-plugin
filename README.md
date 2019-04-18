@@ -1,6 +1,6 @@
 # gradle-code-quality-tools-plugin
 
-Gradle plugin that configures [Error Prone](http://errorprone.info/), [Findbugs](http://findbugs.sourceforge.net/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how each of those plugins are configured.
+Gradle plugin that configures [Error Prone](http://errorprone.info/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how each of those plugins are configured.
 
 This plugin requires Gradle 5.0 or later.
 
@@ -16,7 +16,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.17.0"
+    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.18.0"
   }
 }
 
@@ -54,15 +54,6 @@ codeQualityTools {
   boolean textReports = false
   String[] ignoreProjects = []
 
-  findbugs {
-    boolean enabled = true
-    String toolVersion = '3.0.1'
-    String excludeFilter = 'code_quality_tools/findbugs-filter.xml'
-    Boolean ignoreFailures = null
-    String source = 'src'
-    String effort = 'max'
-    String reportLevel = 'low'
-  }
   checkstyle {
     boolean enabled = true
     String toolVersion = '8.6'
@@ -99,12 +90,14 @@ codeQualityTools {
   ktlint {
     boolean enabled = true
     String toolVersion = '0.14.0'
+    boolean experimental = false
   }
   detekt {
     boolean enabled = true
     String toolVersion = '1.0.0.RC6'
     String config = 'code_quality_tools/detekt.yml'
     String baselineFileName = null
+    boolean failFast = true
   }
   cpd {
     boolean enabled = true
@@ -130,10 +123,6 @@ Here I'll give a bit more information about how each of the tools will be applie
 ### Error Prone
 
 It'll apply the [Error Prone Gradle Plugin](https://github.com/tbroyer/gradle-errorprone-plugin) which will run together with `assemble`. There's no report generated for this but you'll get compile warnings & errors.
-
-### Findbugs
-
-It'll apply the [Findbugs Plugin](https://docs.gradle.org/current/userguide/findbugs_plugin.html) and generate the `findbugs` task that will execute findbugs. The configuration properties of `codeQualityTools -> findbugs` mirror the [properties from the plugin](https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugsExtension.html).
 
 ### Checkstyle
 

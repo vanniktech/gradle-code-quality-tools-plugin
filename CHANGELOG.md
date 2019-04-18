@@ -1,7 +1,13 @@
 # Change Log
 
-Version 0.18.0 *(In development)*
----------------------------------
+Version 0.18.0 *(2019-04-18)*
+-----------------------------
+
+- Support ktlint's experimental flag and update default version to 0.31.0 [\#186](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/186) ([vanniktech](https://github.com/vanniktech))
+- Nuke Findbugs. [\#185](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/185) ([vanniktech](https://github.com/vanniktech))
+- Fix README link now that everything is in Kotlin. [\#184](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/184) ([vanniktech](https://github.com/vanniktech))
+- Gradle 5 is required [\#183](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/183) ([vanniktech](https://github.com/vanniktech))
+- Detekt: Support RC13 + RC14. [\#180](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/180) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.17.0 *(2019-02-18)*
 -----------------------------
