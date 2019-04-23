@@ -13,7 +13,7 @@ buildscript {
   repositories {
     mavenCentral()
     google()
-    gradlePluginPortal()
+    gradlePluginPortal() // Required for the Errorprone Gradle Plugin.
   }
   dependencies {
     classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.18.0"
