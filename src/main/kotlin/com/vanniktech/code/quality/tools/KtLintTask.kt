@@ -1,5 +1,6 @@
 package com.vanniktech.code.quality.tools
 
+import com.vanniktech.code.quality.tools.KtlintExtension.Companion.PINTEREST_VERSION_CHANGE
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
@@ -21,7 +22,7 @@ import java.io.File
 
   @TaskAction fun run() {
     project.javaexec { task ->
-      task.main = "com.github.shyiko.ktlint.Main"
+      task.main = if (version.asVersion() >= PINTEREST_VERSION_CHANGE) "com.pinterest.ktlint.Main" else "com.github.shyiko.ktlint.Main"
       task.classpath = project.configurations.getByName("ktlint")
       if (experimental) {
         task.args("--experimental")
