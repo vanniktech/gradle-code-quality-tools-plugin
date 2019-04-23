@@ -6,6 +6,7 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LintPlugin
 import com.android.build.gradle.internal.dsl.LintOptions
 import com.android.repository.Revision
+import com.vanniktech.code.quality.tools.KtlintExtension.Companion.PINTEREST_VERSION_CHANGE
 import de.aaschmid.gradle.plugins.cpd.Cpd
 import de.aaschmid.gradle.plugins.cpd.CpdExtension
 import de.aaschmid.gradle.plugins.cpd.CpdPlugin
@@ -237,7 +238,11 @@ fun Project.addKtlint(rootProject: Project, extension: CodeQualityToolsPluginExt
     val ktlint = "ktlint"
 
     configurations.create(ktlint).defaultDependencies {
-      it.add(dependencies.create("com.github.shyiko:ktlint:${extension.ktlint.toolVersion}"))
+      if (extension.ktlint.toolVersion.asVersion() >= PINTEREST_VERSION_CHANGE) {
+        it.add(dependencies.create("com.pinterest:ktlint:${extension.ktlint.toolVersion}"))
+      } else {
+        it.add(dependencies.create("com.github.shyiko:ktlint:${extension.ktlint.toolVersion}"))
+      }
     }
 
     tasks.register(ktlint, KtLintTask::class.java) { task ->
