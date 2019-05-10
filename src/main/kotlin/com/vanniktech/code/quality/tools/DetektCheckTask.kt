@@ -2,6 +2,8 @@ package com.vanniktech.code.quality.tools
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
@@ -13,9 +15,14 @@ import org.gradle.api.tasks.PathSensitivity.NONE
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskExecutionException
+import org.gradle.workers.IsolationMode
+import org.gradle.workers.WorkerExecutor
 import java.io.File
+import javax.inject.Inject
 
-@CacheableTask open class DetektCheckTask : DefaultTask() {
+@CacheableTask open class DetektCheckTask @Inject constructor(
+  private val workerExecutor: WorkerExecutor
+) : DefaultTask() {
   @Input var failFast: Boolean = true
   @Input lateinit var version: String
 
@@ -30,61 +37,79 @@ import java.io.File
   }
 
   @TaskAction fun run() {
-    val configuration = project.configurations.getByName("detekt")
-
-    baselineFilePath?.let { file ->
-      if (!File(file).exists()) {
-        executeDetekt(configuration, shouldCreateBaseLine = true)
-        throw TaskExecutionException(this, GradleException("Aborting build since new baseline file was created"))
-      }
+    workerExecutor.submit(DetektCheckTaskRunnable::class.java) {
+      it.isolationMode = IsolationMode.NONE
+      it.params(project, baselineFilePath, version, outputDirectory, configFile, this, failFast)
+      // it.classpath(project.configurations.getByName("detekt"))
     }
-
-    executeDetekt(configuration)
   }
 
-  @Suppress("Detekt.ComplexMethod") // Can remove all of the compatibility crap once Detekt reached 1.0.0
-  private fun executeDetekt(configuration: FileCollection, shouldCreateBaseLine: Boolean = false) {
-    val fixedVersion = version.replace(".RC", "-RC").asVersion() // GradleVersion does not understand . as a - in this case. Let's fix it and hope it does not break.
-    val possibleRcVersion = Regex("RC[\\d]+").find(version)?.value?.replace("RC", "")?.toIntOrNull()
-    val isAtLeastRc10 = possibleRcVersion != null && possibleRcVersion >= RC_BREAKING_POINT // GradleVersion thinks RC10 is smaller than RC9.
-    val shouldUseReport = fixedVersion >= VERSION_REPORT_CHANGE || isAtLeastRc10
-    val canUseFileEnding = fixedVersion >= VERSION_REPORT_EXTENSION_CHANGE && isAtLeastRc10
-    val shouldUseFailFastCliFlag = fixedVersion >= VERSION_FAIL_FAST_CHANGE && isAtLeastRc10
+  internal class DetektCheckTaskRunnable @Inject constructor(
+    private val project: Project,
+    private val baselineFilePath: String?,
+    private val version: String,
+    private val outputDirectory: File,
+    private val configFile: File,
+    private val task: Task,
+    private val failFast: Boolean
+  ) : Runnable {
+    override fun run() {
+      val configuration = project.configurations.getByName("detekt")
 
-    val reportKey = if (shouldUseReport) "--report" else "--output"
-    val reportValue = if (shouldUseReport) {
-      listOf(
-          ReportingMetaInformation("plain", "txt", "plain"),
-          ReportingMetaInformation("xml", "xml", "checkstyle"),
-          ReportingMetaInformation("html", "html", "report")
-      ).joinToString(separator = ",") {
-        val reportId = if (canUseFileEnding) it.fileEnding else it.reportId
-        reportId + ":" + File(outputDirectory, "detekt-${it.fileNameSuffix}.${it.fileEnding}").absolutePath
+      baselineFilePath?.let { file ->
+        if (!File(file).exists()) {
+          executeDetekt(configuration, shouldCreateBaseLine = true)
+          throw TaskExecutionException(task, GradleException("Aborting build since new baseline file was created"))
+        }
       }
-    } else {
-      outputDirectory.absolutePath
+
+      executeDetekt(configuration)
     }
 
-    project.javaexec { task ->
-      task.main = "io.gitlab.arturbosch.detekt.cli.Main"
-      task.classpath = configuration
-      task.args(
-          "--config", configFile,
-          "--input", project.file("."),
-          "--filters", ".*build/.*",
-          reportKey, reportValue
-      )
+    @Suppress("Detekt.ComplexMethod") // Can remove all of the compatibility crap once Detekt reached 1.0.0
+    private fun executeDetekt(configuration: FileCollection, shouldCreateBaseLine: Boolean = false) {
+      val fixedVersion = version.replace(".RC", "-RC").asVersion() // GradleVersion does not understand . as a - in this case. Let's fix it and hope it does not break.
+      val possibleRcVersion = Regex("RC[\\d]+").find(version)?.value?.replace("RC", "")?.toIntOrNull()
+      val isAtLeastRc10 = possibleRcVersion != null && possibleRcVersion >= RC_BREAKING_POINT // GradleVersion thinks RC10 is smaller than RC9.
+      val shouldUseReport = fixedVersion >= VERSION_REPORT_CHANGE || isAtLeastRc10
+      val canUseFileEnding = fixedVersion >= VERSION_REPORT_EXTENSION_CHANGE && isAtLeastRc10
+      val shouldUseFailFastCliFlag = fixedVersion >= VERSION_FAIL_FAST_CHANGE && isAtLeastRc10
 
-      if (shouldUseFailFastCliFlag && failFast) {
-        task.args("--fail-fast")
+      val reportKey = if (shouldUseReport) "--report" else "--output"
+      val reportValue = if (shouldUseReport) {
+        listOf(
+            ReportingMetaInformation("plain", "txt", "plain"),
+            ReportingMetaInformation("xml", "xml", "checkstyle"),
+            ReportingMetaInformation("html", "html", "report")
+        ).joinToString(separator = ",") {
+          val reportId = if (canUseFileEnding) it.fileEnding else it.reportId
+          reportId + ":" + File(outputDirectory, "detekt-${it.fileNameSuffix}.${it.fileEnding}").absolutePath
+        }
+      } else {
+        outputDirectory.absolutePath
       }
 
-      if (shouldCreateBaseLine) {
-        task.args("--create-baseline")
-      }
+      project.javaexec { task ->
+        task.main = "io.gitlab.arturbosch.detekt.cli.Main"
+        task.classpath = configuration
+        task.args(
+            "--config", configFile,
+            "--input", project.file("."),
+            "--filters", ".*build/.*",
+            reportKey, reportValue
+        )
 
-      baselineFilePath?.let {
-        task.args("--baseline", it)
+        if (shouldUseFailFastCliFlag && failFast) {
+          task.args("--fail-fast")
+        }
+
+        if (shouldCreateBaseLine) {
+          task.args("--create-baseline")
+        }
+
+        baselineFilePath?.let {
+          task.args("--baseline", it)
+        }
       }
     }
   }
