@@ -50,6 +50,7 @@ import java.io.File
     val shouldUseReport = fixedVersion >= VERSION_REPORT_CHANGE || isAtLeastRc10
     val canUseFileEnding = fixedVersion >= VERSION_REPORT_EXTENSION_CHANGE && isAtLeastRc10
     val shouldUseFailFastCliFlag = fixedVersion >= VERSION_FAIL_FAST_CHANGE && isAtLeastRc10
+    val shouldUseExcludes = fixedVersion >= VERSION_FILTERS_CHANGE && isAtLeastRc10
 
     val reportKey = if (shouldUseReport) "--report" else "--output"
     val reportValue = if (shouldUseReport) {
@@ -71,9 +72,14 @@ import java.io.File
       task.args(
           "--config", configFile,
           "--input", project.file("."),
-          "--filters", ".*build/.*",
           reportKey, reportValue
       )
+
+      if (shouldUseExcludes) {
+        task.args("--excludes", "**/build/**")
+      } else {
+        task.args("--filters", ".*build/.*")
+      }
 
       if (shouldUseFailFastCliFlag && failFast) {
         task.args("--fail-fast")
@@ -100,5 +106,6 @@ import java.io.File
     internal val VERSION_REPORT_CHANGE = "1.0.0-RC9".asVersion()
     internal val VERSION_REPORT_EXTENSION_CHANGE = "1.0.0-RC10".asVersion()
     internal val VERSION_FAIL_FAST_CHANGE = "1.0.0-RC13".asVersion()
+    internal val VERSION_FILTERS_CHANGE = "1.0.0-RC15".asVersion()
   }
 }
