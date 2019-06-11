@@ -70,7 +70,7 @@ class CodeQualityToolsPluginDetektTest {
   @Test fun worksWithRC15() {
     Roboter(testProjectDir, version = "1.0.0-RC15")
         .withConfiguration("") // Fail Fast is configured via the CLI parameter.
-        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
+        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "package com.vanniktech.test;\nfun foo(param: Int) = param * param\n")
         .succeeds()
   }
 
