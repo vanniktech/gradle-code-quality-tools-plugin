@@ -70,10 +70,13 @@ import java.io.File
       task.main = "io.gitlab.arturbosch.detekt.cli.Main"
       task.classpath = configuration
       task.args(
-          "--config", configFile,
           "--input", project.file("."),
           reportKey, reportValue
       )
+
+      if (configFile.exists()) {
+          task.args("--config", configFile)
+      }
 
       if (shouldUseExcludes) {
         task.args("--excludes", "**/build/**")
