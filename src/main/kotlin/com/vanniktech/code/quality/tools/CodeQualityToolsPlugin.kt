@@ -81,7 +81,7 @@ fun hasLintPlugin(): Boolean {
 
 fun Project.kotlinFiles() = fileTree(mapOf("dir" to ".", "exclude" to "**/build/**", "includes" to listOf("**/*.kt", "**/*.kts")))
 
-fun Project.editorconfigFiles() = fileTree(mapOf("dir" to ".", "include" to "**/.editorconfig"))
+fun Project.editorconfigFile() = fileTree(mapOf("dir" to ".", "include" to ".editorconfig"))
 
 fun Project.addPmd(rootProject: Project, extension: CodeQualityToolsPluginExtension): Boolean {
   val isNotIgnored = !shouldIgnore(extension)
@@ -249,14 +249,14 @@ fun Project.addKtlint(rootProject: Project, extension: CodeQualityToolsPluginExt
       task.experimental = extension.ktlint.experimental
       task.version = extension.ktlint.toolVersion
       task.outputDirectory = File(buildDir, "reports/ktlint/")
-      task.inputs.files(kotlinFiles(), rootProject.editorconfigFiles())
+      task.inputs.files(kotlinFiles(), rootProject.editorconfigFile())
     }
 
     tasks.register("ktlintFormat", KtLintFormatTask::class.java) { task ->
       task.experimental = extension.ktlint.experimental
       task.version = extension.ktlint.toolVersion
       task.outputDirectory = File(buildDir, "reports/ktlint/")
-      task.inputs.files(kotlinFiles(), rootProject.editorconfigFiles())
+      task.inputs.files(kotlinFiles(), rootProject.editorconfigFile())
     }
 
     tasks.named(CHECK_TASK_NAME).configure { it.dependsOn(ktlint) }
