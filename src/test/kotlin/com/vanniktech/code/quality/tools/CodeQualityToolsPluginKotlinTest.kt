@@ -45,7 +45,11 @@ class CodeQualityToolsPluginKotlinTest {
           |}
           |
           |repositories {
-          |  jcenter()
+          |  mavenCentral()
+          |}
+          |
+          |dependencies {
+          |  implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.41'
           |}
           |""".trimMargin())
     }
