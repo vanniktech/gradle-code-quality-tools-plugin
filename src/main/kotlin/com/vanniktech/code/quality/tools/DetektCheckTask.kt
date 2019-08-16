@@ -86,12 +86,4 @@ import java.io.File
     val fileEnding: String,
     val fileNameSuffix: String
   )
-
-  internal companion object {
-    internal const val RC_BREAKING_POINT = 10
-    internal val VERSION_REPORT_CHANGE = "1.0.0-RC9".asVersion()
-    internal val VERSION_REPORT_EXTENSION_CHANGE = "1.0.0-RC10".asVersion()
-    internal val VERSION_FAIL_FAST_CHANGE = "1.0.0-RC13".asVersion()
-    internal val VERSION_FILTERS_CHANGE = "1.0.0-RC15".asVersion()
-  }
 }
