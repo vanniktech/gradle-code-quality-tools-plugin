@@ -44,27 +44,14 @@ import java.io.File
 
   @Suppress("Detekt.ComplexMethod") // Can remove all of the compatibility crap once Detekt reached 1.0.0
   private fun executeDetekt(configuration: FileCollection, shouldCreateBaseLine: Boolean = false) {
-    val fixedVersion = version.replace(".RC", "-RC").asVersion() // GradleVersion does not understand . as a - in this case. Let's fix it and hope it does not break.
-    val possibleRcVersion = Regex("RC[\\d]+").find(version)?.value?.replace("RC", "")?.toIntOrNull()
-    val isAtLeastRc10 = possibleRcVersion != null && possibleRcVersion >= RC_BREAKING_POINT // GradleVersion thinks RC10 is smaller than RC9.
-    val shouldUseReport = fixedVersion >= VERSION_REPORT_CHANGE || isAtLeastRc10
-    val canUseFileEnding = fixedVersion >= VERSION_REPORT_EXTENSION_CHANGE && isAtLeastRc10
-    val shouldUseFailFastCliFlag = fixedVersion >= VERSION_FAIL_FAST_CHANGE && isAtLeastRc10
-    val shouldUseExcludes = fixedVersion >= VERSION_FILTERS_CHANGE && isAtLeastRc10
-
-    val reportKey = if (shouldUseReport) "--report" else "--output"
-    val reportValue = if (shouldUseReport) {
-      listOf(
+    val reportKey = "--report"
+    val reportValue = listOf(
           ReportingMetaInformation("plain", "txt", "plain"),
           ReportingMetaInformation("xml", "xml", "checkstyle"),
           ReportingMetaInformation("html", "html", "report")
       ).joinToString(separator = ",") {
-        val reportId = if (canUseFileEnding) it.fileEnding else it.reportId
-        reportId + ":" + File(outputDirectory, "detekt-${it.fileNameSuffix}.${it.fileEnding}").absolutePath
+        it.fileEnding + ":" + File(outputDirectory, "detekt-${it.fileNameSuffix}.${it.fileEnding}").absolutePath
       }
-    } else {
-      outputDirectory.absolutePath
-    }
 
     project.javaexec { task ->
       task.main = "io.gitlab.arturbosch.detekt.cli.Main"
@@ -78,13 +65,9 @@ import java.io.File
           task.args("--config", configFile)
       }
 
-      if (shouldUseExcludes) {
-        task.args("--excludes", "**/build/**")
-      } else {
-        task.args("--filters", ".*build/.*")
-      }
+      task.args("--excludes", "**/build/**")
 
-      if (shouldUseFailFastCliFlag && failFast) {
+      if (failFast) {
         task.args("--fail-fast")
       }
 
