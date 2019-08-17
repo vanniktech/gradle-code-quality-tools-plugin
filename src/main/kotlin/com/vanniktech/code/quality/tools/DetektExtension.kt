@@ -8,7 +8,7 @@ open class DetektExtension {
   var enabled: Boolean = true
 
   /** @since 0.6.0 */
-  var toolVersion: String = "1.0.0.RC6"
+  var toolVersion: String = "1.0.0"
 
   /** @since 0.6.0 */
   var config: String = "code_quality_tools/detekt.yml"

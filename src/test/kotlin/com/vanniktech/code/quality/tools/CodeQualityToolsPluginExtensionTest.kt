@@ -13,7 +13,7 @@ class CodeQualityToolsPluginExtensionTest {
     assertThat(extension.textReports).isFalse()
 
     assertThat(extension.errorProne.toolVersion).isEqualTo("2.1.3")
-    assertThat(extension.detekt.toolVersion).isEqualTo("1.0.0.RC6")
+    assertThat(extension.detekt.toolVersion).isEqualTo("1.0.0")
     assertThat(extension.ktlint.toolVersion).isEqualTo("0.32.0")
     assertThat(extension.checkstyle.toolVersion).isEqualTo("8.6")
     assertThat(extension.pmd.toolVersion).isEqualTo("6.0.0")
