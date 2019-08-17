@@ -21,7 +21,7 @@ class CodeQualityToolsPluginDetektTest {
         .succeeds()
   }
 
-  @Test fun worksWithV1_0_0() {
+  @Test fun works() {
     Roboter(testProjectDir, version = "1.0.0")
       .withConfiguration("") // Fail Fast is configured via the CLI parameter.
       .withKotlinFile(testPath, testCode)
