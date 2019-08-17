@@ -42,7 +42,6 @@ import java.io.File
     executeDetekt(configuration)
   }
 
-  @Suppress("Detekt.ComplexMethod") // Can remove all of the compatibility crap once Detekt reached 1.0.0
   private fun executeDetekt(configuration: FileCollection, shouldCreateBaseLine: Boolean = false) {
     val reportKey = "--report"
     val reportValue = listOf(
