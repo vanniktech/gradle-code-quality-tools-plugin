@@ -89,12 +89,12 @@ codeQualityTools {
   }
   ktlint {
     boolean enabled = true
-    String toolVersion = '0.14.0'
+    String toolVersion = '0.32.0'
     boolean experimental = false
   }
   detekt {
     boolean enabled = true
-    String toolVersion = '1.0.0.RC6'
+    String toolVersion = '1.0.0'
     String config = 'code_quality_tools/detekt.yml'
     String baselineFileName = null
     boolean failFast = true
