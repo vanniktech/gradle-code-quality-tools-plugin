@@ -1,7 +1,16 @@
 # Change Log
 
-Version 0.19.0 *(In development)*
----------------------------------
+Version 0.19.0 *(2019-08-20)*
+-----------------------------
+
+- Update ktlint and detekt version in readme [\#199](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/199) ([schalkms](https://github.com/schalkms))
+-  Update detekt task to v1.0.0 [\#198](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/198) ([schalkms](https://github.com/schalkms))
+- ktlint: Only look at the root .editorconfig file. [\#197](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/197) ([vanniktech](https://github.com/vanniktech))
+- Update dependencies. [\#196](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/196) ([vanniktech](https://github.com/vanniktech))
+- Detekt: ConfigFile can be optional [\#195](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/195) ([Grannath](https://github.com/Grannath))
+- Detekt: Support for RC15. [\#193](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/193) ([vanniktech](https://github.com/vanniktech))
+- Mention why we need gradlePluginPortal in the README [\#189](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/189) ([vanniktech](https://github.com/vanniktech))
+- Support ktlint 0.32.0 [\#187](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/187) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.18.0 *(2019-04-18)*
 -----------------------------
