@@ -55,7 +55,6 @@ class CodeQualityToolsPlugin : Plugin<Project> {
   }
 }
 
-@Suppress("Detekt.TooGenericExceptionCaught") // Will be fixed by latest version of Detekt.
 fun androidGradlePluginVersion(): Revision {
   val o = Object()
 
