@@ -34,6 +34,13 @@ class CodeQualityToolsPluginDetektTest {
         .succeeds()
   }
 
+  @Test fun defaultConfigFile() {
+    Roboter(testProjectDir, buildUponDefaultConfig = true)
+      .withConfiguration("failFast: true")
+      .withKotlinFile(testPath, testCode)
+      .succeeds()
+  }
+
   @Test fun differentConfigFile() {
     Roboter(testProjectDir, config = "code_quality_tools/config-detekt.yml")
         .withConfiguration("failFast: true")
@@ -104,7 +111,8 @@ class CodeQualityToolsPluginDetektTest {
     private val config: String = "code_quality_tools/detekt.yml",
     enabled: Boolean = true,
     version: String = "1.0.0",
-    private val baselineFileName: String? = null
+    private val baselineFileName: String? = null,
+    buildUponDefaultConfig: Boolean = false
   ) {
     init {
       directory.newFile("build.gradle").writeText("""
@@ -115,6 +123,7 @@ class CodeQualityToolsPluginDetektTest {
           |
           |codeQualityTools {
           |  detekt {
+          |    buildUponDefaultConfig = $buildUponDefaultConfig
           |    config = "$config"
           |    enabled = $enabled
           |    toolVersion = "$version"

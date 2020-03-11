@@ -27,4 +27,10 @@ open class DetektExtension {
    * @since 0.18.0
    */
   var failFast: Boolean = true
+
+  /**
+   * Whether to use preconfigured defaults. Allows provided configurations to override them.
+   * @since 0.19.0
+   */
+  var buildUponDefaultConfig: Boolean = false
 }
