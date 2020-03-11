@@ -311,6 +311,7 @@ fun Project.addDetekt(rootProject: Project, extension: CodeQualityToolsPluginExt
 
     tasks.register("detektCheck", DetektCheckTask::class.java) { task ->
       task.failFast = extension.detekt.failFast
+      task.buildUponDefaultConfig = extension.detekt.buildUponDefaultConfig
       task.version = extension.detekt.toolVersion
       task.outputDirectory = File(buildDir, "reports/detekt/")
       task.configFile = rootProject.file(extension.detekt.config)
