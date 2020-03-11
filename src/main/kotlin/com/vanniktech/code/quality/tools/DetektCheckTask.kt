@@ -18,6 +18,7 @@ import java.io.File
 @CacheableTask open class DetektCheckTask : DefaultTask() {
   @Input var failFast: Boolean = true
   @Input var buildUponDefaultConfig: Boolean = false
+  @Input var parallel: Boolean = false
   @Input lateinit var version: String
 
   // Ideally this would be an optional input file - https://github.com/gradle/gradle/issues/2016
@@ -73,6 +74,10 @@ import java.io.File
 
       if (buildUponDefaultConfig) {
         task.args("--build-upon-default-config")
+      }
+
+      if (parallel) {
+        task.args("--parallel")
       }
 
       if (shouldCreateBaseLine) {

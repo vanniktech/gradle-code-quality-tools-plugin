@@ -33,4 +33,11 @@ open class DetektExtension {
    * @since 0.19.0
    */
   var buildUponDefaultConfig: Boolean = false
+
+  /**
+   * Enables parallel compilation of source files.
+   * Should only be used if the analyzing project has more than ~200 Kotlin files.
+   * @since 0.19.0
+   */
+  var parallel: Boolean = false
 }
