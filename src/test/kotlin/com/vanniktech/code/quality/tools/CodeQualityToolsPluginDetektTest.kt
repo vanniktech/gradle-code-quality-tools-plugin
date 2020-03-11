@@ -28,6 +28,13 @@ class CodeQualityToolsPluginDetektTest {
       .succeeds()
   }
 
+  @Test fun parallel() {
+    Roboter(testProjectDir, parallel = true)
+      .withConfiguration("failFast: true")
+      .withKotlinFile(testPath, testCode)
+      .succeeds()
+  }
+
   @Test fun noSrcFolder() {
     Roboter(testProjectDir)
         .withConfiguration("failFast: true")
@@ -112,7 +119,8 @@ class CodeQualityToolsPluginDetektTest {
     enabled: Boolean = true,
     version: String = "1.0.0",
     private val baselineFileName: String? = null,
-    buildUponDefaultConfig: Boolean = false
+    buildUponDefaultConfig: Boolean = false,
+    parallel: Boolean = false
   ) {
     init {
       directory.newFile("build.gradle").writeText("""
@@ -123,9 +131,10 @@ class CodeQualityToolsPluginDetektTest {
           |
           |codeQualityTools {
           |  detekt {
+          |    enabled = $enabled
+          |    parallel = $parallel
           |    buildUponDefaultConfig = $buildUponDefaultConfig
           |    config = "$config"
-          |    enabled = $enabled
           |    toolVersion = "$version"
           |    baselineFileName = ${baselineFileName.wrap("\"")}
           |  }
