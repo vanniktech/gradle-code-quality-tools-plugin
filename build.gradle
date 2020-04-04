@@ -1,6 +1,6 @@
 buildscript {
   ext.kotlinVersion = '1.3.41'
-  ext.androidGradlePluginVersion = '3.4.2'
+  ext.androidGradlePluginVersion = '3.6.0'
 
   repositories {
     mavenCentral()
@@ -74,7 +74,7 @@ tasks.getByName('pluginUnderTestMetadata').getPluginClasspath().from(configurati
 
 dependencies {
   api gradleApi()
-  api 'de.aaschmid:gradle-cpd-plugin:1.2'
+  api 'de.aaschmid:gradle-cpd-plugin:3.1'
   api 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.14'
 
   compileOnly "com.android.tools.build:gradle:$androidGradlePluginVersion"
@@ -105,6 +105,6 @@ pluginBundle {
 }
 
 wrapper {
-  gradleVersion = '5.5.1'
+  gradleVersion = '6.3'
   distributionType = Wrapper.DistributionType.ALL
 }

@@ -1,4 +1,4 @@
-@file:Suppress("Detekt.TooManyFunctions")
+@file:Suppress("Detekt.TooManyFunctions", "UnstableApiUsage")
 
 package com.vanniktech.code.quality.tools
 
@@ -12,12 +12,9 @@ import de.aaschmid.gradle.plugins.cpd.CpdExtension
 import de.aaschmid.gradle.plugins.cpd.CpdPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.quality.Checkstyle
+import org.gradle.api.plugins.quality.*
 import org.gradle.api.plugins.quality.CheckstyleExtension
-import org.gradle.api.plugins.quality.CheckstylePlugin
-import org.gradle.api.plugins.quality.Pmd
 import org.gradle.api.plugins.quality.PmdExtension
-import org.gradle.api.plugins.quality.PmdPlugin
 import org.gradle.language.base.plugins.LifecycleBasePlugin.CHECK_TASK_NAME
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
@@ -60,11 +57,13 @@ fun androidGradlePluginVersion(): Revision {
 
   try {
     return Revision.parseRevision(Class.forName("com.android.builder.Version").getDeclaredField("ANDROID_GRADLE_PLUGIN_VERSION").get(o).toString(), Revision.Precision.PREVIEW)
-  } catch (ignored: Exception) {}
+  } catch (ignored: Exception) {
+  }
 
   try {
     return Revision.parseRevision(Class.forName("com.android.builder.model.Version").getDeclaredField("ANDROID_GRADLE_PLUGIN_VERSION").get(o).toString(), Revision.Precision.PREVIEW)
-  } catch (ignored: Exception) {}
+  } catch (ignored: Exception) {
+  }
 
   throw IllegalArgumentException("Can't get Android Gradle Plugin version")
 }
@@ -153,7 +152,8 @@ fun Project.addCheckstyle(rootProject: Project, extension: CodeQualityToolsPlugi
   return false
 }
 
-@Suppress("Detekt.ComplexMethod") fun Project.addLint(extension: CodeQualityToolsPluginExtension): Boolean {
+@Suppress("Detekt.ComplexMethod")
+fun Project.addLint(extension: CodeQualityToolsPluginExtension): Boolean {
   val isNotIgnored = !shouldIgnore(extension)
   val isEnabled = extension.lint.enabled
   val isAndroidProject = isAndroidProject()
@@ -276,7 +276,7 @@ fun Project.addCpd(extension: CodeQualityToolsPluginExtension): Boolean {
     extensions.configure(CpdExtension::class.java) {
       it.language = extension.cpd.language
       it.toolVersion = extension.pmd.toolVersion
-      it.ignoreFailures = extension.cpd.ignoreFailures ?: !extension.failEarly
+      it.isIgnoreFailures = extension.cpd.ignoreFailures ?: !extension.failEarly
       it.minimumTokenCount = extension.cpd.minimumTokenCount
     }
 
@@ -289,7 +289,9 @@ fun Project.addCpd(extension: CodeQualityToolsPluginExtension): Boolean {
       it.reports.xml.isEnabled = extension.xmlReports
 
       it.encoding = "UTF-8"
-      it.source = fileTree(extension.cpd.source).filter { it.name.endsWith(".${extension.cpd.language}") }.asFileTree
+      it.source = fileTree(extension.cpd.source).filter { source ->
+        source.name.endsWith(".${extension.cpd.language}")
+      }.asFileTree
     }
 
     tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("cpdCheck") }
