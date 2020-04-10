@@ -63,13 +63,13 @@ class CodeQualityToolsPluginCpdTest : CommonCodeQualityToolsTest() {
     extension.cpd.ignoreFailures = false
 
     assertThat(androidAppProject.addCpd(extension)).isTrue()
-    assertThat(androidAppProject.cpd.ignoreFailures).isFalse()
+    assertThat(androidAppProject.cpd.isIgnoreFailures).isFalse()
 
     assertThat(androidLibraryProject.addCpd(extension)).isTrue()
-    assertThat(androidLibraryProject.cpd.ignoreFailures).isFalse()
+    assertThat(androidLibraryProject.cpd.isIgnoreFailures).isFalse()
 
     assertThat(javaProject.addCpd(extension)).isTrue()
-    assertThat(javaProject.cpd.ignoreFailures).isFalse()
+    assertThat(javaProject.cpd.isIgnoreFailures).isFalse()
   }
 
   @Test fun ignoreFailuresTrue() {
@@ -77,13 +77,13 @@ class CodeQualityToolsPluginCpdTest : CommonCodeQualityToolsTest() {
     extension.cpd.ignoreFailures = true
 
     assertThat(androidAppProject.addCpd(extension)).isTrue()
-    assertThat(androidAppProject.cpd.ignoreFailures).isTrue()
+    assertThat(androidAppProject.cpd.isIgnoreFailures).isTrue()
 
     assertThat(androidLibraryProject.addCpd(extension)).isTrue()
-    assertThat(androidLibraryProject.cpd.ignoreFailures).isTrue()
+    assertThat(androidLibraryProject.cpd.isIgnoreFailures).isTrue()
 
     assertThat(javaProject.addCpd(extension)).isTrue()
-    assertThat(javaProject.cpd.ignoreFailures).isTrue()
+    assertThat(javaProject.cpd.isIgnoreFailures).isTrue()
   }
 
   @Test fun failEarlyFalse() {
@@ -91,7 +91,7 @@ class CodeQualityToolsPluginCpdTest : CommonCodeQualityToolsTest() {
     extension.failEarly = false
 
     assertThat(javaProject.addCpd(extension)).isTrue()
-    assertThat(javaProject.cpd.ignoreFailures).isTrue()
+    assertThat(javaProject.cpd.isIgnoreFailures).isTrue()
   }
 
   @Test fun toolsVersion() {

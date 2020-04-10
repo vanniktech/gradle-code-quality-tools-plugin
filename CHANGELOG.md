@@ -1,7 +1,11 @@
 # Change Log
 
-Version 0.20.0 *(In development)*
----------------------------------
+Version 0.20.0 *(2020-04-10)*
+-----------------------------
+
+- Resolves Cpd Task Creation Failure [\#204](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/204) ([keciciler](https://github.com/keciciler))
+- Detekt: Add --parallel parameter support [\#202](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/202) ([budnyjj](https://github.com/budnyjj))
+- Detekt: Add --build-upon-default-config parameter support [\#201](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/201) ([budnyjj](https://github.com/budnyjj))
 
 Version 0.19.0 *(2019-08-20)*
 -----------------------------

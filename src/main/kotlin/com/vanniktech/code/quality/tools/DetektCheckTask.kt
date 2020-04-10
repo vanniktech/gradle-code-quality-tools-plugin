@@ -9,7 +9,6 @@ import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
-import org.gradle.api.tasks.PathSensitivity.NONE
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskExecutionException
@@ -24,7 +23,7 @@ import java.io.File
   // Ideally this would be an optional input file - https://github.com/gradle/gradle/issues/2016
   @Input @Optional var baselineFilePath: String? = null
   @InputFile @PathSensitive(RELATIVE) lateinit var configFile: File
-  @OutputDirectory @PathSensitive(NONE) lateinit var outputDirectory: File
+  @OutputDirectory lateinit var outputDirectory: File
 
   init {
     group = "verification"

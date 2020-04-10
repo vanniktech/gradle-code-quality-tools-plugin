@@ -13,6 +13,7 @@ import org.gradle.internal.reflect.Instantiator
 fun defaultExtensions(): CodeQualityToolsPluginExtension {
   // This is not ideal but the only solution I have found that somewhat works.
   return CodeQualityToolsPluginExtension(InstantiatorBackedObjectFactory(object : Instantiator {
+    @Suppress("DEPRECATION")
     override fun <T : Any?> newInstance(type: Class<out T>, vararg parameters: Any?): T {
       return type.newInstance()
     }

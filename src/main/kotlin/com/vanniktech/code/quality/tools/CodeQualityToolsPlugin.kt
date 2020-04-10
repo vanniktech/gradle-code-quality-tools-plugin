@@ -12,9 +12,12 @@ import de.aaschmid.gradle.plugins.cpd.CpdExtension
 import de.aaschmid.gradle.plugins.cpd.CpdPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.quality.*
+import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.CheckstyleExtension
+import org.gradle.api.plugins.quality.CheckstylePlugin
+import org.gradle.api.plugins.quality.Pmd
 import org.gradle.api.plugins.quality.PmdExtension
+import org.gradle.api.plugins.quality.PmdPlugin
 import org.gradle.language.base.plugins.LifecycleBasePlugin.CHECK_TASK_NAME
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File

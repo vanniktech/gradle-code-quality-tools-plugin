@@ -5,15 +5,13 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
-import org.gradle.api.tasks.PathSensitive
-import org.gradle.api.tasks.PathSensitivity.NONE
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 @CacheableTask open class KtLintTask : DefaultTask() {
   @Input var experimental: Boolean = false
   @Input lateinit var version: String
-  @OutputDirectory @PathSensitive(NONE) lateinit var outputDirectory: File
+  @OutputDirectory lateinit var outputDirectory: File
 
   init {
     group = "verification"
