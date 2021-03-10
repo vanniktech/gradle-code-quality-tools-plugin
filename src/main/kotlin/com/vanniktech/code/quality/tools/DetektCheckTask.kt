@@ -15,6 +15,7 @@ import org.gradle.api.tasks.TaskExecutionException
 import java.io.File
 
 @CacheableTask open class DetektCheckTask : DefaultTask() {
+  @Input var input: String = "."
   @Input var failFast: Boolean = true
   @Input var buildUponDefaultConfig: Boolean = false
   @Input var parallel: Boolean = false
@@ -57,7 +58,7 @@ import java.io.File
       task.main = "io.gitlab.arturbosch.detekt.cli.Main"
       task.classpath = configuration
       task.args(
-          "--input", project.file("."),
+          "--input", project.file(input),
           reportKey, reportValue
       )
 

@@ -40,4 +40,12 @@ open class DetektExtension {
    * @since 0.19.0
    */
   var parallel: Boolean = false
+
+  /**
+   * Directories to look for source files.
+   * Defaults to current directory.
+   *
+   * @since 0.21.0
+   */
+  var input: String = "."
 }
