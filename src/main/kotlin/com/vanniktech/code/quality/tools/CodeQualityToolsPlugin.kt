@@ -80,7 +80,8 @@ fun hasLintPlugin(): Boolean {
   }
 }
 
-fun Project.kotlinFiles() = fileTree(mapOf("dir" to ".", "exclude" to "**/build/**", "includes" to listOf("**/*.kt", "**/*.kts")))
+fun Project.kotlinFiles(baseDir: String = ".") =
+  fileTree(mapOf("dir" to baseDir, "exclude" to "**/build/**", "includes" to listOf("**/*.kt", "**/*.kts")))
 
 fun Project.editorconfigFile() = fileTree(mapOf("dir" to ".", "include" to ".editorconfig"))
 
@@ -321,7 +322,8 @@ fun Project.addDetekt(rootProject: Project, extension: CodeQualityToolsPluginExt
       task.version = extension.detekt.toolVersion
       task.outputDirectory = File(buildDir, "reports/detekt/")
       task.configFile = rootProject.file(extension.detekt.config)
-      task.inputs.files(kotlinFiles())
+      task.input = extension.detekt.input
+      task.inputs.files(kotlinFiles(baseDir = extension.detekt.input))
 
       task.inputs.property("baseline-file-exists", false)
 

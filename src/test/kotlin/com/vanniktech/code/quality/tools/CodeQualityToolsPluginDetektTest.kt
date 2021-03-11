@@ -113,6 +113,20 @@ class CodeQualityToolsPluginDetektTest {
         .fails(taskToRun = "check", taskToCheck = "detektCheck", containsMessage = "NewLineAtEndOfFile - [Foo.kt] at")
   }
 
+  @Test fun runningWithExplicitInputSucceeds() {
+    Roboter(testProjectDir, inputDirectoryName = testProjectDir.root.toString())
+      .withConfiguration("failFast: true")
+      .withKotlinFile(testPath, testCode)
+      .succeeds()
+  }
+
+  @Test fun failsWithUnexistentInput() {
+    Roboter(testProjectDir, inputDirectoryName = "unexistent")
+      .withConfiguration("failFast: true")
+      .withKotlinFile(testPath, testCode)
+      .fails(containsMessage = "does not exist", assertReportsExist = false)
+  }
+
   class Roboter(
     private val directory: TemporaryFolder,
     private val config: String = "code_quality_tools/detekt.yml",
@@ -120,7 +134,8 @@ class CodeQualityToolsPluginDetektTest {
     version: String = "1.0.0",
     private val baselineFileName: String? = null,
     buildUponDefaultConfig: Boolean = false,
-    parallel: Boolean = false
+    parallel: Boolean = false,
+    inputDirectoryName: String = "."
   ) {
     init {
       directory.newFile("build.gradle").writeText("""
@@ -137,6 +152,7 @@ class CodeQualityToolsPluginDetektTest {
           |    config = "$config"
           |    toolVersion = "$version"
           |    baselineFileName = ${baselineFileName.wrap("\"")}
+          |    input = ${inputDirectoryName.wrap("\"")}
           |  }
           |  ktlint.enabled = false
           |  checkstyle.enabled = false
@@ -168,11 +184,18 @@ class CodeQualityToolsPluginDetektTest {
       assertReportsExist()
     }
 
-    fun fails(taskToRun: String = "detektCheck", taskToCheck: String = taskToRun, containsMessage: String) = apply {
+    fun fails(
+      taskToRun: String = "detektCheck",
+      taskToCheck: String = taskToRun,
+      assertReportsExist: Boolean = true,
+      containsMessage: String
+    ) = apply {
       val buildResult = run(taskToRun).buildAndFail()
       assertThat(buildResult.task(":$taskToCheck")?.outcome).isEqualTo(TaskOutcome.FAILED)
       assertThat(buildResult.output).contains(containsMessage)
-      assertReportsExist()
+      if (assertReportsExist) {
+        assertReportsExist()
+      }
     }
 
     private fun assertReportsExist() {
