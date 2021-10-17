@@ -81,7 +81,11 @@ fun hasLintPlugin(): Boolean {
 }
 
 fun Project.kotlinFiles(baseDir: String = ".") =
-  fileTree(mapOf("dir" to baseDir, "exclude" to "**/build/**", "includes" to listOf("**/*.kt", "**/*.kts")))
+  fileTree(mapOf(
+    "dir" to baseDir,
+    "excludes" to listOf("build/**", "**/build/**", "generated/**", "**/generated/**"),
+    "includes" to listOf("**/*.kt", "**/*.kts")
+  ))
 
 fun Project.editorconfigFile() = fileTree(mapOf("dir" to ".", "include" to ".editorconfig"))
 
@@ -377,8 +381,9 @@ private fun Project.isAndroidProject(): Boolean {
 private fun Project.isKotlinProject(): Boolean {
   val isKotlin = plugins.hasPlugin("kotlin")
   val isKotlinAndroid = plugins.hasPlugin("kotlin-android")
+  val isKotlinMultiPlatform = plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
   val isKotlinPlatformCommon = plugins.hasPlugin("kotlin-platform-common")
   val isKotlinPlatformJvm = plugins.hasPlugin("kotlin-platform-jvm")
   val isKotlinPlatformJs = plugins.hasPlugin("kotlin-platform-js")
-  return isKotlin || isKotlinAndroid || isKotlinPlatformCommon || isKotlinPlatformJvm || isKotlinPlatformJs
+  return isKotlin || isKotlinAndroid || isKotlinMultiPlatform || isKotlinPlatformCommon || isKotlinPlatformJvm || isKotlinPlatformJs
 }
