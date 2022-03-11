@@ -192,7 +192,7 @@ fun Project.addLint(extension: CodeQualityToolsPluginExtension): Boolean {
       }
 
       extension.lint.textReport?.let {
-        lintOptions.setTextReport(it)
+        lintOptions.textReport = it
         lintOptions.textOutput(extension.lint.textOutput)
       }
 
