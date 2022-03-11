@@ -62,12 +62,10 @@ fun hasLintPlugin(): Boolean {
   }
 }
 
-fun Project.kotlinFiles(baseDir: String = ".") =
-  fileTree(mapOf(
-    "dir" to baseDir,
-    "excludes" to listOf("build/**", "**/build/**", "generated/**", "**/generated/**"),
-    "includes" to listOf("**/*.kt", "**/*.kts")
-  ))
+fun Project.kotlinFiles(baseDir: String? = null) =
+  fileTree(baseDir ?: projectDir)
+    .setIncludes(listOf("**/*.kt", "**/*.kts"))
+    .setExcludes(listOf("build/", "generated/"))
 
 fun Project.editorconfigFile() = fileTree(mapOf("dir" to ".", "include" to ".editorconfig"))
 
