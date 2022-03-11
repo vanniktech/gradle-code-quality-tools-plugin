@@ -75,7 +75,7 @@ class CodeQualityToolsPluginKtlintTest {
   @Test fun experimental() {
     Roboter(testProjectDir, experimental = true)
         .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo() =\n   Unit")
-        .fails(containsMessage = "src/main/kotlin/com/vanniktech/test/Foo.kt:2:1: Unexpected indentation (3) (it should be 4) (cannot be auto-corrected)")
+        .fails(containsMessage = "src/main/kotlin/com/vanniktech/test/Foo.kt:2:1: Unexpected indentation (3) (should be 4)")
   }
 
   @Test fun ignoresFileInBuildDirectory() {
@@ -85,16 +85,16 @@ class CodeQualityToolsPluginKtlintTest {
   }
 
   @Test fun failsOnKotlinScript() {
-    Roboter(testProjectDir)
+    Roboter(testProjectDir, version = "0.32.0")
         .withKotlinFile("build.gradle.kts", "fun foo( ) = Unit")
         .fails(containsMessage = "build.gradle.kts:1:9: Unexpected spacing after \"(\"")
   }
 
   @Test fun autoCorrectKotlinScript() {
-    Roboter(testProjectDir)
-        .withKotlinFile("build.gradle.kts", "fun foo( ) = Unit")
+    Roboter(testProjectDir, version = "0.32.0")
+        .withKotlinFile("script.kts", "fun foo(param : Int) = param * param\n")
         .succeeds(taskToRun = "ktlintFormat")
-        .hasKotlinFile("build.gradle.kts", "fun foo() = Unit")
+        .hasKotlinFile("script.kts", "fun foo(param: Int) = param * param\n")
   }
 
   @Test fun disabled() {
@@ -112,7 +112,7 @@ class CodeQualityToolsPluginKtlintTest {
   class Roboter(
     private val directory: TemporaryFolder,
     enabled: Boolean = true,
-    version: String = "0.31.0",
+    version: String = "0.44.0",
     experimental: Boolean = false
   ) {
     init {
@@ -166,7 +166,7 @@ class CodeQualityToolsPluginKtlintTest {
     fun fails(taskToRun: String = "ktlint", taskToCheck: String = taskToRun, containsMessage: String) = apply {
       val buildResult = run(taskToRun).buildAndFail()
       assertEquals(TaskOutcome.FAILED, buildResult.task(":$taskToCheck")?.outcome)
-      assertEquals(true, buildResult.output.contains(containsMessage))
+      assertEquals(buildResult.output, true, buildResult.output.contains(containsMessage))
       assertReportsExist()
     }
 

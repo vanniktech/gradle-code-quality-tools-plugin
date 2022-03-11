@@ -15,8 +15,4 @@ open class KtlintExtension {
    * @since 0.18.0
    */
   var experimental: Boolean = false
-
-  companion object {
-    val PINTEREST_VERSION_CHANGE = "0.32.0".asVersion()
-  }
 }
