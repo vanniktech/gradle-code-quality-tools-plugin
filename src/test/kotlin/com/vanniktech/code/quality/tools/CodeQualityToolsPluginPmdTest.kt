@@ -1,20 +1,20 @@
 package com.vanniktech.code.quality.tools
 
-import org.assertj.core.api.Java6Assertions.assertThat
 import org.gradle.api.Project
 import org.gradle.api.plugins.quality.PmdPlugin
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class CodeQualityToolsPluginPmdTest : CommonCodeQualityToolsTest() {
   @Test fun empty() {
     emptyProjects.forEach { project ->
-      assertThat(project.addPmd(rootProject, defaultExtensions())).isFalse()
+      assertEquals(false, project.addPmd(rootProject, defaultExtensions()))
     }
   }
 
   @Test fun java() {
     javaProjects.forEach { project ->
-      assertThat(project.addPmd(rootProject, defaultExtensions())).isTrue()
+      assertEquals(true, project.addPmd(rootProject, defaultExtensions()))
 
       assertPmd(project)
     }
@@ -23,7 +23,7 @@ class CodeQualityToolsPluginPmdTest : CommonCodeQualityToolsTest() {
   @Test fun kotlin() {
     kotlinProjects.forEach { project ->
       // Ideally we don't want to be running this in kotlin projects but since it uses the java library under the hood we can't do much.
-      assertThat(project.addPmd(rootProject, defaultExtensions())).isTrue()
+      assertEquals(true, project.addPmd(rootProject, defaultExtensions()))
 
       assertPmd(project)
     }
@@ -31,76 +31,76 @@ class CodeQualityToolsPluginPmdTest : CommonCodeQualityToolsTest() {
 
   @Test fun android() {
     androidProjects.forEach { project ->
-      assertThat(project.addPmd(rootProject, defaultExtensions())).isTrue()
+      assertEquals(true, project.addPmd(rootProject, defaultExtensions()))
 
       assertPmd(project)
     }
   }
 
   private fun assertPmd(project: Project) {
-    assertThat(project.plugins.hasPlugin(PmdPlugin::class.java)).isTrue()
+    assertEquals(true, project.plugins.hasPlugin(PmdPlugin::class.java))
 
-    assertThat(project.pmd.isIgnoreFailures).isFalse()
-    assertThat(project.pmd.toolVersion).isEqualTo("6.0.0")
-    assertThat(project.pmd.ruleSetFiles.singleFile).isEqualTo(rootProject.file("code_quality_tools/pmd.xml"))
+    assertEquals(false, project.pmd.isIgnoreFailures)
+    assertEquals("6.0.0", project.pmd.toolVersion)
+    assertEquals(rootProject.file("code_quality_tools/pmd.xml"), project.pmd.ruleSetFiles.singleFile)
 
     project.pmdTask.apply {
-      assertThat(description).isEqualTo("Runs pmd.")
-      assertThat(group).isEqualTo("verification")
+      assertEquals("Runs pmd.", description)
+      assertEquals("verification", group)
 
-      assertThat(ruleSetFiles.singleFile).isEqualTo(rootProject.file("code_quality_tools/pmd.xml"))
-      assertThat(ruleSets).isEmpty()
+      assertEquals(rootProject.file("code_quality_tools/pmd.xml"), ruleSetFiles.singleFile)
+      assertEquals(true, ruleSets.isEmpty())
 
-      assertThat(includes.size).isEqualTo(1)
-      assertThat(includes.contains("**/*.java")).isTrue()
+      assertEquals(1, includes.size)
+      assertEquals(true, includes.contains("**/*.java"))
 
-      assertThat(excludes.size).isEqualTo(1)
-      assertThat(excludes.contains("**/gen/**")).isTrue()
+      assertEquals(1, excludes.size)
+      assertEquals(true, excludes.contains("**/gen/**"))
 
-      assertThat(reports.xml.isEnabled).isTrue()
-      assertThat(reports.html.isEnabled).isFalse()
+      assertEquals(true, reports.xml.required.get())
+      assertEquals(false, reports.html.required.get())
     }
 
-    assertThat(taskDependsOn(project.check, "pmd")).isTrue()
+    assertEquals(true, taskDependsOn(project.check, "pmd"))
   }
 
   @Test fun ignoreFailuresFalse() {
     val extension = defaultExtensions()
     extension.pmd.ignoreFailures = false
 
-    assertThat(androidAppProject.addPmd(rootProject, extension)).isTrue()
-    assertThat(androidAppProject.pmd.isIgnoreFailures).isFalse()
+    assertEquals(true, androidAppProject.addPmd(rootProject, extension))
+    assertEquals(false, androidAppProject.pmd.isIgnoreFailures)
 
-    assertThat(androidLibraryProject.addPmd(rootProject, extension)).isTrue()
-    assertThat(androidLibraryProject.pmd.isIgnoreFailures).isFalse()
+    assertEquals(true, androidLibraryProject.addPmd(rootProject, extension))
+    assertEquals(false, androidLibraryProject.pmd.isIgnoreFailures)
 
-    assertThat(javaProject.addPmd(rootProject, extension)).isTrue()
-    assertThat(javaProject.pmd.isIgnoreFailures).isFalse()
+    assertEquals(true, javaProject.addPmd(rootProject, extension))
+    assertEquals(false, javaProject.pmd.isIgnoreFailures)
   }
 
   @Test fun ignoreFailuresTrue() {
     val extension = defaultExtensions()
     extension.pmd.ignoreFailures = true
 
-    assertThat(androidAppProject.addPmd(rootProject, extension)).isTrue()
-    assertThat(androidAppProject.pmd.isIgnoreFailures).isTrue()
+    assertEquals(true, androidAppProject.addPmd(rootProject, extension))
+    assertEquals(true, androidAppProject.pmd.isIgnoreFailures)
 
-    assertThat(androidLibraryProject.addPmd(rootProject, extension)).isTrue()
-    assertThat(androidLibraryProject.pmd.isIgnoreFailures).isTrue()
+    assertEquals(true, androidLibraryProject.addPmd(rootProject, extension))
+    assertEquals(true, androidLibraryProject.pmd.isIgnoreFailures)
 
-    assertThat(javaProject.addPmd(rootProject, extension)).isTrue()
-    assertThat(javaProject.pmd.isIgnoreFailures).isTrue()
+    assertEquals(true, javaProject.addPmd(rootProject, extension))
+    assertEquals(true, javaProject.pmd.isIgnoreFailures)
   }
 
   @Test fun include() {
     val extension = defaultExtensions()
     extension.pmd.include = listOf("*.java")
 
-    assertThat(javaProject.addPmd(rootProject, extension)).isTrue()
+    assertEquals(true, javaProject.addPmd(rootProject, extension))
 
     javaProject.pmdTask.apply {
-      assertThat(includes.size).isEqualTo(1)
-      assertThat(includes.contains("*.java")).isTrue()
+      assertEquals(1, includes.size)
+      assertEquals(true, includes.contains("*.java"))
     }
   }
 
@@ -108,11 +108,11 @@ class CodeQualityToolsPluginPmdTest : CommonCodeQualityToolsTest() {
     val extension = defaultExtensions()
     extension.pmd.exclude = listOf("**/gen")
 
-    assertThat(javaProject.addPmd(rootProject, extension)).isTrue()
+    assertEquals(true, javaProject.addPmd(rootProject, extension))
 
     javaProject.pmdTask.apply {
-      assertThat(excludes.size).isEqualTo(1)
-      assertThat(excludes.contains("**/gen")).isTrue()
+      assertEquals(1, excludes.size)
+      assertEquals(true, excludes.contains("**/gen"))
     }
   }
 
@@ -120,24 +120,24 @@ class CodeQualityToolsPluginPmdTest : CommonCodeQualityToolsTest() {
     val extension = defaultExtensions()
     extension.failEarly = false
 
-    assertThat(javaProject.addPmd(rootProject, extension)).isTrue()
-    assertThat(javaProject.pmd.isIgnoreFailures).isTrue()
+    assertEquals(true, javaProject.addPmd(rootProject, extension))
+    assertEquals(true, javaProject.pmd.isIgnoreFailures)
   }
 
   @Test fun toolsVersion() {
     val extension = defaultExtensions()
     extension.pmd.toolVersion = "5.4.0"
 
-    assertThat(javaProject.addPmd(rootProject, extension)).isTrue()
-    assertThat(javaProject.pmd.toolVersion).isEqualTo(extension.pmd.toolVersion)
+    assertEquals(true, javaProject.addPmd(rootProject, extension))
+    assertEquals(extension.pmd.toolVersion, javaProject.pmd.toolVersion)
   }
 
   @Test fun configFiles() {
     val extension = defaultExtensions()
     extension.pmd.ruleSetFile = "pmd.xml"
 
-    assertThat(javaProject.addPmd(rootProject, extension)).isTrue()
-    assertThat(javaProject.pmd.ruleSetFiles.singleFile).isEqualTo(rootProject.file(extension.pmd.ruleSetFile))
+    assertEquals(true, javaProject.addPmd(rootProject, extension))
+    assertEquals(rootProject.file(extension.pmd.ruleSetFile), javaProject.pmd.ruleSetFiles.singleFile)
   }
 
   @Test fun reports() {
@@ -145,18 +145,18 @@ class CodeQualityToolsPluginPmdTest : CommonCodeQualityToolsTest() {
     extension.htmlReports = true
     extension.xmlReports = false
 
-    assertThat(javaProject.addPmd(rootProject, extension)).isTrue()
+    assertEquals(true, javaProject.addPmd(rootProject, extension))
 
     javaProject.pmdTask.apply {
-      assertThat(reports.xml.isEnabled).isEqualTo(extension.xmlReports)
-      assertThat(reports.html.isEnabled).isEqualTo(extension.htmlReports)
+      assertEquals(extension.xmlReports, reports.xml.required.get())
+      assertEquals(extension.htmlReports, reports.html.required.get())
     }
   }
 
   @Test fun ignoreProject() {
     val extension = defaultExtensions()
     extension.ignoreProjects = listOf(javaProject.name)
-    assertThat(javaProject.addPmd(rootProject, extension)).isFalse()
+    assertEquals(false, javaProject.addPmd(rootProject, extension))
   }
 
   @Test fun enabled() {
@@ -164,7 +164,7 @@ class CodeQualityToolsPluginPmdTest : CommonCodeQualityToolsTest() {
     extension.pmd.enabled = false
 
     for (project in projects) {
-      assertThat(project.addPmd(rootProject, extension)).isFalse()
+      assertEquals(false, project.addPmd(rootProject, extension))
     }
   }
 }

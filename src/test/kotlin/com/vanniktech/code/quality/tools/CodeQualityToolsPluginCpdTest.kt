@@ -1,20 +1,20 @@
 package com.vanniktech.code.quality.tools
 
 import de.aaschmid.gradle.plugins.cpd.CpdPlugin
-import org.assertj.core.api.Java6Assertions.assertThat
 import org.gradle.api.Project
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class CodeQualityToolsPluginCpdTest : CommonCodeQualityToolsTest() {
   @Test fun empty() {
     emptyProjects.forEach { project ->
-      assertThat(project.addCpd(defaultExtensions())).isFalse()
+      assertEquals(false, project.addCpd(defaultExtensions()))
     }
   }
 
   @Test fun java() {
     javaProjects.forEach { project ->
-      assertThat(project.addCpd(defaultExtensions())).isTrue()
+      assertEquals(true, project.addCpd(defaultExtensions()))
 
       assertCpd(project)
     }
@@ -23,7 +23,7 @@ class CodeQualityToolsPluginCpdTest : CommonCodeQualityToolsTest() {
   @Test fun kotlin() {
     kotlinProjects.forEach { project ->
       // Ideally we don"t want to be running this in kotlin projects but since it uses the java library under the hood we can"t do much.
-      assertThat(project.addCpd(defaultExtensions())).isTrue()
+      assertEquals(true, project.addCpd(defaultExtensions()))
 
       assertCpd(project)
     }
@@ -31,93 +31,92 @@ class CodeQualityToolsPluginCpdTest : CommonCodeQualityToolsTest() {
 
   @Test fun android() {
     androidProjects.forEach { project ->
-      assertThat(project.addCpd(defaultExtensions())).isTrue()
+      assertEquals(true, project.addCpd(defaultExtensions()))
 
       assertCpd(project)
     }
   }
 
   private fun assertCpd(project: Project) {
-    assertThat(project.plugins.hasPlugin(CpdPlugin::class.java)).isTrue()
+    @Suppress("UnstableApiUsage")
+    assertEquals(true, project.plugins.hasPlugin(CpdPlugin::class.java))
 
-    assertThat(project.cpd.toolVersion).isEqualTo("6.0.0")
-    assertThat(project.cpd.language).isEqualTo("java")
+    assertEquals("6.0.0", project.cpd.toolVersion)
+    assertEquals("java", project.cpd.language)
 
     project.cpdTask.apply {
-      assertThat(description).isEqualTo("Runs cpd.")
-      assertThat(group).isEqualTo("verification")
-      assertThat(encoding).isEqualTo("UTF-8")
+      assertEquals("Runs cpd.", description)
+      assertEquals("verification", group)
+      assertEquals("UTF-8", encoding)
 
-      assertThat(minimumTokenCount).isEqualTo(50)
-      assertThat(ignoreFailures).isFalse()
+      assertEquals(50, minimumTokenCount)
+      assertEquals(false, ignoreFailures)
 
-      assertThat(reports.xml.isEnabled).isTrue()
-      assertThat(reports.text.isEnabled).isFalse()
+      assertEquals(true, reports.xml.required.get())
+      assertEquals(false, reports.text.required.get())
     }
 
-    assertThat(taskDependsOn(project.check, "cpdCheck")).isTrue()
+    assertEquals(true, taskDependsOn(project.check, "cpdCheck"))
   }
 
   @Test fun ignoreFailuresFalse() {
     val extension = defaultExtensions()
     extension.cpd.ignoreFailures = false
 
-    assertThat(androidAppProject.addCpd(extension)).isTrue()
-    assertThat(androidAppProject.cpd.isIgnoreFailures).isFalse()
+    assertEquals(true, androidAppProject.addCpd(extension))
+    assertEquals(false, androidAppProject.cpd.isIgnoreFailures)
 
-    assertThat(androidLibraryProject.addCpd(extension)).isTrue()
-    assertThat(androidLibraryProject.cpd.isIgnoreFailures).isFalse()
+    assertEquals(true, androidLibraryProject.addCpd(extension))
+    assertEquals(false, androidLibraryProject.cpd.isIgnoreFailures)
 
-    assertThat(javaProject.addCpd(extension)).isTrue()
-    assertThat(javaProject.cpd.isIgnoreFailures).isFalse()
+    assertEquals(true, javaProject.addCpd(extension))
+    assertEquals(false, javaProject.cpd.isIgnoreFailures)
   }
 
   @Test fun ignoreFailuresTrue() {
     val extension = defaultExtensions()
     extension.cpd.ignoreFailures = true
 
-    assertThat(androidAppProject.addCpd(extension)).isTrue()
-    assertThat(androidAppProject.cpd.isIgnoreFailures).isTrue()
+    assertEquals(true, androidAppProject.addCpd(extension))
+    assertEquals(true, androidAppProject.cpd.isIgnoreFailures)
 
-    assertThat(androidLibraryProject.addCpd(extension)).isTrue()
-    assertThat(androidLibraryProject.cpd.isIgnoreFailures).isTrue()
+    assertEquals(true, androidLibraryProject.addCpd(extension))
+    assertEquals(true, androidLibraryProject.cpd.isIgnoreFailures)
 
-    assertThat(javaProject.addCpd(extension)).isTrue()
-    assertThat(javaProject.cpd.isIgnoreFailures).isTrue()
+    assertEquals(true, javaProject.addCpd(extension))
+    assertEquals(true, javaProject.cpd.isIgnoreFailures)
   }
 
   @Test fun failEarlyFalse() {
     val extension = defaultExtensions()
     extension.failEarly = false
 
-    assertThat(javaProject.addCpd(extension)).isTrue()
-    assertThat(javaProject.cpd.isIgnoreFailures).isTrue()
+    assertEquals(true, javaProject.addCpd(extension))
+    assertEquals(true, javaProject.cpd.isIgnoreFailures)
   }
 
   @Test fun toolsVersion() {
     val extension = defaultExtensions()
     extension.pmd.toolVersion = "5.4.0" // We take the PMD version for CPD since they"re using the same tool.
 
-    assertThat(javaProject.addCpd(extension)).isTrue()
-    assertThat(javaProject.cpd.toolVersion).isEqualTo("5.4.0")
+    assertEquals(true, javaProject.addCpd(extension))
+    assertEquals("5.4.0", javaProject.cpd.toolVersion)
   }
 
   @Test fun language() {
     val extension = defaultExtensions()
     extension.cpd.language = "swift"
 
-    assertThat(javaProject.addCpd(extension)).isTrue()
-    assertThat(javaProject.cpd.language).isEqualTo("swift")
+    assertEquals(true, javaProject.addCpd(extension))
+    assertEquals("swift", javaProject.cpd.language)
   }
 
   @Test fun minimumTokenCount() {
     val extension = defaultExtensions()
     extension.cpd.minimumTokenCount = 50
 
-    assertThat(javaProject.addCpd(extension)).isTrue()
-    javaProject.cpd.apply {
-      assertThat(minimumTokenCount).isEqualTo(50)
-    }
+    assertEquals(true, javaProject.addCpd(extension))
+    assertEquals(50, javaProject.cpd.minimumTokenCount)
   }
 
   @Test fun reports() {
@@ -125,18 +124,18 @@ class CodeQualityToolsPluginCpdTest : CommonCodeQualityToolsTest() {
     extension.textReports = true
     extension.xmlReports = false
 
-    assertThat(javaProject.addCpd(extension)).isTrue()
+    assertEquals(true, javaProject.addCpd(extension))
 
     javaProject.cpdTask.apply {
-      assertThat(reports.xml.isEnabled).isEqualTo(extension.xmlReports)
-      assertThat(reports.text.isEnabled).isEqualTo(extension.textReports)
+      assertEquals(extension.xmlReports, reports.xml.required.get())
+      assertEquals(extension.textReports, reports.text.required.get())
     }
   }
 
   @Test fun ignoreProject() {
     val extension = defaultExtensions()
     extension.ignoreProjects = listOf(javaProject.name)
-    assertThat(javaProject.addCpd(extension)).isFalse()
+    assertEquals(false, javaProject.addCpd(extension))
   }
 
   @Test fun enabled() {
@@ -144,7 +143,7 @@ class CodeQualityToolsPluginCpdTest : CommonCodeQualityToolsTest() {
     extension.cpd.enabled = false
 
     for (project in projects) {
-      assertThat(project.addCpd(extension)).isFalse()
+      assertEquals(false, project.addCpd(extension))
     }
   }
 }
