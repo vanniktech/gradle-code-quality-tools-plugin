@@ -70,24 +70,24 @@ abstract class CommonCodeQualityToolsTest {
     androidTestProject.plugins.apply(TestPlugin::class.java)
 
     emptyProjects = arrayOf(
-        emptyProject
+      emptyProject
     )
 
     javaProjects = arrayOf(
-        javaProject,
-        javaLibraryProject
+      javaProject,
+      javaLibraryProject
     )
 
     kotlinProjects = arrayOf(
-        kotlinPlatformCommonProject,
-        kotlinPlatformJvmProject,
-        kotlinPlatformJsProject
+      kotlinPlatformCommonProject,
+      kotlinPlatformJvmProject,
+      kotlinPlatformJsProject
     )
 
     androidProjects = arrayOf(
-        androidAppProject,
-        androidLibraryProject,
-        androidTestProject
+      androidAppProject,
+      androidLibraryProject,
+      androidTestProject
     )
 
     projects = emptyProjects + javaProjects + kotlinProjects + androidProjects

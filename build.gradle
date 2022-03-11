@@ -28,7 +28,7 @@ apply plugin: "com.vanniktech.maven.publish"
 
 codeQualityTools {
   ktlint {
-    toolVersion = '0.32.0'
+    toolVersion = '0.44.0'
   }
   detekt {
     toolVersion = '1.0.0'

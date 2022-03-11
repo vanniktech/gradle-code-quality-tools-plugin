@@ -12,24 +12,28 @@ class CodeQualityToolsPluginKotlinTest {
 
   @Test fun success() {
     Roboter(testProjectDir)
-        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
-        .succeeds()
+      .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
+      .succeeds()
   }
 
   @Test fun fails() {
     Roboter(testProjectDir)
-        .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", """
+      .withKotlinFile(
+        "src/main/kotlin/com/vanniktech/test/Foo.kt",
+        """
             @Deprecated("Don't use this") fun bar() = { }
             fun foo() = bar()
-            """.trimIndent())
-        .fails(containsMessage = "bar(): () -> Unit' is deprecated. Don't use this")
+        """.trimIndent()
+      )
+      .fails(containsMessage = "bar(): () -> Unit' is deprecated. Don't use this")
   }
 
   class Roboter(
     private val directory: TemporaryFolder
   ) {
     init {
-      directory.newFile("build.gradle").writeText("""
+      directory.newFile("build.gradle").writeText(
+        """
           |plugins {
           |  id "kotlin"
           |  id "com.vanniktech.code.quality.tools"
@@ -50,7 +54,9 @@ class CodeQualityToolsPluginKotlinTest {
           |dependencies {
           |  implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.41'
           |}
-          |""".trimMargin())
+          |
+        """.trimMargin()
+      )
     }
 
     fun withKotlinFile(path: String, content: String) = write(path, content)
