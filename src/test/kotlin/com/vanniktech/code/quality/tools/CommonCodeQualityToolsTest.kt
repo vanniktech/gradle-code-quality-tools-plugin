@@ -1,7 +1,6 @@
 package com.vanniktech.code.quality.tools
 
 import com.android.build.gradle.AppPlugin
-import com.android.build.gradle.FeaturePlugin
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.TestPlugin
 import org.gradle.api.Project
@@ -37,7 +36,6 @@ abstract class CommonCodeQualityToolsTest {
   lateinit var androidAppProject: Project
   lateinit var androidLibraryProject: Project
   lateinit var androidTestProject: Project
-  lateinit var androidFeatureProject: Project
   // Project androidInstantAppProject   groovy.lang.MissingPropertyException: No such property: InstantAppPlugin for class
 
   lateinit var projects: Array<Project>
@@ -71,9 +69,6 @@ abstract class CommonCodeQualityToolsTest {
     androidTestProject = ProjectBuilder.builder().withName("android test").build()
     androidTestProject.plugins.apply(TestPlugin::class.java)
 
-    androidFeatureProject = ProjectBuilder.builder().withName("android feature").build()
-    androidFeatureProject.plugins.apply(FeaturePlugin::class.java)
-
     emptyProjects = arrayOf(
         emptyProject
     )
@@ -92,8 +87,7 @@ abstract class CommonCodeQualityToolsTest {
     androidProjects = arrayOf(
         androidAppProject,
         androidLibraryProject,
-        androidTestProject,
-        androidFeatureProject
+        androidTestProject
     )
 
     projects = emptyProjects + javaProjects + kotlinProjects + androidProjects
