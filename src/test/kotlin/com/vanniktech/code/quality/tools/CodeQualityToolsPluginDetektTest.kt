@@ -16,9 +16,9 @@ class CodeQualityToolsPluginDetektTest {
 
   @Test fun success() {
     Roboter(testProjectDir)
-        .withConfiguration("failFast: true")
-        .withKotlinFile(testPath, testCode)
-        .succeeds()
+      .withConfiguration("failFast: true")
+      .withKotlinFile(testPath, testCode)
+      .succeeds()
   }
 
   @Test fun works() {
@@ -37,8 +37,8 @@ class CodeQualityToolsPluginDetektTest {
 
   @Test fun noSrcFolder() {
     Roboter(testProjectDir)
-        .withConfiguration("failFast: true")
-        .succeeds()
+      .withConfiguration("failFast: true")
+      .succeeds()
   }
 
   @Test fun defaultConfigFile() {
@@ -50,67 +50,70 @@ class CodeQualityToolsPluginDetektTest {
 
   @Test fun differentConfigFile() {
     Roboter(testProjectDir, config = "code_quality_tools/config-detekt.yml")
-        .withConfiguration("failFast: true")
-        .withKotlinFile(testPath, testCode)
-        .succeeds()
+      .withConfiguration("failFast: true")
+      .withKotlinFile(testPath, testCode)
+      .succeeds()
   }
 
   @Test fun fails() {
     Roboter(testProjectDir)
-        .withConfiguration("failFast: true")
-        .withKotlinFile(testPath, "fun foo() = Unit")
-        .fails(containsMessage = "NewLineAtEndOfFile - [Foo.kt]")
+      .withConfiguration("failFast: true")
+      .withKotlinFile(testPath, "fun foo() = Unit")
+      .fails(containsMessage = "NewLineAtEndOfFile - [Foo.kt]")
   }
 
   @Test fun ignoresFileInBuildDirectory() {
     Roboter(testProjectDir)
-        .withConfiguration("failFast: true")
-        .withKotlinFile("build/Foo.kt", "fun foo() = Unit")
-        .succeeds()
+      .withConfiguration("failFast: true")
+      .withKotlinFile("build/Foo.kt", "fun foo() = Unit")
+      .succeeds()
   }
 
   @Test fun failsOnKotlinScript() {
     Roboter(testProjectDir)
-        .withConfiguration("failFast: true")
-        .withKotlinFile("build.gradle.kts", "fun foo() = Unit")
-        .fails(containsMessage = "NewLineAtEndOfFile - [build.gradle.kts]")
+      .withConfiguration("failFast: true")
+      .withKotlinFile("build.gradle.kts", "fun foo() = Unit")
+      .fails(containsMessage = "NewLineAtEndOfFile - [build.gradle.kts]")
   }
 
   @Test fun disabled() {
     Roboter(testProjectDir, enabled = false)
-        .withConfiguration("failFast: true")
-        .withKotlinFile(testPath, "fun foo() = Unit")
-        .doesNothing()
+      .withConfiguration("failFast: true")
+      .withKotlinFile(testPath, "fun foo() = Unit")
+      .doesNothing()
   }
 
   @Test fun creatingInitialBaselineFails() {
     Roboter(testProjectDir, baselineFileName = "detekt-baseline.xml")
-        .withConfiguration("failFast: true")
-        .withKotlinFile(testPath, "fun foo() = Unit")
-        .fails(containsMessage = "NewLineAtEndOfFile - [Foo.kt]")
-        .baseLineContains("<ID>NewLineAtEndOfFile:Foo.kt\$.Foo.kt</ID>")
+      .withConfiguration("failFast: true")
+      .withKotlinFile(testPath, "fun foo() = Unit")
+      .fails(containsMessage = "NewLineAtEndOfFile - [Foo.kt]")
+      .baseLineContains("<ID>NewLineAtEndOfFile:Foo.kt\$.Foo.kt</ID>")
   }
 
   @Test fun runningWithBaseLineSucceeds() {
     Roboter(testProjectDir, baselineFileName = "detekt-baseline.xml")
-        .withConfiguration("failFast: true")
-        .withBaseLineFile("""
+      .withConfiguration("failFast: true")
+      .withBaseLineFile(
+        """
             <?xml version="1.0"?>
             <SmellBaseline>
               <Blacklist timestamp="1529425729991"></Blacklist>
               <Whitelist timestamp="1529425729991">
                 <ID>InvalidPackageDeclaration:Foo.kt$.Foo.kt</ID>
               </Whitelist>
-            </SmellBaseline>""".trimIndent())
-        .withKotlinFile(testPath, "fun foo(i: Int) = i * 3\n")
-        .succeeds()
+            </SmellBaseline>
+        """.trimIndent()
+      )
+      .withKotlinFile(testPath, "fun foo(i: Int) = i * 3\n")
+      .succeeds()
   }
 
   @Test fun checkTaskRunsDetekt() {
     Roboter(testProjectDir)
-        .withConfiguration("failFast: true")
-        .withKotlinFile(testPath, "fun foo() = Unit")
-        .fails(taskToRun = "check", taskToCheck = "detektCheck", containsMessage = "NewLineAtEndOfFile - [Foo.kt] at")
+      .withConfiguration("failFast: true")
+      .withKotlinFile(testPath, "fun foo() = Unit")
+      .fails(taskToRun = "check", taskToCheck = "detektCheck", containsMessage = "NewLineAtEndOfFile - [Foo.kt] at")
   }
 
   @Test fun runningWithExplicitInputSucceeds() {
@@ -138,7 +141,8 @@ class CodeQualityToolsPluginDetektTest {
     inputDirectoryName: String = "."
   ) {
     init {
-      directory.newFile("build.gradle").writeText("""
+      directory.newFile("build.gradle").writeText(
+        """
           |plugins {
           |  id "kotlin"
           |  id "com.vanniktech.code.quality.tools"
@@ -163,7 +167,9 @@ class CodeQualityToolsPluginDetektTest {
           |repositories {
           |  jcenter()
           |}
-          |""".trimMargin())
+          |
+        """.trimMargin()
+      )
     }
 
     fun withBaseLineFile(content: String) = write(requireNotNull(baselineFileName), content)

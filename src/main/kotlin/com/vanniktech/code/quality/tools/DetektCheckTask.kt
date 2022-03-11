@@ -47,23 +47,23 @@ import java.io.File
   private fun executeDetekt(configuration: FileCollection, shouldCreateBaseLine: Boolean = false) {
     val reportKey = "--report"
     val reportValue = listOf(
-          ReportingMetaInformation("plain", "txt", "plain"),
-          ReportingMetaInformation("xml", "xml", "checkstyle"),
-          ReportingMetaInformation("html", "html", "report")
-      ).joinToString(separator = ",") {
-        it.fileEnding + ":" + File(outputDirectory, "detekt-${it.fileNameSuffix}.${it.fileEnding}").absolutePath
-      }
+      ReportingMetaInformation("plain", "txt", "plain"),
+      ReportingMetaInformation("xml", "xml", "checkstyle"),
+      ReportingMetaInformation("html", "html", "report")
+    ).joinToString(separator = ",") {
+      it.fileEnding + ":" + File(outputDirectory, "detekt-${it.fileNameSuffix}.${it.fileEnding}").absolutePath
+    }
 
     project.javaexec { task ->
       task.main = "io.gitlab.arturbosch.detekt.cli.Main"
       task.classpath = configuration
       task.args(
-          "--input", project.file(input),
-          reportKey, reportValue
+        "--input", project.file(input),
+        reportKey, reportValue
       )
 
       if (configFile.exists()) {
-          task.args("--config", configFile)
+        task.args("--config", configFile)
       }
 
       task.args("--excludes", "**/build/**")
