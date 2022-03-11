@@ -5,7 +5,6 @@ package com.vanniktech.code.quality.tools
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LintPlugin
 import com.android.build.gradle.internal.dsl.LintOptions
-import com.android.repository.Revision
 import com.vanniktech.code.quality.tools.KtlintExtension.Companion.PINTEREST_VERSION_CHANGE
 import de.aaschmid.gradle.plugins.cpd.Cpd
 import de.aaschmid.gradle.plugins.cpd.CpdExtension
@@ -54,22 +53,6 @@ class CodeQualityToolsPlugin : Plugin<Project> {
   }
 }
 
-fun androidGradlePluginVersion(): Revision {
-  val o = Object()
-
-  try {
-    return Revision.parseRevision(Class.forName("com.android.builder.Version").getDeclaredField("ANDROID_GRADLE_PLUGIN_VERSION").get(o).toString(), Revision.Precision.PREVIEW)
-  } catch (ignored: Exception) {
-  }
-
-  try {
-    return Revision.parseRevision(Class.forName("com.android.builder.model.Version").getDeclaredField("ANDROID_GRADLE_PLUGIN_VERSION").get(o).toString(), Revision.Precision.PREVIEW)
-  } catch (ignored: Exception) {
-  }
-
-  throw IllegalArgumentException("Can't get Android Gradle Plugin version")
-}
-
 fun hasLintPlugin(): Boolean {
   return try {
     Class.forName("com.android.build.gradle.LintPlugin")
@@ -112,8 +95,8 @@ fun Project.addPmd(rootProject: Project, extension: CodeQualityToolsPluginExtens
       it.include(extension.pmd.include)
       it.exclude(extension.pmd.exclude)
 
-      it.reports.html.isEnabled = extension.htmlReports
-      it.reports.xml.isEnabled = extension.xmlReports
+      it.reports.html.required.set(extension.htmlReports)
+      it.reports.xml.required.set(extension.xmlReports)
     }
 
     tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("pmd") }
@@ -148,8 +131,8 @@ fun Project.addCheckstyle(rootProject: Project, extension: CodeQualityToolsPlugi
 
       it.classpath = files()
 
-      it.reports.html.isEnabled = extension.htmlReports
-      it.reports.xml.isEnabled = extension.xmlReports
+      it.reports.html.required.set(extension.htmlReports)
+      it.reports.xml.required.set(extension.xmlReports)
     }
 
     tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("checkstyle") }
@@ -292,8 +275,8 @@ fun Project.addCpd(extension: CodeQualityToolsPluginExtension): Boolean {
       it.description = "Runs cpd."
       it.group = GROUP_VERIFICATION
 
-      it.reports.text.isEnabled = extension.textReports
-      it.reports.xml.isEnabled = extension.xmlReports
+      it.reports.text.required.set(extension.textReports)
+      it.reports.xml.required.set(extension.xmlReports)
 
       it.encoding = "UTF-8"
       it.source = fileTree(extension.cpd.source).filter { source ->
