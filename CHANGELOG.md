@@ -1,7 +1,19 @@
 # Change Log
 
-Version 0.21.0 *(In development)*
----------------------------------
+Version 0.21.0 *(2022-03-11)*
+-----------------------------
+
+- ktlint: Run on repository & update to 0.44.0 [\#222](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/222) ([vanniktech](https://github.com/vanniktech))
+- ktlint: Ignore build directory. [\#219](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/219) ([vanniktech](https://github.com/vanniktech))
+- ktlint: Require version \>= 0.32.0 [\#218](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/218) ([vanniktech](https://github.com/vanniktech))
+- Remove deprecated usage of Tasks from Gradle. [\#217](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/217) ([vanniktech](https://github.com/vanniktech))
+- Refactoring: Remove assertj with junit. [\#216](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/216) ([vanniktech](https://github.com/vanniktech))
+- Remove ErrorProne support, instead use the net.ltgt.errorprone Plugin yourself. [\#215](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/215) ([vanniktech](https://github.com/vanniktech))
+- Android: Remove support for deprecated Feature plugin. [\#214](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/214) ([vanniktech](https://github.com/vanniktech))
+- Support Kotlin Multiplatform Project [\#213](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/213) ([vanniktech](https://github.com/vanniktech))
+- Update gradle-maven-publish-plugin to 0.16.0 [\#212](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/212) ([vanniktech](https://github.com/vanniktech))
+- Switch to GitHub workflows. [\#211](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/211) ([vanniktech](https://github.com/vanniktech))
+- Detekt: add ability to specify input directory [\#210](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/210) ([budnyjj](https://github.com/budnyjj))
 
 Version 0.20.0 *(2020-04-10)*
 -----------------------------
