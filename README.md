@@ -22,8 +22,6 @@ buildscript {
 apply plugin: "com.vanniktech.code.quality.tools"
 ```
 
-Information: [This plugin is also available on Gradle plugins](https://plugins.gradle.org/plugin/com.vanniktech.code.quality.tools)
-
 ### Snapshot
 
 ```gradle
