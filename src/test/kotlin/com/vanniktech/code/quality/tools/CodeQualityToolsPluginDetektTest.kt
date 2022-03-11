@@ -1,8 +1,8 @@
 package com.vanniktech.code.quality.tools
 
-import org.assertj.core.api.Java6Assertions.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -179,7 +179,7 @@ class CodeQualityToolsPluginDetektTest {
     }
 
     fun succeeds(taskToRun: String = "detektCheck") = apply {
-      assertThat(run(taskToRun).build().task(":$taskToRun")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+      assertEquals(TaskOutcome.SUCCESS, run(taskToRun).build().task(":$taskToRun")?.outcome)
       assertReportsExist()
     }
 
@@ -190,25 +190,25 @@ class CodeQualityToolsPluginDetektTest {
       containsMessage: String
     ) = apply {
       val buildResult = run(taskToRun).buildAndFail()
-      assertThat(buildResult.task(":$taskToCheck")?.outcome).isEqualTo(TaskOutcome.FAILED)
-      assertThat(buildResult.output).contains(containsMessage)
+      assertEquals(TaskOutcome.FAILED, buildResult.task(":$taskToCheck")?.outcome)
+      assertEquals(true, buildResult.output.contains(containsMessage))
       if (assertReportsExist) {
         assertReportsExist()
       }
     }
 
     private fun assertReportsExist() {
-      assertThat(File(directory.root, "build/reports/detekt/detekt-report.html")).exists()
-      assertThat(File(directory.root, "build/reports/detekt/detekt-checkstyle.xml")).exists()
-      assertThat(File(directory.root, "build/reports/detekt/detekt-plain.txt")).exists()
+      assertEquals(true, File(directory.root, "build/reports/detekt/detekt-report.html").exists())
+      assertEquals(true, File(directory.root, "build/reports/detekt/detekt-checkstyle.xml").exists())
+      assertEquals(true, File(directory.root, "build/reports/detekt/detekt-plain.txt").exists())
     }
 
     fun doesNothing(taskToRun: String = "detektCheck") = apply {
-      assertThat(run(taskToRun).buildAndFail().task(":$taskToRun")).isNull()
+      assertEquals(null, run(taskToRun).buildAndFail().task(":$taskToRun"))
     }
 
     fun baseLineContains(content: String) {
-      assertThat(File(directory.root, baselineFileName).readText()).contains(content)
+      assertEquals(true, File(directory.root, baselineFileName).readText().contains(content))
     }
 
     private fun run(taskToRun: String) = GradleRunner.create().withPluginClasspath().withProjectDir(directory.root).withArguments(taskToRun)

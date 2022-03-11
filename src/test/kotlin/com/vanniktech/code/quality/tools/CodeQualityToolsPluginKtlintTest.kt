@@ -1,8 +1,8 @@
 package com.vanniktech.code.quality.tools
 
-import org.assertj.core.api.Java6Assertions.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -149,7 +149,7 @@ class CodeQualityToolsPluginKtlintTest {
     fun withKotlinFile(path: String, content: String) = write(path, content)
 
     fun hasKotlinFile(path: String, content: String) {
-      assertThat(File(directory.root, path)).hasContent(content)
+      assertEquals(content, File(directory.root, path).readText())
     }
 
     private fun write(path: String, content: String) = apply {
@@ -159,23 +159,23 @@ class CodeQualityToolsPluginKtlintTest {
     }
 
     fun succeeds(taskToRun: String = "ktlint") = apply {
-      assertThat(run(taskToRun).build().task(":$taskToRun")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+      assertEquals(TaskOutcome.SUCCESS, run(taskToRun).build().task(":$taskToRun")?.outcome)
       assertReportsExist()
     }
 
     fun fails(taskToRun: String = "ktlint", taskToCheck: String = taskToRun, containsMessage: String) = apply {
       val buildResult = run(taskToRun).buildAndFail()
-      assertThat(buildResult.task(":$taskToCheck")?.outcome).isEqualTo(TaskOutcome.FAILED)
-      assertThat(buildResult.output).contains(containsMessage)
+      assertEquals(TaskOutcome.FAILED, buildResult.task(":$taskToCheck")?.outcome)
+      assertEquals(true, buildResult.output.contains(containsMessage))
       assertReportsExist()
     }
 
     private fun assertReportsExist() {
-      assertThat(File(directory.root, "build/reports/ktlint/ktlint-checkstyle-report.xml")).exists()
+      assertEquals(true, File(directory.root, "build/reports/ktlint/ktlint-checkstyle-report.xml").exists())
     }
 
     fun doesNothing(taskToRun: String = "ktlint") = apply {
-      assertThat(run(taskToRun).buildAndFail().task(":$taskToRun")).isNull()
+      assertEquals(null, run(taskToRun).buildAndFail().task(":$taskToRun"))
     }
 
     private fun run(taskToRun: String) = GradleRunner.create().withPluginClasspath().withProjectDir(directory.root).withArguments(taskToRun)

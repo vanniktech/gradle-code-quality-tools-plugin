@@ -1,20 +1,20 @@
 package com.vanniktech.code.quality.tools
 
-import org.assertj.core.api.Java6Assertions.assertThat
 import org.gradle.api.Project
 import org.gradle.api.plugins.quality.CheckstylePlugin
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class CodeQualityToolsPluginCheckstyleTest : CommonCodeQualityToolsTest() {
   @Test fun empty() {
     emptyProjects.forEach { project ->
-      assertThat(project.addCheckstyle(rootProject, defaultExtensions())).isFalse()
+      assertEquals(false, project.addCheckstyle(rootProject, defaultExtensions()))
     }
   }
 
   @Test fun java() {
     javaProjects.forEach { project ->
-      assertThat(project.addCheckstyle(rootProject, defaultExtensions())).isTrue()
+      assertEquals(true, project.addCheckstyle(rootProject, defaultExtensions()))
 
       assertCheckstyle(project)
     }
@@ -23,7 +23,7 @@ class CodeQualityToolsPluginCheckstyleTest : CommonCodeQualityToolsTest() {
   @Test fun kotlin() {
     kotlinProjects.forEach { project ->
       // Ideally we don"t want to be running this in kotlin projects but since it uses the java library under the hood we can"t do much.
-      assertThat(project.addCheckstyle(rootProject, defaultExtensions())).isTrue()
+      assertEquals(true, project.addCheckstyle(rootProject, defaultExtensions()))
 
       assertCheckstyle(project)
     }
@@ -31,62 +31,62 @@ class CodeQualityToolsPluginCheckstyleTest : CommonCodeQualityToolsTest() {
 
   @Test fun android() {
     androidProjects.forEach { project ->
-      assertThat(project.addCheckstyle(rootProject, defaultExtensions())).isTrue()
+      assertEquals(true, project.addCheckstyle(rootProject, defaultExtensions()))
 
       assertCheckstyle(project)
     }
   }
 
   private fun assertCheckstyle(project: Project) {
-    assertThat(project.plugins.hasPlugin(CheckstylePlugin::class.java)).isTrue()
+    assertEquals(true, project.plugins.hasPlugin(CheckstylePlugin::class.java))
 
-    assertThat(project.checkstyle.isIgnoreFailures).isFalse()
-    assertThat(project.checkstyle.isShowViolations).isTrue()
-    assertThat(project.checkstyle.toolVersion).isEqualTo("8.6")
-    assertThat(project.checkstyle.configFile).isEqualTo(rootProject.file("code_quality_tools/checkstyle.xml"))
+    assertEquals(false, project.checkstyle.isIgnoreFailures)
+    assertEquals(true, project.checkstyle.isShowViolations)
+    assertEquals("8.6", project.checkstyle.toolVersion)
+    assertEquals(rootProject.file("code_quality_tools/checkstyle.xml"), project.checkstyle.configFile)
 
     project.checkstyleTask.apply {
-      assertThat(description).isEqualTo("Runs checkstyle.")
-      assertThat(group).isEqualTo("verification")
+      assertEquals("Runs checkstyle.", description)
+      assertEquals("verification", group)
 
-      assertThat(configFile).isEqualTo(rootProject.file("code_quality_tools/checkstyle.xml"))
+      assertEquals(rootProject.file("code_quality_tools/checkstyle.xml"), configFile)
 
-      assertThat(includes.size).isEqualTo(1)
-      assertThat(includes.contains("**/*.java")).isTrue()
+      assertEquals(1, includes.size)
+      assertEquals(true, includes.contains("**/*.java"))
 
-      assertThat(excludes.size).isEqualTo(1)
-      assertThat(excludes.contains("**/gen/**")).isTrue()
+      assertEquals(1, excludes.size)
+      assertEquals(true, excludes.contains("**/gen/**"))
 
-      assertThat(reports.xml.isEnabled).isTrue()
-      assertThat(reports.html.isEnabled).isFalse()
+      assertEquals(true, reports.xml.required.get())
+      assertEquals(false, reports.html.required.get())
     }
 
-    assertThat(taskDependsOn(project.check, "checkstyle")).isTrue()
+    assertEquals(true, taskDependsOn(project.check, "checkstyle"))
   }
 
   @Test fun ignoreFailuresFalse() {
     val extension = defaultExtensions()
     extension.checkstyle.ignoreFailures = false
 
-    assertThat(androidAppProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(androidAppProject.checkstyle.isIgnoreFailures).isFalse()
+    assertEquals(true, androidAppProject.addCheckstyle(rootProject, extension))
+    assertEquals(false, androidAppProject.checkstyle.isIgnoreFailures)
 
-    assertThat(androidLibraryProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(androidLibraryProject.checkstyle.isIgnoreFailures).isFalse()
+    assertEquals(true, androidLibraryProject.addCheckstyle(rootProject, extension))
+    assertEquals(false, androidLibraryProject.checkstyle.isIgnoreFailures)
 
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(javaProject.checkstyle.isIgnoreFailures).isFalse()
+    assertEquals(true, javaProject.addCheckstyle(rootProject, extension))
+    assertEquals(false, javaProject.checkstyle.isIgnoreFailures)
   }
 
   @Test fun include() {
     val extension = defaultExtensions()
     extension.checkstyle.include = listOf("*.java")
 
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isTrue()
+    assertEquals(true, javaProject.addCheckstyle(rootProject, extension))
 
     javaProject.checkstyleTask.apply {
-      assertThat(includes.size).isEqualTo(1)
-      assertThat(includes.contains("*.java")).isTrue()
+      assertEquals(1, includes.size)
+      assertEquals(true, includes.contains("*.java"))
     }
   }
 
@@ -94,11 +94,11 @@ class CodeQualityToolsPluginCheckstyleTest : CommonCodeQualityToolsTest() {
     val extension = defaultExtensions()
     extension.checkstyle.exclude = listOf("**/gen")
 
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isTrue()
+    assertEquals(true, javaProject.addCheckstyle(rootProject, extension))
 
     javaProject.checkstyleTask.apply {
-      assertThat(excludes.size).isEqualTo(1)
-      assertThat(excludes.contains("**/gen")).isTrue()
+      assertEquals(1, excludes.size)
+      assertEquals(true, excludes.contains("**/gen"))
     }
   }
 
@@ -106,67 +106,67 @@ class CodeQualityToolsPluginCheckstyleTest : CommonCodeQualityToolsTest() {
     val extension = defaultExtensions()
     extension.checkstyle.ignoreFailures = true
 
-    assertThat(androidAppProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(androidAppProject.checkstyle.isIgnoreFailures).isTrue()
+    assertEquals(true, androidAppProject.addCheckstyle(rootProject, extension))
+    assertEquals(true, androidAppProject.checkstyle.isIgnoreFailures)
 
-    assertThat(androidLibraryProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(androidLibraryProject.checkstyle.isIgnoreFailures).isTrue()
+    assertEquals(true, androidLibraryProject.addCheckstyle(rootProject, extension))
+    assertEquals(true, androidLibraryProject.checkstyle.isIgnoreFailures)
 
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(javaProject.checkstyle.isIgnoreFailures).isTrue()
+    assertEquals(true, javaProject.addCheckstyle(rootProject, extension))
+    assertEquals(true, javaProject.checkstyle.isIgnoreFailures)
   }
 
   @Test fun showViolationsFalse() {
     val extension = defaultExtensions()
     extension.checkstyle.showViolations = false
 
-    assertThat(androidAppProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(androidAppProject.checkstyle.isShowViolations).isFalse()
+    assertEquals(true, androidAppProject.addCheckstyle(rootProject, extension))
+    assertEquals(false, androidAppProject.checkstyle.isShowViolations)
 
-    assertThat(androidLibraryProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(androidLibraryProject.checkstyle.isShowViolations).isFalse()
+    assertEquals(true, androidLibraryProject.addCheckstyle(rootProject, extension))
+    assertEquals(false, androidLibraryProject.checkstyle.isShowViolations)
 
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(javaProject.checkstyle.isShowViolations).isFalse()
+    assertEquals(true, javaProject.addCheckstyle(rootProject, extension))
+    assertEquals(false, javaProject.checkstyle.isShowViolations)
   }
 
   @Test fun showViolationsTrue() {
     val extension = defaultExtensions()
     extension.checkstyle.showViolations = true
 
-    assertThat(androidAppProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(androidAppProject.checkstyle.isShowViolations).isTrue()
+    assertEquals(true, androidAppProject.addCheckstyle(rootProject, extension))
+    assertEquals(true, androidAppProject.checkstyle.isShowViolations)
 
-    assertThat(androidLibraryProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(androidLibraryProject.checkstyle.isShowViolations).isTrue()
+    assertEquals(true, androidLibraryProject.addCheckstyle(rootProject, extension))
+    assertEquals(true, androidLibraryProject.checkstyle.isShowViolations)
 
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(javaProject.checkstyle.isShowViolations).isTrue()
+    assertEquals(true, javaProject.addCheckstyle(rootProject, extension))
+    assertEquals(true, javaProject.checkstyle.isShowViolations)
   }
 
   @Test fun failEarlyFalse() {
     val extension = defaultExtensions()
     extension.failEarly = false
 
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(javaProject.checkstyle.isIgnoreFailures).isTrue()
-    assertThat(javaProject.checkstyle.isShowViolations).isFalse()
+    assertEquals(true, javaProject.addCheckstyle(rootProject, extension))
+    assertEquals(true, javaProject.checkstyle.isIgnoreFailures)
+    assertEquals(false, javaProject.checkstyle.isShowViolations)
   }
 
   @Test fun toolsVersion() {
     val extension = defaultExtensions()
     extension.checkstyle.toolVersion = "6.14.0"
 
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(javaProject.checkstyle.toolVersion).isEqualTo(extension.checkstyle.toolVersion)
+    assertEquals(true, javaProject.addCheckstyle(rootProject, extension))
+    assertEquals(extension.checkstyle.toolVersion, javaProject.checkstyle.toolVersion)
   }
 
   @Test fun configFiles() {
     val extension = defaultExtensions()
     extension.checkstyle.configFile = "checkstyle.xml"
 
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isTrue()
-    assertThat(javaProject.checkstyle.configFile).isEqualTo(rootProject.file(extension.checkstyle.configFile))
+    assertEquals(true, javaProject.addCheckstyle(rootProject, extension))
+    assertEquals(rootProject.file(extension.checkstyle.configFile), javaProject.checkstyle.configFile)
   }
 
   @Test fun reports() {
@@ -174,18 +174,18 @@ class CodeQualityToolsPluginCheckstyleTest : CommonCodeQualityToolsTest() {
     extension.htmlReports = true
     extension.xmlReports = false
 
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isTrue()
+    assertEquals(true, javaProject.addCheckstyle(rootProject, extension))
 
     javaProject.checkstyleTask.apply {
-      assertThat(reports.xml.isEnabled).isEqualTo(extension.xmlReports)
-      assertThat(reports.html.isEnabled).isEqualTo(extension.htmlReports)
+      assertEquals(extension.xmlReports, reports.xml.required.get())
+      assertEquals(extension.htmlReports, reports.html.required.get())
     }
   }
 
   @Test fun ignoreProject() {
     val extension = defaultExtensions()
     extension.ignoreProjects = listOf(javaProject.name)
-    assertThat(javaProject.addCheckstyle(rootProject, extension)).isFalse()
+    assertEquals(false, javaProject.addCheckstyle(rootProject, extension))
   }
 
   @Test fun enabled() {
@@ -193,7 +193,7 @@ class CodeQualityToolsPluginCheckstyleTest : CommonCodeQualityToolsTest() {
     extension.checkstyle.enabled = false
 
     for (project in projects) {
-      assertThat(project.addCheckstyle(rootProject, extension)).isFalse()
+      assertEquals(false, project.addCheckstyle(rootProject, extension))
     }
   }
 }

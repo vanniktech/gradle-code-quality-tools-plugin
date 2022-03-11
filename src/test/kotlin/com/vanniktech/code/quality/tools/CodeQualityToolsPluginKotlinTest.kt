@@ -1,8 +1,8 @@
 package com.vanniktech.code.quality.tools
 
-import org.assertj.core.api.Java6Assertions.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -62,13 +62,13 @@ class CodeQualityToolsPluginKotlinTest {
     }
 
     fun succeeds(taskToRun: String = "compileKotlin") = apply {
-      assertThat(run(taskToRun).build().task(":$taskToRun")?.outcome).isEqualTo(TaskOutcome.SUCCESS)
+      assertEquals(TaskOutcome.SUCCESS, run(taskToRun).build().task(":$taskToRun")?.outcome)
     }
 
     fun fails(taskToRun: String = "compileKotlin", taskToCheck: String = taskToRun, containsMessage: String) = apply {
       val buildResult = run(taskToRun).buildAndFail()
-      assertThat(buildResult.task(":$taskToCheck")?.outcome).isEqualTo(TaskOutcome.FAILED)
-      assertThat(buildResult.output).contains(containsMessage)
+      assertEquals(TaskOutcome.FAILED, buildResult.task(":$taskToCheck")?.outcome)
+      assertEquals(true, buildResult.output.contains(containsMessage))
     }
 
     private fun run(taskToRun: String) = GradleRunner.create().withPluginClasspath().withProjectDir(directory.root).withArguments(taskToRun)

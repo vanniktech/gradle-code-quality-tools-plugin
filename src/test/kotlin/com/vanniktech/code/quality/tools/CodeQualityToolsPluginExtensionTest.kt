@@ -1,69 +1,69 @@
 package com.vanniktech.code.quality.tools
 
-import org.assertj.core.api.Java6Assertions.assertThat
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class CodeQualityToolsPluginExtensionTest {
   @Test @Suppress("Detekt.LongMethod") fun defaults() {
     val extension = defaultExtensions()
 
-    assertThat(extension.failEarly).isTrue()
-    assertThat(extension.xmlReports).isTrue()
-    assertThat(extension.htmlReports).isFalse()
-    assertThat(extension.textReports).isFalse()
+    assertEquals(true, extension.failEarly)
+    assertEquals(true, extension.xmlReports)
+    assertEquals(false, extension.htmlReports)
+    assertEquals(false, extension.textReports)
 
-    assertThat(extension.detekt.toolVersion).isEqualTo("1.0.0")
-    assertThat(extension.ktlint.toolVersion).isEqualTo("0.32.0")
-    assertThat(extension.checkstyle.toolVersion).isEqualTo("8.6")
-    assertThat(extension.pmd.toolVersion).isEqualTo("6.0.0")
+    assertEquals("1.0.0", extension.detekt.toolVersion)
+    assertEquals("0.32.0", extension.ktlint.toolVersion)
+    assertEquals("8.6", extension.checkstyle.toolVersion)
+    assertEquals("6.0.0", extension.pmd.toolVersion)
 
-    assertThat(extension.checkstyle.source).isEqualTo("src")
-    assertThat(extension.pmd.source).isEqualTo("src")
-    assertThat(extension.cpd.source).isEqualTo("src")
+    assertEquals("src", extension.checkstyle.source)
+    assertEquals("src", extension.pmd.source)
+    assertEquals("src", extension.cpd.source)
 
-    assertThat(extension.checkstyle.include).isEqualTo(listOf("**/*.java"))
-    assertThat(extension.pmd.include).isEqualTo(listOf("**/*.java"))
+    assertEquals(listOf("**/*.java"), extension.checkstyle.include)
+    assertEquals(listOf("**/*.java"), extension.pmd.include)
 
-    assertThat(extension.checkstyle.exclude).isEqualTo(listOf("**/gen/**"))
-    assertThat(extension.pmd.exclude).isEqualTo(listOf("**/gen/**"))
+    assertEquals(listOf("**/gen/**"), extension.checkstyle.exclude)
+    assertEquals(listOf("**/gen/**"), extension.pmd.exclude)
 
-    assertThat(extension.cpd.language).isEqualTo("java")
+    assertEquals("java", extension.cpd.language)
 
-    assertThat(extension.checkstyle.ignoreFailures).isNull()
-    assertThat(extension.checkstyle.showViolations).isNull()
-    assertThat(extension.pmd.ignoreFailures).isNull()
-    assertThat(extension.cpd.ignoreFailures).isNull()
+    assertEquals(null, extension.checkstyle.ignoreFailures)
+    assertEquals(null, extension.checkstyle.showViolations)
+    assertEquals(null, extension.pmd.ignoreFailures)
+    assertEquals(null, extension.cpd.ignoreFailures)
 
-    assertThat(extension.detekt.config).isEqualTo("code_quality_tools/detekt.yml")
-    assertThat(extension.checkstyle.configFile).isEqualTo("code_quality_tools/checkstyle.xml")
-    assertThat(extension.pmd.ruleSetFile).isEqualTo("code_quality_tools/pmd.xml")
+    assertEquals("code_quality_tools/detekt.yml", extension.detekt.config)
+    assertEquals("code_quality_tools/checkstyle.xml", extension.checkstyle.configFile)
+    assertEquals("code_quality_tools/pmd.xml", extension.pmd.ruleSetFile)
 
-    assertThat(extension.ignoreProjects).isEmpty()
+    assertEquals(true, extension.ignoreProjects.isEmpty())
 
-    assertThat(extension.cpd.enabled).isTrue()
-    assertThat(extension.detekt.enabled).isTrue()
-    assertThat(extension.ktlint.enabled).isTrue()
-    assertThat(extension.lint.enabled).isTrue()
-    assertThat(extension.checkstyle.enabled).isTrue()
-    assertThat(extension.pmd.enabled).isTrue()
+    assertEquals(true, extension.cpd.enabled)
+    assertEquals(true, extension.detekt.enabled)
+    assertEquals(true, extension.ktlint.enabled)
+    assertEquals(true, extension.lint.enabled)
+    assertEquals(true, extension.checkstyle.enabled)
+    assertEquals(true, extension.pmd.enabled)
 
-    assertThat(extension.lint.textReport).isNull()
-    assertThat(extension.lint.textOutput).isEqualTo("stdout")
-    assertThat(extension.lint.abortOnError).isNull()
-    assertThat(extension.lint.warningsAsErrors).isNull()
-    assertThat(extension.lint.checkAllWarnings).isNull()
-    assertThat(extension.lint.baselineFileName).isNull()
-    assertThat(extension.lint.absolutePaths).isNull()
-    assertThat(extension.lint.lintConfig).isNull()
-    assertThat(extension.lint.checkReleaseBuilds).isFalse()
-    assertThat(extension.lint.checkTestSources).isTrue()
-    assertThat(extension.lint.checkDependencies).isNull()
+    assertEquals(null, extension.lint.textReport)
+    assertEquals("stdout", extension.lint.textOutput)
+    assertEquals(null, extension.lint.abortOnError)
+    assertEquals(null, extension.lint.warningsAsErrors)
+    assertEquals(null, extension.lint.checkAllWarnings)
+    assertEquals(null, extension.lint.baselineFileName)
+    assertEquals(null, extension.lint.absolutePaths)
+    assertEquals(null, extension.lint.lintConfig)
+    assertEquals(false, extension.lint.checkReleaseBuilds)
+    assertEquals(true, extension.lint.checkTestSources)
+    assertEquals(null, extension.lint.checkDependencies)
 
-    assertThat(extension.detekt.baselineFileName).isNull()
-    assertThat(extension.detekt.failFast).isTrue()
+    assertEquals(null, extension.detekt.baselineFileName)
+    assertEquals(true, extension.detekt.failFast)
 
-    assertThat(extension.kotlin.allWarningsAsErrors).isTrue()
+    assertEquals(true, extension.kotlin.allWarningsAsErrors)
 
-    assertThat(extension.ktlint.experimental).isFalse()
+    assertEquals(false, extension.ktlint.experimental)
   }
 }
