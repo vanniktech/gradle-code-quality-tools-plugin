@@ -373,9 +373,8 @@ private fun Project.isAndroidProject(): Boolean {
   val isAndroidLibrary = plugins.hasPlugin("com.android.library")
   val isAndroidApp = plugins.hasPlugin("com.android.application")
   val isAndroidTest = plugins.hasPlugin("com.android.test")
-  val isAndroidFeature = plugins.hasPlugin("com.android.feature")
   val isAndroidInstantApp = plugins.hasPlugin("com.android.instantapp")
-  return isAndroidLibrary || isAndroidApp || isAndroidTest || isAndroidFeature || isAndroidInstantApp
+  return isAndroidLibrary || isAndroidApp || isAndroidTest || isAndroidInstantApp
 }
 
 private fun Project.isKotlinProject(): Boolean {
