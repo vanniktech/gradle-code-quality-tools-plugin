@@ -123,13 +123,6 @@ class CodeQualityToolsPluginDetektTest {
       .succeeds()
   }
 
-  @Test fun failsWithUnexistentInput() {
-    Roboter(testProjectDir, inputDirectoryName = "unexistent")
-      .withConfiguration("failFast: true")
-      .withKotlinFile(testPath, testCode)
-      .fails(containsMessage = "does not exist", assertReportsExist = false)
-  }
-
   class Roboter(
     private val directory: TemporaryFolder,
     private val config: String = "code_quality_tools/detekt.yml",
