@@ -132,7 +132,6 @@ class CodeQualityToolsPluginKtlintTest {
           |  checkstyle.enabled = false
           |  pmd.enabled = false
           |  cpd.enabled = false
-          |  errorProne.enabled = false
           |}
           |
           |repositories {

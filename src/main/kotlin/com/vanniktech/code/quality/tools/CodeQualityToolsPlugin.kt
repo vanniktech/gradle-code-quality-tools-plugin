@@ -50,7 +50,6 @@ class CodeQualityToolsPlugin : Plugin<Project> {
     project.addKotlin(extension)
     project.addCpd(extension)
     project.addDetekt(rootProject, extension)
-    project.addErrorProne(extension)
     project.addLint(extension)
   }
 }
@@ -346,21 +345,6 @@ fun Project.addDetekt(rootProject: Project, extension: CodeQualityToolsPluginExt
 }
 
 private fun Project.shouldIgnore(extension: CodeQualityToolsPluginExtension) = extension.ignoreProjects.contains(name)
-
-fun Project.addErrorProne(extension: CodeQualityToolsPluginExtension): Boolean {
-  val isNotIgnored = !shouldIgnore(extension)
-  val isEnabled = extension.errorProne.enabled
-  val isErrorProneSupported = isJavaProject() || isAndroidProject()
-
-  if (isNotIgnored && isEnabled && isErrorProneSupported) {
-    plugins.apply("net.ltgt.errorprone")
-    configurations.getByName("errorprone").resolutionStrategy.force("com.google.errorprone:error_prone_core:${extension.errorProne.toolVersion}")
-
-    return true
-  }
-
-  return false
-}
 
 private fun Project.isJavaProject(): Boolean {
   val isJava = plugins.hasPlugin("java")
