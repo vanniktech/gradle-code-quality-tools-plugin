@@ -12,7 +12,6 @@ class CodeQualityToolsPluginExtensionTest {
     assertThat(extension.htmlReports).isFalse()
     assertThat(extension.textReports).isFalse()
 
-    assertThat(extension.errorProne.toolVersion).isEqualTo("2.1.3")
     assertThat(extension.detekt.toolVersion).isEqualTo("1.0.0")
     assertThat(extension.ktlint.toolVersion).isEqualTo("0.32.0")
     assertThat(extension.checkstyle.toolVersion).isEqualTo("8.6")
@@ -41,7 +40,6 @@ class CodeQualityToolsPluginExtensionTest {
 
     assertThat(extension.ignoreProjects).isEmpty()
 
-    assertThat(extension.errorProne.enabled).isTrue()
     assertThat(extension.cpd.enabled).isTrue()
     assertThat(extension.detekt.enabled).isTrue()
     assertThat(extension.ktlint.enabled).isTrue()

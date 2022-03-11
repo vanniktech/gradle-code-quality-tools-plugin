@@ -55,9 +55,6 @@ open class CodeQualityToolsPluginExtension @Inject constructor(
   val cpd = objectFactory.newInstance(CpdExtension::class.java)
   fun cpd(action: Action<in CpdExtension>) = action.execute(cpd)
 
-  val errorProne = objectFactory.newInstance(ErrorProneExtension::class.java)
-  fun errorProne(action: Action<in ErrorProneExtension>) = action.execute(errorProne)
-
   val kotlin = objectFactory.newInstance(KotlinExtension::class.java)
   fun kotlin(action: Action<in KotlinExtension>) = action.execute(kotlin)
 }

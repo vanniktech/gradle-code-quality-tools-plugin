@@ -1,6 +1,6 @@
 # gradle-code-quality-tools-plugin
 
-Gradle plugin that configures [Error Prone](http://errorprone.info/), [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how each of those plugins are configured.
+Gradle plugin that configures [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how each of those plugins are configured.
 
 This plugin requires Gradle 5.0 or later.
 
@@ -13,7 +13,6 @@ buildscript {
   repositories {
     mavenCentral()
     google()
-    gradlePluginPortal() // Required for the Errorprone Gradle Plugin.
   }
   dependencies {
     classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.20.0"
@@ -106,10 +105,6 @@ codeQualityTools {
     Boolean ignoreFailures = null
     int minimumTokenCount = 50
   }
-  errorProne {
-    boolean enabled = true
-    String toolVersion = '2.1.3'
-  }
   kotlin {
     boolean allWarningsAsErrors = true
   }
@@ -119,10 +114,6 @@ codeQualityTools {
 ## Tools
 
 Here I'll give a bit more information about how each of the tools will be applied. If there's a Gradle task that this plugin will generate it will also be hooked up into the `check` Gradle task. This means that when you execute `check` all of the rools will be running for you.
-
-### Error Prone
-
-It'll apply the [Error Prone Gradle Plugin](https://github.com/tbroyer/gradle-errorprone-plugin) which will run together with `assemble`. There's no report generated for this but you'll get compile warnings & errors.
 
 ### Checkstyle
 

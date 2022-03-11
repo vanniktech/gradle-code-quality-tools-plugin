@@ -75,7 +75,6 @@ tasks.getByName('pluginUnderTestMetadata').getPluginClasspath().from(configurati
 dependencies {
   api gradleApi()
   api 'de.aaschmid:gradle-cpd-plugin:3.1'
-  api 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.14'
 
   compileOnly "com.android.tools.build:gradle:$androidGradlePluginVersion"
   compileOnly "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
@@ -98,7 +97,7 @@ pluginBundle {
   plugins {
     codeQualityToolsPlugin {
       displayName = POM_NAME
-      tags = ['gradle', 'android', 'java', 'pmd', 'cpd', 'detekt', 'kotlin', 'ktlint', 'checkstyle', 'errorprone', 'multiprojects', 'app module', 'library module', 'lint']
+      tags = ['gradle', 'android', 'java', 'pmd', 'cpd', 'detekt', 'kotlin', 'ktlint', 'checkstyle', 'multiprojects', 'app module', 'library module', 'lint']
       description = POM_DESCRIPTION
     }
   }
