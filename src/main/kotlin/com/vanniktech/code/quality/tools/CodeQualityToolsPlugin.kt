@@ -10,6 +10,7 @@ import de.aaschmid.gradle.plugins.cpd.CpdExtension
 import de.aaschmid.gradle.plugins.cpd.CpdPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.attributes.Usage
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.plugins.quality.CheckstylePlugin
@@ -223,13 +224,22 @@ fun Project.addKtlint(rootProject: Project, extension: CodeQualityToolsPluginExt
   if (isNotIgnored && isEnabled && isKtlintSupported) {
     val ktlint = "ktlint"
 
-    configurations.create(ktlint).defaultDependencies {
-      it.add(dependencies.create("com.pinterest:ktlint:${extension.ktlint.toolVersion}"))
+    val ktlintConfiguration = configurations.create(ktlint) { configuration ->
+      configuration.attributes {
+        it.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage::class.javaObjectType, Usage.JAVA_RUNTIME))
+      }
+
+      configuration.isCanBeConsumed = false
+
+      configuration.defaultDependencies {
+        it.add(dependencies.create("com.pinterest:ktlint:${extension.ktlint.toolVersion}"))
+      }
     }
 
     tasks.register(ktlint, KtLintTask::class.java) { task ->
       task.experimental = extension.ktlint.experimental
       task.version = extension.ktlint.toolVersion
+      task.classpath.from(ktlintConfiguration)
       task.outputDirectory = File(buildDir, "reports/ktlint/")
       task.inputs.files(kotlinFiles(), rootProject.editorconfigFile())
     }
@@ -237,6 +247,7 @@ fun Project.addKtlint(rootProject: Project, extension: CodeQualityToolsPluginExt
     tasks.register("ktlintFormat", KtLintFormatTask::class.java) { task ->
       task.experimental = extension.ktlint.experimental
       task.version = extension.ktlint.toolVersion
+      task.classpath.from(ktlintConfiguration)
       task.outputDirectory = File(buildDir, "reports/ktlint/")
       task.inputs.files(kotlinFiles(), rootProject.editorconfigFile())
     }
@@ -290,8 +301,16 @@ fun Project.addDetekt(rootProject: Project, extension: CodeQualityToolsPluginExt
   val isDetektSupported = isKotlinProject()
 
   if (isNotIgnored && isEnabled && isDetektSupported) {
-    configurations.create("detekt").defaultDependencies {
-      it.add(dependencies.create("io.gitlab.arturbosch.detekt:detekt-cli:${extension.detekt.toolVersion}"))
+    val detektConfiguration = configurations.create("detekt") { configuration ->
+      configuration.attributes {
+        it.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage::class.javaObjectType, Usage.JAVA_RUNTIME))
+      }
+
+      configuration.isCanBeConsumed = false
+
+      configuration.defaultDependencies {
+        it.add(dependencies.create("io.gitlab.arturbosch.detekt:detekt-cli:${extension.detekt.toolVersion}"))
+      }
     }
 
     tasks.register("detektCheck", DetektCheckTask::class.java) { task ->
@@ -301,7 +320,8 @@ fun Project.addDetekt(rootProject: Project, extension: CodeQualityToolsPluginExt
       task.version = extension.detekt.toolVersion
       task.outputDirectory = File(buildDir, "reports/detekt/")
       task.configFile = rootProject.file(extension.detekt.config)
-      task.input = extension.detekt.input
+      task.inputFile = file(extension.detekt.input)
+      task.classpath.from(detektConfiguration)
       task.inputs.files(kotlinFiles(baseDir = extension.detekt.input))
 
       task.inputs.property("baseline-file-exists", false)
