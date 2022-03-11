@@ -25,7 +25,13 @@ import java.io.File
       if (experimental) {
         task.args("--experimental")
       }
-      task.args("--reporter=plain", "--reporter=checkstyle,output=${File(outputDirectory, "ktlint-checkstyle-report.xml")}", "**/*.kt", "**/*.kts", "!build/")
+      task.args(
+        "--reporter=plain",
+        "--reporter=checkstyle,output=${File(outputDirectory, "ktlint-checkstyle-report.xml")}",
+        "**/*.kt",
+        "**/*.kts",
+        "!build/**"
+      )
     }
   }
 }
