@@ -2,9 +2,8 @@
 
 package com.vanniktech.code.quality.tools
 
-import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LintPlugin
-import com.android.build.gradle.internal.dsl.LintOptions
+import com.android.build.api.dsl.Lint
 import com.vanniktech.code.quality.tools.KtlintExtension.Companion.PINTEREST_VERSION_CHANGE
 import de.aaschmid.gradle.plugins.cpd.Cpd
 import de.aaschmid.gradle.plugins.cpd.CpdExtension
@@ -151,28 +150,28 @@ fun Project.addLint(extension: CodeQualityToolsPluginExtension): Boolean {
 
   if (isNotIgnored && isEnabled) {
     val lintOptions = if (isAndroidProject) {
-      extensions.getByType(BaseExtension::class.java).lintOptions
+      extensions.getByType(Lint::class.java)
     } else if (isJavaProject && hasLintPlugin()) {
       plugins.apply(LintPlugin::class.java)
-      extensions.getByType(LintOptions::class.java)
+      extensions.getByType(Lint::class.java)
     } else {
       null
     }
 
     if (lintOptions != null) {
-      lintOptions.isWarningsAsErrors = extension.lint.warningsAsErrors ?: extension.failEarly
-      lintOptions.isAbortOnError = extension.lint.abortOnError ?: extension.failEarly
+      lintOptions.warningsAsErrors = extension.lint.warningsAsErrors ?: extension.failEarly
+      lintOptions.abortOnError = extension.lint.abortOnError ?: extension.failEarly
 
       extension.lint.checkAllWarnings?.let {
-        lintOptions.isCheckAllWarnings = it
+        lintOptions.checkAllWarnings = it
       }
 
       extension.lint.absolutePaths?.let {
-        lintOptions.isAbsolutePaths = it
+        lintOptions.absolutePaths = it
       }
 
       extension.lint.baselineFileName?.let {
-        lintOptions.baselineFile = file(it)
+        lintOptions.baseline = file(it)
       }
 
       extension.lint.lintConfig?.let {
@@ -180,20 +179,20 @@ fun Project.addLint(extension: CodeQualityToolsPluginExtension): Boolean {
       }
 
       extension.lint.checkReleaseBuilds?.let {
-        lintOptions.isCheckReleaseBuilds = it
+        lintOptions.checkReleaseBuilds = it
       }
 
       extension.lint.checkTestSources?.let {
-        lintOptions.isCheckTestSources = it
+        lintOptions.checkTestSources = it
       }
 
       extension.lint.checkDependencies?.let {
-        lintOptions.isCheckDependencies = it
+        lintOptions.checkDependencies = it
       }
 
       extension.lint.textReport?.let {
         lintOptions.textReport = it
-        lintOptions.textOutput(extension.lint.textOutput)
+        lintOptions.textOutput = File("stdout")
       }
 
       tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("lint") }
