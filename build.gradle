@@ -26,6 +26,10 @@ apply plugin: 'com.vanniktech.code.quality.tools'
 apply plugin: 'com.vanniktech.android.junit.jacoco'
 apply plugin: "com.vanniktech.maven.publish"
 
+validatePlugins {
+  enableStricterValidation = true
+}
+
 codeQualityTools {
   ktlint {
     toolVersion = '0.44.0'
