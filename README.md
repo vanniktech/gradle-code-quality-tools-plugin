@@ -72,7 +72,7 @@ codeQualityTools {
   }
   lint {
     boolean enabled = true
-    Boolean textReport = null
+    Boolean textReport = true
     String textOutput = 'stdout'
     Boolean abortOnError = null
     Boolean warningsAsErrors = null

@@ -13,7 +13,7 @@ open class LintExtension {
    * Enable or disable textReport.
    * @since 0.2.0
    */
-  var textReport: Boolean? = null
+  var textReport: Boolean? = true
 
   /**
    * Specify the textOutput for lint. It will only be used when [textReport] is set to true.
