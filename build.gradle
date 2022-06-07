@@ -2,7 +2,7 @@ import org.gradle.api.internal.classpath.ModuleRegistry
 import org.gradle.api.internal.project.ProjectInternal
 
 buildscript {
-  ext.kotlinVersion = '1.6.10'
+  ext.kotlinVersion = '1.6.21'
   ext.androidGradlePluginVersion = '7.1.2'
 
   repositories {
@@ -13,7 +13,7 @@ buildscript {
 
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.20.0'
+    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.21.0'
     classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.16.0'
     classpath 'com.vanniktech:gradle-maven-publish-plugin:0.19.0'
   }
@@ -32,7 +32,7 @@ validatePlugins {
 
 codeQualityTools {
   ktlint {
-    toolVersion = '0.44.0'
+    toolVersion = '0.45.2'
   }
   detekt {
     toolVersion = '1.0.0'
@@ -44,9 +44,6 @@ codeQualityTools {
     enabled = false
   }
   cpd {
-    enabled = false
-  }
-  errorProne {
     enabled = false
   }
   kotlin {
@@ -110,6 +107,6 @@ tasks.withType(Test) {
 }
 
 wrapper {
-  gradleVersion = '7.4'
+  gradleVersion = '7.4.2'
   distributionType = Wrapper.DistributionType.ALL
 }
