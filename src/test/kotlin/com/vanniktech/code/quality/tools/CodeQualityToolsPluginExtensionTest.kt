@@ -47,7 +47,7 @@ class CodeQualityToolsPluginExtensionTest {
     assertEquals(true, extension.checkstyle.enabled)
     assertEquals(true, extension.pmd.enabled)
 
-    assertEquals(null, extension.lint.textReport)
+    assertEquals(true, extension.lint.textReport)
     assertEquals("stdout", extension.lint.textOutput)
     assertEquals(null, extension.lint.abortOnError)
     assertEquals(null, extension.lint.warningsAsErrors)

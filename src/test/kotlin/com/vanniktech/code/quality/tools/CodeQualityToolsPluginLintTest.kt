@@ -3,6 +3,7 @@ package com.vanniktech.code.quality.tools
 import org.gradle.api.Project
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.io.File
 
 class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
   @Test fun empty() {
@@ -34,8 +35,8 @@ class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
   private fun assertLint(project: Project) {
     assertEquals(true, project.lintOptions.isWarningsAsErrors)
     assertEquals(true, project.lintOptions.isAbortOnError)
-    assertEquals(false, project.lintOptions.textReport)
-    assertEquals(null, project.lintOptions.textOutput)
+    assertEquals(true, project.lintOptions.textReport)
+    assertEquals(File("stdout"), project.lintOptions.textOutput)
     assertEquals(false, project.lintOptions.isCheckAllWarnings)
     assertEquals(null, project.lintOptions.baselineFile)
 
@@ -44,7 +45,7 @@ class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
 
   @Test @Suppress("Detekt.LongMethod") fun configurations() {
     val extension = defaultExtensions()
-    extension.lint.textReport = true
+    extension.lint.textReport = null
     extension.lint.textOutput = "stdout"
 
     extension.lint.abortOnError = false
@@ -57,27 +58,27 @@ class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
     assertEquals(false, androidAppProject.lintOptions.isWarningsAsErrors)
     assertEquals(false, androidAppProject.lintOptions.isAbortOnError)
     assertEquals(true, androidAppProject.lintOptions.isCheckAllWarnings)
-    assertEquals(true, androidAppProject.lintOptions.textReport)
+    assertEquals(false, androidAppProject.lintOptions.textReport)
     assertEquals(true, androidAppProject.lintOptions.isAbsolutePaths)
     assertEquals(null, androidAppProject.lintOptions.lintConfig)
     assertEquals(false, androidAppProject.lintOptions.isCheckReleaseBuilds)
     assertEquals(true, androidAppProject.lintOptions.isCheckTestSources)
     assertEquals(false, androidAppProject.lintOptions.isCheckDependencies)
     assertEquals(androidAppProject.file("baseline.xml"), androidAppProject.lintOptions.baselineFile)
-    assertEquals(extension.lint.textOutput, androidAppProject.lintOptions.textOutput.toString())
+    assertEquals(null, androidAppProject.lintOptions.textOutput)
 
     assertEquals(true, androidLibraryProject.addLint(extension))
     assertEquals(false, androidLibraryProject.lintOptions.isWarningsAsErrors)
     assertEquals(false, androidLibraryProject.lintOptions.isAbortOnError)
     assertEquals(true, androidLibraryProject.lintOptions.isCheckAllWarnings)
-    assertEquals(true, androidLibraryProject.lintOptions.textReport)
+    assertEquals(false, androidLibraryProject.lintOptions.textReport)
     assertEquals(true, androidLibraryProject.lintOptions.isAbsolutePaths)
     assertEquals(null, androidLibraryProject.lintOptions.lintConfig)
     assertEquals(false, androidLibraryProject.lintOptions.isCheckReleaseBuilds)
     assertEquals(true, androidLibraryProject.lintOptions.isCheckTestSources)
     assertEquals(false, androidLibraryProject.lintOptions.isCheckDependencies)
     assertEquals(androidLibraryProject.file("baseline.xml"), androidLibraryProject.lintOptions.baselineFile)
-    assertEquals(extension.lint.textOutput, androidLibraryProject.lintOptions.textOutput.toString())
+    assertEquals(null, androidLibraryProject.lintOptions.textOutput)
   }
 
   @Test fun configurationsWhenNotFailEarly() {
