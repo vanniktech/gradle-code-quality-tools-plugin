@@ -83,7 +83,7 @@ dependencies {
   compileOnly "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
   testImplementation "com.android.tools.build:gradle:$androidGradlePluginVersion"
-  testImplementation 'junit:junit:4.13'
+  testImplementation 'junit:junit:4.13.2'
   testImplementation "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
   fixtureClasspath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
