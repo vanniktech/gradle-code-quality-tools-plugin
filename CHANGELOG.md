@@ -1,7 +1,11 @@
 # Change Log
 
-Version 0.22.0 *(In development)*
----------------------------------
+Version 0.22.0 *(2022-07-14)*
+-----------------------------
+
+- ktlint: Fix formatting task when running on JDK 16+ [\#239](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/239) ([vanniktech](https://github.com/vanniktech))
+- Lint: By default set textReport to true. [\#227](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/227) ([vanniktech](https://github.com/vanniktech))
+- Use validatePlugins\#enableStricterValidation [\#223](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/223) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.21.0 *(2022-03-11)*
 -----------------------------
