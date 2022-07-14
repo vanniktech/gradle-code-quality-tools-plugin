@@ -58,6 +58,10 @@ internal abstract class KtLintFormatWorker @Inject internal constructor(
         task.args("--experimental")
       }
 
+      // Required for JDK 16 or later.
+      // https://github.com/pinterest/ktlint/issues/1195#issuecomment-1009027802
+      task.jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
+
       task.args(
         "--reporter=plain",
         "--reporter=checkstyle,output=${File(parameters.outputDirectory.asFile.get(), "ktlint-checkstyle-report.xml")}",
