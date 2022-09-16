@@ -64,7 +64,7 @@ internal abstract class KtLintWorker @Inject internal constructor(
         "**/*.kt",
         "**/*.kts",
         "!build/",
-        "!build/**"
+        "!build/**",
       )
     }
   }

@@ -61,7 +61,7 @@ import javax.inject.Inject
 internal data class ReportingMetaInformation(
   val reportId: String,
   val fileEnding: String,
-  val fileNameSuffix: String
+  val fileNameSuffix: String,
 )
 
 internal interface DetektParameters : WorkParameters {
@@ -94,7 +94,7 @@ internal abstract class DetektWorker @Inject internal constructor(
     val reportValue = listOf(
       ReportingMetaInformation("plain", "txt", "plain"),
       ReportingMetaInformation("xml", "xml", "checkstyle"),
-      ReportingMetaInformation("html", "html", "report")
+      ReportingMetaInformation("html", "html", "report"),
     ).joinToString(separator = ",") {
       it.fileEnding + ":" + File(parameters.outputDirectory.asFile.get(), "detekt-${it.fileNameSuffix}.${it.fileEnding}").absolutePath
     }
@@ -104,7 +104,7 @@ internal abstract class DetektWorker @Inject internal constructor(
       task.classpath = parameters.classpath
       task.args(
         "--input", parameters.inputFile.get().asFile,
-        reportKey, reportValue
+        reportKey, reportValue,
       )
 
       val configFile = parameters.configFile.asFile.get()

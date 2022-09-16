@@ -103,7 +103,7 @@ class CodeQualityToolsPluginDetektTest {
                 <ID>InvalidPackageDeclaration:Foo.kt$.Foo.kt</ID>
               </Whitelist>
             </SmellBaseline>
-        """.trimIndent()
+        """.trimIndent(),
       )
       .withKotlinFile(testPath, "fun foo(i: Int) = i * 3\n")
       .succeeds()
@@ -131,7 +131,7 @@ class CodeQualityToolsPluginDetektTest {
     private val baselineFileName: String? = null,
     buildUponDefaultConfig: Boolean = false,
     parallel: Boolean = false,
-    inputDirectoryName: String = "."
+    inputDirectoryName: String = ".",
   ) {
     init {
       directory.newFile("build.gradle").writeText(
@@ -161,7 +161,7 @@ class CodeQualityToolsPluginDetektTest {
           |  jcenter()
           |}
           |
-        """.trimMargin()
+        """.trimMargin(),
       )
     }
 
@@ -186,7 +186,7 @@ class CodeQualityToolsPluginDetektTest {
       taskToRun: String = "detektCheck",
       taskToCheck: String = taskToRun,
       assertReportsExist: Boolean = true,
-      containsMessage: String
+      containsMessage: String,
     ) = apply {
       val buildResult = run(taskToRun).buildAndFail()
       assertEquals(TaskOutcome.FAILED, buildResult.task(":$taskToCheck")?.outcome)

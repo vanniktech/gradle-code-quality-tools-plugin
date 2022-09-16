@@ -18,7 +18,8 @@ fun defaultExtensions(): CodeQualityToolsPluginExtension {
       override fun <T : Any?> newInstance(type: Class<out T>, vararg parameters: Any?): T {
         return type.newInstance()
       }
-    })
+    },
+    ),
   )
 }
 

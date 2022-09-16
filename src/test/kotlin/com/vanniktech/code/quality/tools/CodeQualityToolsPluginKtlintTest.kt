@@ -29,7 +29,7 @@ class CodeQualityToolsPluginKtlintTest {
         """
             |[*.{kt,kts}]
             |insert_final_newline=true
-        """.trimMargin()
+        """.trimMargin(),
       )
       .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param")
       .fails(containsMessage = "/src/main/kotlin/com/vanniktech/test/Foo.kt:1:1: File must end with a newline (\\n)")
@@ -41,7 +41,7 @@ class CodeQualityToolsPluginKtlintTest {
         """
             |[*.{kt,kts}]
             |insert_final_newline=true
-        """.trimMargin()
+        """.trimMargin(),
       )
       .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param")
       .succeeds(taskToRun = "ktlintFormat")
@@ -54,7 +54,7 @@ class CodeQualityToolsPluginKtlintTest {
         """
             |[*.{kt,kts}]
             |insert_final_newline=true
-        """.trimMargin()
+        """.trimMargin(),
       )
       .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param")
       .succeeds(taskToRun = "ktlintFormat")
@@ -119,7 +119,7 @@ class CodeQualityToolsPluginKtlintTest {
     private val directory: TemporaryFolder,
     enabled: Boolean = true,
     version: String = "0.44.0",
-    experimental: Boolean = false
+    experimental: Boolean = false,
   ) {
     init {
       directory.newFile("build.gradle").writeText(
@@ -149,7 +149,7 @@ class CodeQualityToolsPluginKtlintTest {
           |  implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.41'
           |}
           |
-        """.trimMargin()
+        """.trimMargin(),
       )
     }
 
