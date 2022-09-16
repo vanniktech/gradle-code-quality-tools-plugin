@@ -23,13 +23,13 @@ class CodeQualityToolsPluginKotlinTest {
         """
             @Deprecated("Don't use this") fun bar() = { }
             fun foo() = bar()
-        """.trimIndent()
+        """.trimIndent(),
       )
       .fails(containsMessage = "bar(): () -> Unit' is deprecated. Don't use this")
   }
 
   class Roboter(
-    private val directory: TemporaryFolder
+    private val directory: TemporaryFolder,
   ) {
     init {
       directory.newFile("build.gradle").writeText(
@@ -55,7 +55,7 @@ class CodeQualityToolsPluginKotlinTest {
           |  implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.41'
           |}
           |
-        """.trimMargin()
+        """.trimMargin(),
       )
     }
 

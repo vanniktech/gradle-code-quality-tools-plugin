@@ -5,7 +5,7 @@ import org.gradle.api.model.ObjectFactory
 import javax.inject.Inject
 
 open class CodeQualityToolsPluginExtension @Inject constructor(
-  objectFactory: ObjectFactory
+  objectFactory: ObjectFactory,
 ) {
   /**
    * When set to true all enabled code quality tools will be configured in a way that even a single warning / error will fail the build process.

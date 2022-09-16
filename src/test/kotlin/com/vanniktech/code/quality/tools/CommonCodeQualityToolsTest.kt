@@ -26,6 +26,7 @@ abstract class CommonCodeQualityToolsTest {
   // Project javaGradlePluginProject    We can't use this one yet since testing takes forever then.
 
   lateinit var kotlinProjects: Array<Project>
+
   // Project kotlinProject              groovy.lang.MissingPropertyException: No such property: KotlinPlugin for class
   // Project kotlinAndroidProject       groovy.lang.MissingPropertyException: No such property: KotlinPlugin for class
   lateinit var kotlinPlatformCommonProject: Project
@@ -70,24 +71,24 @@ abstract class CommonCodeQualityToolsTest {
     androidTestProject.plugins.apply(TestPlugin::class.java)
 
     emptyProjects = arrayOf(
-      emptyProject
+      emptyProject,
     )
 
     javaProjects = arrayOf(
       javaProject,
-      javaLibraryProject
+      javaLibraryProject,
     )
 
     kotlinProjects = arrayOf(
       kotlinPlatformCommonProject,
       kotlinPlatformJvmProject,
-      kotlinPlatformJsProject
+      kotlinPlatformJsProject,
     )
 
     androidProjects = arrayOf(
       androidAppProject,
       androidLibraryProject,
-      androidTestProject
+      androidTestProject,
     )
 
     projects = emptyProjects + javaProjects + kotlinProjects + androidProjects
