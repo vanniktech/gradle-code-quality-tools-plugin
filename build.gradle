@@ -3,7 +3,7 @@ import org.gradle.api.internal.project.ProjectInternal
 
 buildscript {
   ext.kotlinVersion = '1.6.21'
-  ext.androidGradlePluginVersion = '7.3.0'
+  ext.androidGradlePluginVersion = '7.3.1'
 
   repositories {
     mavenCentral()
