@@ -230,6 +230,7 @@ fun Project.addKtlint(rootProject: Project, extension: CodeQualityToolsPluginExt
       }
 
       configuration.isCanBeConsumed = false
+      configuration.isVisible = false
 
       configuration.defaultDependencies {
         it.add(dependencies.create("com.pinterest:ktlint:${extension.ktlint.toolVersion}"))
@@ -307,6 +308,7 @@ fun Project.addDetekt(rootProject: Project, extension: CodeQualityToolsPluginExt
       }
 
       configuration.isCanBeConsumed = false
+      configuration.isVisible = false
 
       configuration.defaultDependencies {
         it.add(dependencies.create("io.gitlab.arturbosch.detekt:detekt-cli:${extension.detekt.toolVersion}"))
