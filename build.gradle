@@ -33,7 +33,7 @@ codeQualityTools {
     toolVersion = '0.47.1'
   }
   detekt {
-    toolVersion = '1.0.0'
+    toolVersion = '1.23.0'
   }
   pmd {
     enabled = false
