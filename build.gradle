@@ -3,7 +3,7 @@ import org.gradle.api.internal.project.ProjectInternal
 
 buildscript {
   ext.kotlinVersion = '1.8.22'
-  ext.androidGradlePluginVersion = '7.3.1'
+  ext.androidGradlePluginVersion = '8.0.2'
 
   repositories {
     mavenCentral()
@@ -30,10 +30,10 @@ validatePlugins {
 
 codeQualityTools {
   ktlint {
-    toolVersion = '0.47.1'
+    toolVersion = '0.50.0'
   }
   detekt {
-    toolVersion = '1.0.0'
+    enabled = false
   }
   pmd {
     enabled = false
@@ -96,15 +96,14 @@ dependencies {
   testRuntimeOnly(files(toolingApiBuildersJar))
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
+kotlin {
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+  }
+}
 
 tasks.withType(Test) {
   testLogging {
     testLogging.exceptionFormat = 'full'
   }
-}
-
-wrapper {
-  gradleVersion = '7.6.2'
-  distributionType = Wrapper.DistributionType.ALL
 }
