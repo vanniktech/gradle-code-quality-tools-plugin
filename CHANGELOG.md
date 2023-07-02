@@ -1,7 +1,10 @@
 # Change Log
 
-Version 0.23.0 *(In development)*
----------------------------------
+Version 0.23.0 *(2023-07-02)*
+-----------------------------
+
+- Kotlin Inputs: Exclude src/test/snapshots/ to fix 'ktlint uses this output of task testDebugUnitTest without declaring an explicit or implicit dependency'. [\#274](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/274) ([vanniktech](https://github.com/vanniktech))
+- Gradle: Use Java 11, Android Gradle Plugin 8.0.2 & update all dependencies. [\#273](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/273) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.22.0 *(2022-07-14)*
 -----------------------------
