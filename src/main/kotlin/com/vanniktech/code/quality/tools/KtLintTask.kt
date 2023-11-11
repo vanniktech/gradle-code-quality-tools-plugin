@@ -3,7 +3,6 @@ package com.vanniktech.code.quality.tools
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.RegularFileProperty
-import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.Input
@@ -17,7 +16,6 @@ import java.io.File
 import javax.inject.Inject
 
 @CacheableTask abstract class KtLintTask : DefaultTask() {
-  @Input var experimental: Boolean = false
   @Input lateinit var version: String
   @get:Classpath abstract val classpath: ConfigurableFileCollection
   @OutputDirectory lateinit var outputDirectory: File
@@ -34,7 +32,6 @@ import javax.inject.Inject
 
     queue.submit(KtLintWorker::class.java) {
       it.classpath.from(classpath)
-      it.experimental.set(experimental)
       it.outputDirectory.set(outputDirectory)
     }
   }
@@ -42,7 +39,6 @@ import javax.inject.Inject
 
 internal interface KtLintParameters : WorkParameters {
   val classpath: ConfigurableFileCollection
-  val experimental: Property<Boolean>
   val outputDirectory: RegularFileProperty
 }
 
@@ -53,10 +49,6 @@ internal abstract class KtLintWorker @Inject internal constructor(
     execOperations.javaexec { task ->
       task.mainClass.set("com.pinterest.ktlint.Main")
       task.classpath = parameters.classpath
-
-      if (parameters.experimental.get()) {
-        task.args("--experimental")
-      }
 
       task.args(
         "--reporter=plain",

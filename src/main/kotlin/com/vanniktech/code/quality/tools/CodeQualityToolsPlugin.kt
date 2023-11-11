@@ -239,12 +239,11 @@ fun Project.addKtlint(rootProject: Project, extension: CodeQualityToolsPluginExt
       configuration.isVisible = false
 
       configuration.defaultDependencies {
-        it.add(dependencies.create("com.pinterest:ktlint:${extension.ktlint.toolVersion}"))
+        it.add(dependencies.create("com.pinterest.ktlint:ktlint-cli:${extension.ktlint.toolVersion}"))
       }
     }
 
     tasks.register(ktlint, KtLintTask::class.java) { task ->
-      task.experimental = extension.ktlint.experimental
       task.version = extension.ktlint.toolVersion
       task.classpath.from(ktlintConfiguration)
       task.outputDirectory = File(buildDir, "reports/ktlint/")
@@ -252,7 +251,6 @@ fun Project.addKtlint(rootProject: Project, extension: CodeQualityToolsPluginExt
     }
 
     tasks.register("ktlintFormat", KtLintFormatTask::class.java) { task ->
-      task.experimental = extension.ktlint.experimental
       task.version = extension.ktlint.toolVersion
       task.classpath.from(ktlintConfiguration)
       task.outputDirectory = File(buildDir, "reports/ktlint/")
