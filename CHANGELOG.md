@@ -1,7 +1,9 @@
 # Change Log
 
-Version 0.24.0 *(In development)*
----------------------------------
+Version 0.24.0 *(2023-11-22)*
+-----------------------------
+
+- Breaking change: Only support ktlint 1.x and upwards. Removal of experimental setting. [\#286](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/286) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.23.0 *(2023-07-02)*
 -----------------------------
