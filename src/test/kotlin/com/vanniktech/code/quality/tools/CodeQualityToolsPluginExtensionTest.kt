@@ -13,7 +13,7 @@ class CodeQualityToolsPluginExtensionTest {
     assertEquals(false, extension.textReports)
 
     assertEquals("1.0.0", extension.detekt.toolVersion)
-    assertEquals("0.32.0", extension.ktlint.toolVersion)
+    assertEquals("1.0.1", extension.ktlint.toolVersion)
     assertEquals("8.6", extension.checkstyle.toolVersion)
     assertEquals("6.0.0", extension.pmd.toolVersion)
 
@@ -63,7 +63,5 @@ class CodeQualityToolsPluginExtensionTest {
     assertEquals(true, extension.detekt.failFast)
 
     assertEquals(true, extension.kotlin.allWarningsAsErrors)
-
-    assertEquals(false, extension.ktlint.experimental)
   }
 }

@@ -14,8 +14,9 @@ open class DetektExtension {
   var config: String = "code_quality_tools/detekt.yml"
 
   /**
-   * Optional baseline file. If one is present it will be used in the detektCheck task.
-   * If this name is specified however the file is not present it will be generated.
+   * Optional baseline file.
+   * If one is present, it will be used in the detektCheck task.
+   * If this name is specified, however, the file is not present it will be generated.
    * This mirrors the baseline mechanism from Android Lint.
    *
    * @since 0.11.0

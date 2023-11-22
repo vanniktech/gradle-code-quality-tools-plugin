@@ -14,7 +14,7 @@ open class PmdExtension {
   var ruleSetFile: String = "code_quality_tools/pmd.xml"
 
   /**
-   * If set to false or true it overrides {@link CodeQualityToolsPluginExtension#failEarly}.
+   * If set to false or true, it overrides {@link CodeQualityToolsPluginExtension#failEarly}.
    * @since 0.3.0
    */
   var ignoreFailures: Boolean? = null

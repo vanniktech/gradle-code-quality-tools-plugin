@@ -17,12 +17,6 @@ class CodeQualityToolsPluginKtlintTest {
       .succeeds()
   }
 
-  @Test fun successVersion0320() {
-    Roboter(testProjectDir, version = "0.32.0")
-      .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
-      .succeeds()
-  }
-
   @Test fun configuration() {
     Roboter(testProjectDir)
       .withConfiguration(
@@ -48,19 +42,6 @@ class CodeQualityToolsPluginKtlintTest {
       .hasKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
   }
 
-  @Test fun autoFormatVersion0320() {
-    Roboter(testProjectDir, version = "0.32.0")
-      .withConfiguration(
-        """
-            |[*.{kt,kts}]
-            |insert_final_newline=true
-        """.trimMargin(),
-      )
-      .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param")
-      .succeeds(taskToRun = "ktlintFormat")
-      .hasKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo(param: Int) = param * param\n")
-  }
-
   @Test fun noSrcFolder() {
     Roboter(testProjectDir)
       .succeeds()
@@ -72,14 +53,13 @@ class CodeQualityToolsPluginKtlintTest {
       .fails(containsMessage = "src/main/kotlin/com/vanniktech/test/Foo.kt:1:9: Unexpected spacing after \"(\"")
   }
 
-  @Test fun failsVersion0320() {
-    Roboter(testProjectDir, version = "0.32.0")
-      .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo( ) = Unit")
-      .fails(containsMessage = "src/main/kotlin/com/vanniktech/test/Foo.kt:1:9: Unexpected spacing after \"(\"")
-  }
-
   @Test fun experimental() {
-    Roboter(testProjectDir, experimental = true)
+    Roboter(testProjectDir)
+      .withConfiguration(
+        """
+        |ktlint_experimental = enabled
+        """.trimMargin(),
+      )
       .withKotlinFile("src/main/kotlin/com/vanniktech/test/Foo.kt", "fun foo() =\n   Unit")
       .fails(containsMessage = "src/main/kotlin/com/vanniktech/test/Foo.kt:2:1: Unexpected indentation (3) (should be 4)")
   }
@@ -91,13 +71,13 @@ class CodeQualityToolsPluginKtlintTest {
   }
 
   @Test fun failsOnKotlinScript() {
-    Roboter(testProjectDir, version = "0.32.0")
+    Roboter(testProjectDir)
       .withKotlinFile("build.gradle.kts", "fun foo( ) = Unit")
       .fails(containsMessage = "build.gradle.kts:1:9: Unexpected spacing after \"(\"")
   }
 
   @Test fun autoCorrectKotlinScript() {
-    Roboter(testProjectDir, version = "0.32.0")
+    Roboter(testProjectDir)
       .withKotlinFile("script.kts", "fun foo(param : Int) = param * param\n")
       .succeeds(taskToRun = "ktlintFormat")
       .hasKotlinFile("script.kts", "fun foo(param: Int) = param * param\n")
@@ -118,8 +98,7 @@ class CodeQualityToolsPluginKtlintTest {
   class Roboter(
     private val directory: TemporaryFolder,
     enabled: Boolean = true,
-    version: String = "0.44.0",
-    experimental: Boolean = false,
+    version: String = "1.0.1",
   ) {
     init {
       directory.newFile("build.gradle").writeText(
@@ -133,7 +112,6 @@ class CodeQualityToolsPluginKtlintTest {
           |  ktlint {
           |    enabled = $enabled
           |    toolVersion = "$version"
-          |    experimental = $experimental
           |  }
           |  detekt.enabled = false
           |  checkstyle.enabled = false
