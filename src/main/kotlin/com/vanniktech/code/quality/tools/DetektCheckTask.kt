@@ -103,8 +103,10 @@ internal abstract class DetektWorker @Inject internal constructor(
       task.mainClass.set("io.gitlab.arturbosch.detekt.cli.Main")
       task.classpath = parameters.classpath
       task.args(
-        "--input", parameters.inputFile.get().asFile,
-        reportKey, reportValue,
+        "--input",
+        parameters.inputFile.get().asFile,
+        reportKey,
+        reportValue,
       )
 
       val configFile = parameters.configFile.asFile.get()
