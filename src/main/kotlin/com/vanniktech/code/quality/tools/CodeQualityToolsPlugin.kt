@@ -19,7 +19,6 @@ import org.gradle.api.plugins.quality.PmdExtension
 import org.gradle.api.plugins.quality.PmdPlugin
 import org.gradle.language.base.plugins.LifecycleBasePlugin.CHECK_TASK_NAME
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.io.File
 
 const val GROUP_VERIFICATION = "verification"
 
@@ -246,14 +245,14 @@ fun Project.addKtlint(rootProject: Project, extension: CodeQualityToolsPluginExt
     tasks.register(ktlint, KtLintTask::class.java) { task ->
       task.version = extension.ktlint.toolVersion
       task.classpath.from(ktlintConfiguration)
-      task.outputDirectory = File(buildDir, "reports/ktlint/")
+      task.outputDirectory = layout.buildDirectory.dir("reports/ktlint/")
       task.inputs.files(kotlinFiles(), rootProject.editorconfigFile())
     }
 
     tasks.register("ktlintFormat", KtLintFormatTask::class.java) { task ->
       task.version = extension.ktlint.toolVersion
       task.classpath.from(ktlintConfiguration)
-      task.outputDirectory = File(buildDir, "reports/ktlint/")
+      task.outputDirectory = layout.buildDirectory.dir("reports/ktlint/")
       task.inputs.files(kotlinFiles(), rootProject.editorconfigFile())
     }
 
@@ -324,7 +323,7 @@ fun Project.addDetekt(rootProject: Project, extension: CodeQualityToolsPluginExt
       task.buildUponDefaultConfig = extension.detekt.buildUponDefaultConfig
       task.parallel = extension.detekt.parallel
       task.version = extension.detekt.toolVersion
-      task.outputDirectory = File(buildDir, "reports/detekt/")
+      task.outputDirectory = layout.buildDirectory.dir("reports/detekt/")
       task.configFile = rootProject.file(extension.detekt.config)
       task.inputFile = file(extension.detekt.input)
       task.classpath.from(detektConfiguration)

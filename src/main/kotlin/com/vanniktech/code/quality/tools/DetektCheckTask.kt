@@ -2,8 +2,11 @@ package com.vanniktech.code.quality.tools
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.Directory
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.Input
@@ -33,7 +36,7 @@ import javax.inject.Inject
   // Ideally this would be an optional input file - https://github.com/gradle/gradle/issues/2016
   @Input @Optional var baselineFilePath: String? = null
   @InputFile @PathSensitive(RELATIVE) lateinit var configFile: File
-  @OutputDirectory lateinit var outputDirectory: File
+  @OutputDirectory lateinit var outputDirectory: Provider<Directory>
 
   init {
     group = "verification"
@@ -52,7 +55,7 @@ import javax.inject.Inject
       it.configFile.set(configFile)
       it.failFast.set(failFast)
       it.inputFile.set(inputFile)
-      it.outputDirectory.set(outputDirectory)
+      it.outputDirectory.set(outputDirectory.get())
       it.parallel.set(parallel)
     }
   }
@@ -71,7 +74,7 @@ internal interface DetektParameters : WorkParameters {
   val configFile: RegularFileProperty
   val failFast: Property<Boolean>
   val inputFile: RegularFileProperty
-  val outputDirectory: RegularFileProperty
+  val outputDirectory: DirectoryProperty
   val parallel: Property<Boolean>
 }
 
