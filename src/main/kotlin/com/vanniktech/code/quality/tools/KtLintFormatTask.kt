@@ -2,7 +2,9 @@ package com.vanniktech.code.quality.tools
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.file.Directory
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.Input
@@ -18,7 +20,7 @@ import javax.inject.Inject
 @CacheableTask abstract class KtLintFormatTask : DefaultTask() {
   @Input lateinit var version: String
   @get:Classpath abstract val classpath: ConfigurableFileCollection
-  @OutputDirectory lateinit var outputDirectory: File
+  @OutputDirectory lateinit var outputDirectory: Provider<Directory>
 
   init {
     group = "formatting"
@@ -32,14 +34,14 @@ import javax.inject.Inject
 
     queue.submit(KtLintFormatWorker::class.java) {
       it.classpath.from(classpath)
-      it.outputDirectory.set(outputDirectory)
+      it.outputDirectory.set(outputDirectory.get())
     }
   }
 }
 
 internal interface KtLintFormatParameters : WorkParameters {
   val classpath: ConfigurableFileCollection
-  val outputDirectory: RegularFileProperty
+  val outputDirectory: DirectoryProperty
 }
 
 internal abstract class KtLintFormatWorker @Inject internal constructor(
