@@ -22,10 +22,7 @@ class CodeQualityToolsPluginPmdTest : CommonCodeQualityToolsTest() {
 
   @Test fun kotlin() {
     kotlinProjects.forEach { project ->
-      // Ideally we don't want to be running this in kotlin projects but since it uses the java library under the hood we can't do much.
-      assertEquals(true, project.addPmd(rootProject, defaultExtensions()))
-
-      assertPmd(project)
+      assertEquals(false, project.addPmd(rootProject, defaultExtensions()))
     }
   }
 

@@ -22,10 +22,7 @@ class CodeQualityToolsPluginCheckstyleTest : CommonCodeQualityToolsTest() {
 
   @Test fun kotlin() {
     kotlinProjects.forEach { project ->
-      // Ideally we don"t want to be running this in kotlin projects but since it uses the java library under the hood we can"t do much.
-      assertEquals(true, project.addCheckstyle(rootProject, defaultExtensions()))
-
-      assertCheckstyle(project)
+      assertEquals(false, project.addCheckstyle(rootProject, defaultExtensions()))
     }
   }
 

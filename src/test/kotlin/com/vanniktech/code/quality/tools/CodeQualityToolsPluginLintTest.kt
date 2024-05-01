@@ -20,7 +20,7 @@ class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
 
   @Test fun kotlin() {
     kotlinProjects.forEach { project ->
-      assertEquals(true, project.addLint(defaultExtensions()))
+      assertEquals(false, project.addLint(defaultExtensions()))
     }
   }
 
