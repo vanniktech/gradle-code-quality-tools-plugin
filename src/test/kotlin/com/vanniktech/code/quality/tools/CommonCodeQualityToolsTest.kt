@@ -8,9 +8,7 @@ import org.gradle.api.Task
 import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testfixtures.ProjectBuilder
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformCommonPlugin
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJsPlugin
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
+import org.jetbrains.kotlin.gradle.plugin.KotlinApiPlugin
 import org.junit.Before
 
 @Suppress("Detekt.UnnecessaryAbstractClass")
@@ -29,9 +27,7 @@ abstract class CommonCodeQualityToolsTest {
 
   // Project kotlinProject              groovy.lang.MissingPropertyException: No such property: KotlinPlugin for class
   // Project kotlinAndroidProject       groovy.lang.MissingPropertyException: No such property: KotlinPlugin for class
-  lateinit var kotlinPlatformCommonProject: Project
-  lateinit var kotlinPlatformJvmProject: Project
-  lateinit var kotlinPlatformJsProject: Project
+  lateinit var kotlinProject: Project
 
   lateinit var androidProjects: Array<Project>
   lateinit var androidAppProject: Project
@@ -52,14 +48,8 @@ abstract class CommonCodeQualityToolsTest {
     javaLibraryProject = ProjectBuilder.builder().withName("java-library").withParent(rootProject).build()
     javaLibraryProject.plugins.apply(JavaLibraryPlugin::class.java)
 
-    kotlinPlatformCommonProject = ProjectBuilder.builder().withName("kotlin-platform-common").withParent(rootProject).build()
-    kotlinPlatformCommonProject.plugins.apply(KotlinPlatformCommonPlugin::class.java)
-
-    kotlinPlatformJvmProject = ProjectBuilder.builder().withName("kotlin-platform-jvm").withParent(rootProject).build()
-    kotlinPlatformJvmProject.plugins.apply(KotlinPlatformJvmPlugin::class.java)
-
-    kotlinPlatformJsProject = ProjectBuilder.builder().withName("kotlin-platform-js").withParent(rootProject).build()
-    kotlinPlatformJsProject.plugins.apply(KotlinPlatformJsPlugin::class.java)
+    kotlinProject = ProjectBuilder.builder().withName("kotlin").withParent(rootProject).build()
+    kotlinProject.plugins.apply(KotlinApiPlugin::class.java)
 
     androidAppProject = ProjectBuilder.builder().withName("android app").build()
     androidAppProject.plugins.apply(AppPlugin::class.java)
@@ -80,9 +70,7 @@ abstract class CommonCodeQualityToolsTest {
     )
 
     kotlinProjects = arrayOf(
-      kotlinPlatformCommonProject,
-      kotlinPlatformJvmProject,
-      kotlinPlatformJsProject,
+      kotlinProject,
     )
 
     androidProjects = arrayOf(

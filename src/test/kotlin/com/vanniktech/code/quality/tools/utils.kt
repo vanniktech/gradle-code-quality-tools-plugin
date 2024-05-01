@@ -16,7 +16,7 @@ fun defaultExtensions(): CodeQualityToolsPluginExtension {
     InstantiatorBackedObjectFactory(
       object : Instantiator {
         @Suppress("DEPRECATION")
-        override fun <T : Any?> newInstance(type: Class<out T>, vararg parameters: Any?): T = type.newInstance()
+        override fun <T : Any> newInstance(type: Class<out T>, vararg parameters: Any?): T = type.newInstance()
       },
     ),
   )
