@@ -52,13 +52,11 @@ class CodeQualityToolsPlugin : Plugin<Project> {
   }
 }
 
-fun hasLintPlugin(): Boolean {
-  return try {
-    Class.forName("com.android.build.gradle.LintPlugin")
-    true
-  } catch (ignored: ClassNotFoundException) {
-    false
-  }
+fun hasLintPlugin(): Boolean = try {
+  Class.forName("com.android.build.gradle.LintPlugin")
+  true
+} catch (ignored: ClassNotFoundException) {
+  false
 }
 
 fun Project.kotlinFiles(baseDir: String? = null) =
