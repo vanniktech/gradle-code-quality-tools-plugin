@@ -12,7 +12,7 @@ class CodeQualityToolsPluginExtensionTest {
     assertEquals(false, extension.htmlReports)
     assertEquals(false, extension.textReports)
 
-    assertEquals("1.0.0", extension.detekt.toolVersion)
+    assertEquals("1.23.6", extension.detekt.toolVersion)
     assertEquals("1.0.1", extension.ktlint.toolVersion)
     assertEquals("8.6", extension.checkstyle.toolVersion)
     assertEquals("6.0.0", extension.pmd.toolVersion)
