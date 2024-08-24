@@ -11,7 +11,6 @@ import org.gradle.testfixtures.ProjectBuilder
 import org.jetbrains.kotlin.gradle.plugin.KotlinApiPlugin
 import org.junit.Before
 
-@Suppress("Detekt.UnnecessaryAbstractClass")
 abstract class CommonCodeQualityToolsTest {
   lateinit var rootProject: Project
 
@@ -37,7 +36,7 @@ abstract class CommonCodeQualityToolsTest {
 
   lateinit var projects: Array<Project>
 
-  @Before @Suppress("Detekt.LongMethod") fun setUp() {
+  @Before fun setUp() {
     rootProject = ProjectBuilder.builder().withName("root").build()
 
     emptyProject = ProjectBuilder.builder().withName("empty").withParent(rootProject).build()
