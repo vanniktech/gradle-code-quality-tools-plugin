@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class CodeQualityToolsPluginExtensionTest {
-  @Test @Suppress("Detekt.LongMethod") fun defaults() {
+  @Test fun defaults() {
     val extension = defaultExtensions()
 
     assertEquals(true, extension.failEarly)
@@ -12,7 +12,6 @@ class CodeQualityToolsPluginExtensionTest {
     assertEquals(false, extension.htmlReports)
     assertEquals(false, extension.textReports)
 
-    assertEquals("1.0.0", extension.detekt.toolVersion)
     assertEquals("1.0.1", extension.ktlint.toolVersion)
     assertEquals("8.6", extension.checkstyle.toolVersion)
     assertEquals("6.0.0", extension.pmd.toolVersion)
@@ -34,14 +33,12 @@ class CodeQualityToolsPluginExtensionTest {
     assertEquals(null, extension.pmd.ignoreFailures)
     assertEquals(null, extension.cpd.ignoreFailures)
 
-    assertEquals("code_quality_tools/detekt.yml", extension.detekt.config)
     assertEquals("code_quality_tools/checkstyle.xml", extension.checkstyle.configFile)
     assertEquals("code_quality_tools/pmd.xml", extension.pmd.ruleSetFile)
 
     assertEquals(true, extension.ignoreProjects.isEmpty())
 
     assertEquals(true, extension.cpd.enabled)
-    assertEquals(true, extension.detekt.enabled)
     assertEquals(true, extension.ktlint.enabled)
     assertEquals(true, extension.lint.enabled)
     assertEquals(true, extension.checkstyle.enabled)
@@ -58,9 +55,6 @@ class CodeQualityToolsPluginExtensionTest {
     assertEquals(false, extension.lint.checkReleaseBuilds)
     assertEquals(true, extension.lint.checkTestSources)
     assertEquals(null, extension.lint.checkDependencies)
-
-    assertEquals(null, extension.detekt.baselineFileName)
-    assertEquals(true, extension.detekt.failFast)
 
     assertEquals(true, extension.kotlin.allWarningsAsErrors)
   }
