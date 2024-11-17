@@ -75,7 +75,7 @@ tasks.getByName('pluginUnderTestMetadata').getPluginClasspath().from(configurati
 
 dependencies {
   api gradleApi()
-  api 'de.aaschmid:gradle-cpd-plugin:3.4'
+  api 'de.aaschmid:gradle-cpd-plugin:3.5'
 
   compileOnly "com.android.tools.build:gradle:$androidGradlePluginVersion"
   compileOnly "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
