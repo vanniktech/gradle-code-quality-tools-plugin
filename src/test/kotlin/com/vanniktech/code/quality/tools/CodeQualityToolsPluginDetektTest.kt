@@ -22,7 +22,7 @@ class CodeQualityToolsPluginDetektTest {
   }
 
   @Test fun works() {
-    Roboter(testProjectDir, version = "1.0.0")
+    Roboter(testProjectDir, version = "1.23.6")
       .withConfiguration("") // Fail Fast is configured via the CLI parameter.
       .withKotlinFile(testPath, testCode)
       .succeeds()
@@ -127,7 +127,7 @@ class CodeQualityToolsPluginDetektTest {
     private val directory: TemporaryFolder,
     private val config: String = "code_quality_tools/detekt.yml",
     enabled: Boolean = true,
-    version: String = "1.0.0",
+    version: String = "1.23.6",
     private val baselineFileName: String? = null,
     buildUponDefaultConfig: Boolean = false,
     parallel: Boolean = false,
