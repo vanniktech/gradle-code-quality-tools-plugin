@@ -210,8 +210,10 @@ fun Project.addKotlin(extension: CodeQualityToolsPluginExtension): Boolean {
   val isKotlinProject = isKotlinProject()
 
   if (isNotIgnored && isKotlinProject) {
-    project.tasks.withType(KotlinCompile::class.java) {
-      it.kotlinOptions.allWarningsAsErrors = extension.kotlin.allWarningsAsErrors
+    project.tasks.withType(KotlinCompile::class.java) { kotlinCompile ->
+      kotlinCompile.compilerOptions {
+        allWarningsAsErrors.set(extension.kotlin.allWarningsAsErrors)
+      }
     }
     return true
   }
