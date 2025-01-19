@@ -23,6 +23,5 @@ open class CpdExtension {
    * A positive integer indicating the minimum token count to trigger a CPD match.
    * @since 0.6.0
    */
-  @Suppress("Detekt.MagicNumber") // Will be fixed with RC12.
   var minimumTokenCount: Int = 50
 }
