@@ -2,8 +2,8 @@ import org.gradle.api.internal.classpath.ModuleRegistry
 import org.gradle.api.internal.project.ProjectInternal
 
 buildscript {
-  ext.kotlinVersion = '2.0.10'
-  ext.androidGradlePluginVersion = '8.5.2'
+  ext.kotlinVersion = '2.1.0'
+  ext.androidGradlePluginVersion = '8.8.0'
 
   repositories {
     mavenCentral()
@@ -14,7 +14,7 @@ buildscript {
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.24.0'
-    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.29.0'
+    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.30.0'
   }
 }
 
@@ -75,7 +75,7 @@ tasks.getByName('pluginUnderTestMetadata').getPluginClasspath().from(configurati
 
 dependencies {
   api gradleApi()
-  api 'de.aaschmid:gradle-cpd-plugin:3.4'
+  api 'de.aaschmid:gradle-cpd-plugin:3.5'
 
   compileOnly "com.android.tools.build:gradle:$androidGradlePluginVersion"
   compileOnly "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
