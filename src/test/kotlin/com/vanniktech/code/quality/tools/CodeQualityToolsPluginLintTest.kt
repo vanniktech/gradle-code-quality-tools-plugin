@@ -43,7 +43,7 @@ class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
     assertEquals(true, taskDependsOn(project.check, "lint"))
   }
 
-  @Test @Suppress("Detekt.LongMethod") fun configurations() {
+  @Test fun configurations() {
     val extension = defaultExtensions()
     extension.lint.textReport = null
     extension.lint.textOutput = "stdout"

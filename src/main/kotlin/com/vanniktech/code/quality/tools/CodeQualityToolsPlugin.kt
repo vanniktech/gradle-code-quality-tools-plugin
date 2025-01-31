@@ -1,5 +1,3 @@
-@file:Suppress("Detekt.TooManyFunctions", "UnstableApiUsage")
-
 package com.vanniktech.code.quality.tools
 
 import com.android.build.gradle.BaseExtension
@@ -47,7 +45,6 @@ class CodeQualityToolsPlugin : Plugin<Project> {
     project.addKtlint(rootProject, extension)
     project.addKotlin(extension)
     project.addCpd(extension)
-    project.addDetekt(rootProject, extension)
     project.addLint(extension)
   }
 }
@@ -143,7 +140,6 @@ fun Project.addCheckstyle(rootProject: Project, extension: CodeQualityToolsPlugi
   return false
 }
 
-@Suppress("Detekt.ComplexMethod")
 fun Project.addLint(extension: CodeQualityToolsPluginExtension): Boolean {
   val isNotIgnored = !shouldIgnore(extension)
   val isEnabled = extension.lint.enabled
@@ -293,52 +289,6 @@ fun Project.addCpd(extension: CodeQualityToolsPluginExtension): Boolean {
     }
 
     tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("cpdCheck") }
-    return true
-  }
-
-  return false
-}
-
-fun Project.addDetekt(rootProject: Project, extension: CodeQualityToolsPluginExtension): Boolean {
-  val isNotIgnored = !shouldIgnore(extension)
-  val isEnabled = extension.detekt.enabled
-  val isDetektSupported = isKotlinProject()
-
-  if (isNotIgnored && isEnabled && isDetektSupported) {
-    val detektConfiguration = configurations.create("detekt") { configuration ->
-      configuration.attributes {
-        it.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage::class.javaObjectType, Usage.JAVA_RUNTIME))
-      }
-
-      configuration.isCanBeConsumed = false
-      configuration.isVisible = false
-
-      configuration.defaultDependencies {
-        it.add(dependencies.create("io.gitlab.arturbosch.detekt:detekt-cli:${extension.detekt.toolVersion}"))
-      }
-    }
-
-    tasks.register("detektCheck", DetektCheckTask::class.java) { task ->
-      task.failFast = extension.detekt.failFast
-      task.buildUponDefaultConfig = extension.detekt.buildUponDefaultConfig
-      task.parallel = extension.detekt.parallel
-      task.version = extension.detekt.toolVersion
-      task.outputDirectory = layout.buildDirectory.dir("reports/detekt/")
-      task.configFile = rootProject.file(extension.detekt.config)
-      task.inputFile = file(extension.detekt.input)
-      task.classpath.from(detektConfiguration)
-      task.inputs.files(kotlinFiles(baseDir = extension.detekt.input))
-
-      task.inputs.property("baseline-file-exists", false)
-
-      extension.detekt.baselineFileName?.let {
-        val file = file(it)
-        task.baselineFilePath = file.toString()
-        task.inputs.property("baseline-file-exists", file.exists())
-      }
-    }
-
-    tasks.named(CHECK_TASK_NAME).configure { it.dependsOn("detektCheck") }
     return true
   }
 

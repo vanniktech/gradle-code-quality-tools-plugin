@@ -4,22 +4,14 @@ import com.android.build.gradle.BaseExtension
 import de.aaschmid.gradle.plugins.cpd.Cpd
 import de.aaschmid.gradle.plugins.cpd.CpdExtension
 import org.gradle.api.Project
-import org.gradle.api.internal.model.InstantiatorBackedObjectFactory
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.Pmd
 import org.gradle.api.plugins.quality.PmdExtension
-import org.gradle.internal.reflect.Instantiator
+import org.gradle.testfixtures.ProjectBuilder
 
 fun defaultExtensions(): CodeQualityToolsPluginExtension {
-  // This is not ideal but the only solution I have found that somewhat works.
-  return CodeQualityToolsPluginExtension(
-    InstantiatorBackedObjectFactory(
-      object : Instantiator {
-        @Suppress("DEPRECATION")
-        override fun <T : Any> newInstance(type: Class<out T>, vararg parameters: Any?): T = type.newInstance()
-      },
-    ),
-  )
+  val project = ProjectBuilder.builder().build()
+  return CodeQualityToolsPluginExtension(project.objects)
 }
 
 val Project.cpd get() = extensions.getByType(CpdExtension::class.java)

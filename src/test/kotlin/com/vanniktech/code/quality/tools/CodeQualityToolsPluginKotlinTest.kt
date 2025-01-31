@@ -41,7 +41,6 @@ class CodeQualityToolsPluginKotlinTest {
           |
           |codeQualityTools {
           |  ktlint.enabled = false
-          |  detekt.enabled = false
           |  checkstyle.enabled = false
           |  pmd.enabled = false
           |  cpd.enabled = false
