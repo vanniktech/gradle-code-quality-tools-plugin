@@ -113,7 +113,6 @@ class CodeQualityToolsPluginKtlintTest {
           |    enabled = $enabled
           |    toolVersion = "$version"
           |  }
-          |  detekt.enabled = false
           |  checkstyle.enabled = false
           |  pmd.enabled = false
           |  cpd.enabled = false

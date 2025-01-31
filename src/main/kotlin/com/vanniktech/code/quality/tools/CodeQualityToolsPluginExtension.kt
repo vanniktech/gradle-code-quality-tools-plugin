@@ -49,9 +49,6 @@ open class CodeQualityToolsPluginExtension @Inject constructor(
   val ktlint = objectFactory.newInstance(KtlintExtension::class.java)
   fun ktlint(action: Action<in KtlintExtension>) = action.execute(ktlint)
 
-  val detekt = objectFactory.newInstance(DetektExtension::class.java)
-  fun detekt(action: Action<in DetektExtension>) = action.execute(detekt)
-
   val cpd = objectFactory.newInstance(CpdExtension::class.java)
   fun cpd(action: Action<in CpdExtension>) = action.execute(cpd)
 
