@@ -2,7 +2,7 @@ import org.gradle.api.internal.classpath.ModuleRegistry
 import org.gradle.api.internal.project.ProjectInternal
 
 buildscript {
-  ext.kotlinVersion = '2.1.20'
+  ext.kotlinVersion = '2.1.21'
   ext.androidGradlePluginVersion = '8.10.0'
 
   repositories {
