@@ -77,7 +77,7 @@ dependencies {
   api gradleApi()
   api 'de.aaschmid:gradle-cpd-plugin:3.5'
 
-  compileOnly "com.android.tools.build:gradle:$androidGradlePluginVersion"
+  compileOnly "com.android.tools.build:gradle-api:$androidGradlePluginVersion"
   compileOnly "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
   testImplementation "com.android.tools.build:gradle:$androidGradlePluginVersion"
@@ -102,7 +102,7 @@ kotlin {
   }
 }
 
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
   testLogging {
     testLogging.exceptionFormat = 'full'
   }

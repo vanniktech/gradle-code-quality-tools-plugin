@@ -3,7 +3,6 @@ package com.vanniktech.code.quality.tools
 import org.gradle.api.Project
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.io.File
 
 class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
   @Test fun empty() {
@@ -36,7 +35,7 @@ class CodeQualityToolsPluginLintTest : CommonCodeQualityToolsTest() {
     assertEquals(true, project.lintOptions.isWarningsAsErrors)
     assertEquals(true, project.lintOptions.isAbortOnError)
     assertEquals(true, project.lintOptions.textReport)
-    assertEquals(File("stdout"), project.lintOptions.textOutput)
+    assertEquals(null, project.lintOptions.textOutput)
     assertEquals(false, project.lintOptions.isCheckAllWarnings)
     assertEquals(null, project.lintOptions.baselineFile)
 
