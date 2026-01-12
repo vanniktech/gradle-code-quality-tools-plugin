@@ -1,7 +1,10 @@
 # Change Log
 
-Version 0.25.0 *(In development)*
----------------------------------
+Version 0.25.0 *(2026-01-12)*
+-----------------------------
+
+- Lint: Support Android Gradle Plugin 9.0.0 [\#382](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/382) ([vanniktech](https://github.com/vanniktech))
+- Breaking: Remove Detekt. Please use their own Gradle Plugin. [\#326](https://github.com/vanniktech/gradle-code-quality-tools-plugin/pull/326) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.24.0 *(2023-11-22)*
 -----------------------------

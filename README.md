@@ -15,7 +15,7 @@ buildscript {
     google()
   }
   dependencies {
-    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.24.0"
+    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.25.0"
   }
 }
 
