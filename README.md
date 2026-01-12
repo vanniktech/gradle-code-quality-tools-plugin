@@ -1,6 +1,6 @@
 # gradle-code-quality-tools-plugin
 
-Gradle plugin that configures [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html), [Detekt](https://github.com/arturbosch/detekt) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how each of those plugins are configured.
+Gradle plugin that configures [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/), [CPD](https://pmd.github.io/pmd-6.0.0/#cpd), [Lint](https://developer.android.com/studio/write/lint.html) & [Ktlint](https://github.com/shyiko/ktlint). All of these tools are also automatically hooked into the `check` gradle task. Below, I'll go more into depth how each of those plugins are configured.
 
 This plugin requires Gradle 5.0 or later.
 
@@ -30,7 +30,7 @@ buildscript {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
   dependencies {
-    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.25.0-SNAPSHOT"
+    classpath "com.vanniktech:gradle-code-quality-tools-plugin:0.26.0-SNAPSHOT"
   }
 }
 
@@ -89,13 +89,6 @@ codeQualityTools {
     String toolVersion = '0.32.0'
     boolean experimental = false
   }
-  detekt {
-    boolean enabled = true
-    String toolVersion = '1.0.0'
-    String config = 'code_quality_tools/detekt.yml'
-    String baselineFileName = null
-    boolean failFast = true
-  }
   cpd {
     boolean enabled = true
     String source = 'src'
@@ -128,10 +121,6 @@ It'll apply the [CPD Plugin](https://github.com/aaschmid/gradle-cpd-plugin) and 
 ### Lint
 
 This will only work when one of the Android Plugins (`com.android.application`, `com.android.library`, etc.) are applied. The configuration properties of `codeQualityTools -> lint` mirror the [properties from the lintOptions](https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.LintOptions.html).
-
-### Detekt
-
-It'll use the specified detekt version and generate the `detektCheck` task which will run detekt on your code base.
 
 ### Ktlint
 
