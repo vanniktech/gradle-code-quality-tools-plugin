@@ -1,6 +1,7 @@
 package com.vanniktech.code.quality.tools
 
 import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.api.dsl.Lint
 import com.android.build.api.dsl.TestExtension
@@ -18,6 +19,7 @@ import org.gradle.api.plugins.quality.Pmd
 import org.gradle.api.plugins.quality.PmdExtension
 import org.gradle.api.plugins.quality.PmdPlugin
 import org.gradle.language.base.plugins.LifecycleBasePlugin.CHECK_TASK_NAME
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 const val GROUP_VERIFICATION = "verification"
@@ -151,6 +153,7 @@ fun Project.addLint(extension: CodeQualityToolsPluginExtension): Boolean {
       plugins.hasPlugin("com.android.application") -> extensions.getByType(ApplicationExtension::class.java).lint
       plugins.hasPlugin("com.android.library") -> extensions.getByType(LibraryExtension::class.java).lint
       plugins.hasPlugin("com.android.test") -> extensions.getByType(TestExtension::class.java).lint
+      plugins.hasPlugin("com.android.kotlin.multiplatform.library") -> extensions.getByType(KotlinMultiplatformExtension::class.java).extensions.getByType(KotlinMultiplatformAndroidLibraryTarget::class.java).lint
       isJavaProject && hasLintPlugin() -> {
         plugins.apply(LintPlugin::class.java)
         extensions.getByType(Lint::class.java)
